@@ -13,7 +13,6 @@ public class GridControls : MonoBehaviour, IGrid
     protected HashSet<Vector3Int> gridCells;
 
 
-    // Must add parameters for Grid Height and Tile Base
     public void GenerateGrid(int gridHeight, TileBase tile)
     {
         Vector3Int cellPosition = new Vector3Int(0, 0, 0);
@@ -36,6 +35,37 @@ public class GridControls : MonoBehaviour, IGrid
 
     }
 
+    public Vector3Int GetCellByClick()
+    {
+        Vector2 mouseScreenPos = Input.mousePosition;
+        Vector2 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
+        
+        Vector3Int mouseCellPos = mapGrid.WorldToCell(mouseWorldPos);
+
+        return mouseCellPos;
+    }
+
+    public IEnumerable<Vector3Int> GetGridDimensions()
+    {
+        return gridCells;
+    }
+
+    public Vector3Int GetNeighborCells()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    protected void Awake()
+    {
+        if (mapGrid == null)
+            mapGrid = GetComponent<Grid>();
+        if (mapTiles == null)
+            mapTiles = GetComponentInChildren<Tilemap>();
+
+        mainCamera = Camera.main;
+        gridCells = new HashSet<Vector3Int>();
+    }
+
     [ContextMenu("Generate Grid")]
     protected void DebugGenerateGrid()
     {
@@ -48,33 +78,4 @@ public class GridControls : MonoBehaviour, IGrid
         GenerateGrid(gridHeight, null);
     }
 
-    public Vector3Int GetCellByClick()
-    {
-        Vector2 mouseScreenPos = Input.mousePosition;
-        Vector2 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
-        
-        Vector3Int mouseCellPos = mapGrid.WorldToCell(mouseWorldPos);
-
-        return mouseCellPos;
-    }
-
-    public Bounds GetGridDimensions()
-    {
-        return mapTiles.localBounds;
-    }
-
-    public Vector3Int GetNeighborCells()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    protected void Awake()
-    {
-        if(mapGrid == null)
-            mapGrid = GetComponent<Grid>();
-        if (mapTiles == null)
-            mapTiles = GetComponentInChildren<Tilemap>();
-        
-        mainCamera = Camera.main;
-    }
 }

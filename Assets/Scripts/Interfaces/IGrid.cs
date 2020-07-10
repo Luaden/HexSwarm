@@ -7,7 +7,7 @@ public interface IGrid
 {
     Vector3Int GetNeighborCells();
 
-    Bounds GetGridDimensions();
+    IEnumerable<Vector3Int> GetGridDimensions();
 
     Vector3Int GetCellByClick();
 

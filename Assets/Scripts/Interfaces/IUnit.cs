@@ -1,0 +1,54 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[System.Flags]
+public enum Teams
+{
+    Player  = 1 << 0,
+    AI1     = 1 << 1,
+    AI2     = 1 << 2,
+    AI3     = 1 << 3,
+    AI4     = 1 << 4,
+    AI5     = 1 << 5,
+    AI6     = 1 << 6,
+    AI7     = 1 << 7,
+    AI8     = 1 << 8,
+    AI9     = 1 << 9,
+    AIS = AI1|AI2|AI3|AI4|AI5|AI6|AI7|AI8|AI9
+}
+
+
+public interface PosAblityDefault
+{
+    int ID { get; }
+    string Name { get; }
+    string Description { get; }
+    Sprite MovementGrid { get; }
+    Sprite DamageGrid { get; }
+}
+
+public interface PosAblity : PosAblityDefault
+{
+    IEnumerable<Vector2> PossiblePlacements { get; }
+    IReadOnlyDictionary<Vector2, HashSet<Vector2>> AttackZone { get; }
+}
+
+//public interface IGrid 
+//{
+//    void PlaceNewUnit(IUnit Vector2);
+//    void MoveUnit(IUnit Vector2);
+//    void DestroyUnits(IUnit Vector2);
+//}
+
+public interface IUnit
+{
+    Vector2 location { get; }
+    IGrid World { get; }
+    int UnitRange { get; }
+    Teams Team { get; }
+    IReadOnlyList<PosAblityDefault> Abilites { get; }
+
+    PosAblity GeneratePosAblity(PosAblityDefault move);
+    void ApplyAbility(PosAblityDefault move, Vector2 temp);
+}
