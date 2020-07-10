@@ -34,16 +34,9 @@ public interface PosAblity : PosAblityDefault
     IReadOnlyDictionary<Vector2, HashSet<Vector2>> AttackZone { get; }
 }
 
-//public interface IGrid 
-//{
-//    void PlaceNewUnit(IUnit Vector2);
-//    void MoveUnit(IUnit Vector2);
-//    void DestroyUnits(IUnit Vector2);
-//}
-
 public interface IUnit
 {
-    Vector2 location { get; }
+    Vector3Int location { get; }
     IGrid World { get; }
     int UnitRange { get; }
     Teams Team { get; }

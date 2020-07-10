@@ -10,7 +10,7 @@ public class GridControls : MonoBehaviour, IGrid
     [SerializeField] protected int gridHeight = 3;
 
     protected Camera mainCamera;
-    protected HashSet<Vector3Int> gridCells;
+    protected HashSet<Cell> world;
 
 
     public void GenerateGrid(int gridHeight, TileBase tile)
@@ -22,17 +22,16 @@ public class GridControls : MonoBehaviour, IGrid
             Vector3Int cellPositionModified = new Vector3Int(cellPosition.x, cellPosition.y = i, cellPosition.z);
             mapTiles.SetTile(cellPositionModified, tile);
 
-            gridCells.Add(cellPositionModified);
+            world.Add(new Cell(cellPositionModified, null, tile));
 
             for (int j = gridHeight; j >= -gridHeight; j--)
             {
                 cellPositionModified = new Vector3Int(cellPositionModified.x = j, cellPositionModified.y, cellPositionModified.z);
                 mapTiles.SetTile(cellPositionModified, tile);
 
-                gridCells.Add(cellPositionModified);
+                world.Add(new Cell(cellPositionModified, null, tile));
             }
         }
-
     }
 
     public Vector3Int GetCellByClick()
@@ -45,14 +44,9 @@ public class GridControls : MonoBehaviour, IGrid
         return mouseCellPos;
     }
 
-    public IEnumerable<Vector3Int> GetGridDimensions()
+    public IEnumerable<ICell> GetNeighborCells(Vector3Int origin, int range = 1)
     {
-        return gridCells;
-    }
-
-    public Vector3Int GetNeighborCells()
-    {
-        throw new System.NotImplementedException();
+        return world;
     }
 
     protected void Awake()
@@ -63,7 +57,7 @@ public class GridControls : MonoBehaviour, IGrid
             mapTiles = GetComponentInChildren<Tilemap>();
 
         mainCamera = Camera.main;
-        gridCells = new HashSet<Vector3Int>();
+        world = new HashSet<Cell>();
     }
 
     [ContextMenu("Generate Grid")]

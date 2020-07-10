@@ -5,9 +5,7 @@ using UnityEngine.Tilemaps;
 
 public interface IGrid 
 {
-    Vector3Int GetNeighborCells();
-
-    IEnumerable<Vector3Int> GetGridDimensions();
+    IEnumerable<ICell> GetNeighborCells(Vector3Int origin, int range = 1);
 
     Vector3Int GetCellByClick();
 
