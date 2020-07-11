@@ -9,14 +9,9 @@ public class GameManager : MonoBehaviour
     //Editor variables
     [SerializeField] protected GridManager gridManager;
 
-    //Editor debug variables, remove for live build.
-    [SerializeField] IUnit tempUnit;
-
     //Cached references
     protected BattlefieldManager battlefieldManager;
-
     
-
 
     protected void Awake()
     {

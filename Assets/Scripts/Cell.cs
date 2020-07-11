@@ -6,18 +6,16 @@ using UnityEngine.Tilemaps;
 public class Cell : ICell
 {
     protected Vector3Int position;
-    protected IUnit unit;
-    protected TileBase tile;
 
     public Vector3Int Position => position;
-    public IUnit Unit => unit;
-    public TileBase Tile => tile;
+    public IUnit Unit { get; set; }
+    public TileBase Tile { get; set; }
 
     public Cell(Vector3Int position, IUnit unit, TileBase tile)
     {
         this.position = position;
-        this.unit = unit;
-        this.tile = tile;
+        Unit = unit;
+        Tile = tile;
     }
 
     

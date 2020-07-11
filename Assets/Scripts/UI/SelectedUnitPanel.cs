@@ -27,13 +27,13 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>
         UpdateText(unitDescription, unit.Description);
 
         //This needs to be a single sprite representing the action, or we need a way to determine if it's damage or movement.
-        UpdateSprite(ability1Image, unit.Abilites[0].DamageGrid);
-        UpdateText(ability1Name, unit.Abilites[0].Name);
-        UpdateText(ability1Description, unit.Abilites[0].Description);
+        //UpdateSprite(ability1Image, unit.Abilites[0].DamageGrid);
+        //UpdateText(ability1Name, unit.Abilites[0].Name);
+        //UpdateText(ability1Description, unit.Abilites[0].Description);
 
-        UpdateSprite(ability2Image, unit.Abilites[1].DamageGrid);
-        UpdateText(ability2Name, unit.Abilites[1].Name);
-        UpdateText(ability2Description, unit.Abilites[1].Description);
+        //UpdateSprite(ability2Image, unit.Abilites[1].DamageGrid);
+        //UpdateText(ability2Name, unit.Abilites[1].Name);
+        //UpdateText(ability2Description, unit.Abilites[1].Description);
     }
 
     protected override bool ClearedIfEmpty(IUnit unit)

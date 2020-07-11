@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 [System.Flags]
 public enum Teams
@@ -38,6 +39,7 @@ public interface IUnit
 {
     string Name { get; }
     string Description { get; }
+    TileBase Tile { get; }
     Sprite Icon { get; }
     Color Color { get; }
     Vector3Int Location { get; }

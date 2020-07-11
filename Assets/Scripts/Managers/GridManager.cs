@@ -1,13 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+[System.Serializable]
 public class GridManager : MonoBehaviour, IGrid
 {
+    //Editor/debug variables
+    [SerializeField] protected Unit tempUnit = new Unit();
+    [SerializeField] protected Vector3Int unitSpawnPos;
+
+    //Editor variables
     [SerializeField] protected SelectedUnitPanel selectedUnitPanel;
     [SerializeField] protected Grid mapGrid;
     [SerializeField] protected Tilemap groundTiles;
     [SerializeField] protected Tilemap highlightTiles;
+    [SerializeField] protected Tilemap unitTiles;
     [SerializeField] protected TileBase tile;
     [SerializeField] protected TileBase highlightTile;
     [SerializeField] protected int gridHeight = 3;
@@ -86,6 +95,8 @@ public class GridManager : MonoBehaviour, IGrid
         highlightedCells.Clear();
     }
 
+    public void PaintUnitTile(Vector3Int cellToPaint, TileBase tileToPaint) => unitTiles.SetTile(cellToPaint, tileToPaint);
+
     protected void Awake()
     {
         if (mapGrid == null)
@@ -99,10 +110,11 @@ public class GridManager : MonoBehaviour, IGrid
         world = new Dictionary<Vector3Int, Cell>();
         highlightedCells = new HashSet<Cell>();
 
-        battlefieldManager = new BattlefieldManager(world);
+        battlefieldManager = new BattlefieldManager(world, this);
+
+        DebugGenerateGrid();
     }
 
-    [ContextMenu("Generate Grid")]
     protected void DebugGenerateGrid()
     {
         GenerateGrid(gridHeight, tile);
@@ -114,12 +126,20 @@ public class GridManager : MonoBehaviour, IGrid
         GenerateGrid(gridHeight, null);
     }
 
+    [ContextMenu("Generate Unit")]
+    protected void DebugGenerateUnit()
+    {
+        battlefieldManager.PlaceNewUnit(tempUnit, unitSpawnPos);
+        print("Unit generated at: " + unitSpawnPos);
+    }
+
     //Make OnMouseDown if cells have colliders.
-    private void Update()
+    protected void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
             GetMouseCell();
+            CheckCellForUnit(selectedCell);
         }
 
         if (Input.GetMouseButtonDown(1))
@@ -128,29 +148,30 @@ public class GridManager : MonoBehaviour, IGrid
         }
     }
 
-    private void GetMouseCell()
+    protected void GetMouseCell()
     {
         currentLocation = GetCellByClick(Input.mousePosition);
         battlefieldManager.World.TryGetValue(currentLocation, out selectedCell);
-
-        if(selectedCell != null)
-            print(selectedCell.Position);
     }
 
-    private void CheckCellForUnit(Cell selectedCell)
+    protected void CheckCellForUnit(Cell selectedCell)
     {
         if (selectedCell == null)
             return;
 
         if (selectedCell.Unit != null)
         {
-            selectedUnitPanel.UpdateUI(selectedCell.Unit);
             selectedUnit = selectedCell.Unit;
+            selectedUnitPanel.UpdateUI(selectedUnit);
+
+            if (selectedCell.Unit != null)
+                print("Selected: " + selectedUnit.Name);
+
             return;
         }
     }
 
-    private void CheckMoveUnit()
+    protected void CheckMoveUnit()
     {
         if (selectedUnit == null)
             return;
