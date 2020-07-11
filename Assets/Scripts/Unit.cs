@@ -16,7 +16,7 @@ public class Unit : IUnit
 
     [SerializeField] protected Color color;
     
-    [SerializeField] protected IGrid world;
+    [SerializeField] protected GridManager world;
 
     [SerializeField] protected int unitRange;
 
@@ -60,12 +60,16 @@ public class Unit : IUnit
 
     public IEnumerable<Vector3Int> CalcuateValidNewLocation(IPosAbilityDefault move)
     {
-        throw new System.NotImplementedException();
+        Vector3Int targetLocation = new Vector3Int(Location.x, Location.y - 1, Location.z);
+        // if (CheckWorldForVector(targetlocation)
+        //  return new Vector3Int[] {targetLocation};
+        // else
+         return new Vector3Int[0];
     }
 
     public IEnumerable<Vector3Int> DiscoverHits(Vector3Int location, IPosAbilityDefault move)
     {
-        throw new System.NotImplementedException();
+        return new Vector3Int[0];
     }
 
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 
 [System.Serializable]
-public class HashSetVector3Int : HashSet<int> { }
+public class HashSetVector3Int : SerializableHashset<int> { }
 [System.Serializable]
 public class Ablity : IPosAblity
 {
