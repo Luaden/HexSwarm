@@ -22,6 +22,9 @@ public class Unit : IUnit
 
     [SerializeField] protected IReadOnlyList<IPosAbilityDefault> abilites;
 
+    [SerializeField] protected Team member;
+    public ITeam Member => member;
+
     public string Name => name;
     public string Description => description; 
     public TileBase Tile => tile;
@@ -31,6 +34,9 @@ public class Unit : IUnit
     public IGrid World => world;
     public int UnitRange => unitRange;
     public IReadOnlyList<IPosAbilityDefault> Abilites => abilites;
+
+
+
 
     public Unit() { }
 
@@ -46,7 +52,7 @@ public class Unit : IUnit
         abilites = unit.abilites;
     }
 
-    void IUnit.ApplyAbility(IPosAbilityDefault move, Vector2 temp)
+    public void ApplyAbility(IPosAbilityDefault move, Vector3Int temp)
     {
         Member.DoMove(this, move, temp);
     }
@@ -63,6 +69,11 @@ public class Unit : IUnit
     public IEnumerable<Vector3Int> DiscoverHits(Vector3Int location, IPosAbilityDefault move)
     {
         return new Vector3Int[0];
+    }
+
+    public IPosAblity GeneratePosAblity(IPosAbilityDefault move)
+    {
+        throw new System.NotImplementedException();
     }
 
 }

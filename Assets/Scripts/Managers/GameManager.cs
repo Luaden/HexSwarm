@@ -66,8 +66,4 @@ public class GameManager : MonoBehaviour, IGameManager
 
     }
 
-    bool IGameManager.EndTurn()
-    {
-        throw new NotImplementedException();
-    }
 }

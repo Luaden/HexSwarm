@@ -47,7 +47,8 @@ public interface IUnit
     int UnitRange { get; }
 
     IReadOnlyList<IPosAbilityDefault> Abilites { get; }
+    IEnumerable<Vector3Int> CalcuateValidNewLocation(IPosAbilityDefault move);
+    IEnumerable<Vector3Int> DiscoverHits(Vector3Int location, IPosAbilityDefault move);
 
-    IPosAblity GeneratePosAblity(IPosAbilityDefault move);
-    void ApplyAbility(IPosAbilityDefault move, Vector2 temp);
+    void ApplyAbility(IPosAbilityDefault move, Vector3Int temp);
 }

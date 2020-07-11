@@ -22,4 +22,8 @@ public class Ablity : IPosAblity
     public Sprite MovementGrid => throw new System.NotImplementedException();
 
     public Sprite DamageGrid => throw new System.NotImplementedException();
+
+    IEnumerable<Vector2> IPosAblity.PossiblePlacements => throw new System.NotImplementedException();
+
+    IReadOnlyDictionary<Vector2, HashSet<Vector2>> IPosAblity.AttackZone => throw new System.NotImplementedException();
 }
