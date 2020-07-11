@@ -1,59 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
-public class Team : ITeam
+public abstract class Team : MonoBehaviour, ITeam
 {
-    public string Name { get; private set; }
-    public Sprite Icon { get; private set; }
-    public Color Color { get; private set; }
-    public void UpdateColor(Color newColor) { Color = newColor; }
-    public IGameManager Game => throw new NotImplementedException();
+    [SerializeField] IGameManager gameManager;
+    [SerializeField] protected string teamName;
+    [SerializeField] protected string description;
+    [SerializeField] protected Sprite icon;
+    [SerializeField] protected TileBase tile;
 
-    public IEnumerable<IUnit> Units => throw new NotImplementedException();
+    protected List<IUnit> units;
 
-    public bool hasMove => throw new NotImplementedException();
+    public string Name { get => teamName; }
+    public string Description { get => description; }
+    public Sprite Icon { get => icon; }
+    public TileBase Tile { get => tile; }
+    public IGameManager GameManager { get => gameManager; }
+    public IEnumerable<IUnit> Units { get => units; }
+    public IEnumerable<Vector3Int> HighlightMove { get; set; }
+    public IEnumerable<Vector3Int> HighlightAttack { get; set; }
+    public IEnumerable<Vector3Int> HighlightOverlap { get; set; }
 
-    public IEnumerable<Vector3Int> HighlightMove => throw new NotImplementedException();
+    //Get and Set
+    public Color Color { get; set; }
+    public Teams Type { get; set; }
+    public bool HasMove { get; set; }
 
-    public IEnumerable<Vector3Int> HighlightAttack => throw new NotImplementedException();
-
-    public IEnumerable<Vector3Int> HighlightOverlap => throw new NotImplementedException();
-
-    public string Discription => throw new NotImplementedException();
-
-    public Teams Type => throw new NotImplementedException();
-
-    public void DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
+    public virtual void StartTurn()
     {
-        throw new NotImplementedException();
+
     }
 
-    public void EndTurn()
+    public virtual void Undo()
     {
-        throw new NotImplementedException();
+        return;
     }
 
-    public bool hasUnitsAfterLosses(IEnumerable<IUnit> losses)
+    public virtual void EndTurn()
     {
-        throw new NotImplementedException();
+        
+    }
+    
+    public virtual void DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
+    {
+        //This needs to not have no parameters.
     }
 
-    public void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
+    public virtual void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
     {
-        throw new NotImplementedException();
+        // This needs to take in a collection of Vector3Ints
     }
 
-    public void StartTurn()
+    public bool HasUnitsAfterLosses(IEnumerable<IUnit> deadUnits)
     {
-        throw new NotImplementedException();
-    }
-
-    public void Undo()
-    {
-        throw new NotImplementedException();
+        return false;
     }
 }
