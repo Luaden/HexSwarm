@@ -8,10 +8,12 @@ public interface ITeam
     Sprite Icon { get; }
     Color Color { get; }
     Teams Type { get; }
+    int RemainingUnits { get; }
 
     IGameManager Game { get; }
     IEnumerable<IUnit> Units { get;}
-    bool hasUnitsAfterLosses(IEnumerable<IUnit> losses);
+    
+    bool HasUnitsAfterLosses(IEnumerable<IUnit> losses);
     bool hasMove { get; }
     void StartTurn();
     void Undo();
@@ -21,7 +23,7 @@ public interface ITeam
     IEnumerable<Vector3Int> HighlightAttack { get; }
     IEnumerable<Vector3Int> HighlightOverlap { get; }
 
-    void DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
+    bool DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
     void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
 }
 
