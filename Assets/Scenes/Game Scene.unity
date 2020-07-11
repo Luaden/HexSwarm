@@ -332,6 +332,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c21329f01d3004499a09357e4c23b8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1839735485 &1973603387 stripped
+Tilemap:
+  m_CorrespondingSourceObject: {fileID: 7750796442149323760, guid: 6d27f1fbfb0ec3049bca3a633029737f,
+    type: 3}
+  m_PrefabInstance: {fileID: 7750796440972483460}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2012025893
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,6 +421,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1839735485 &2032544971 stripped
+Tilemap:
+  m_CorrespondingSourceObject: {fileID: 2173104493146169030, guid: 6d27f1fbfb0ec3049bca3a633029737f,
+    type: 3}
+  m_PrefabInstance: {fileID: 7750796440972483460}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &873528704725618821
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -784,6 +796,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2173104493146169030, guid: 6d27f1fbfb0ec3049bca3a633029737f,
+        type: 3}
+      propertyPath: m_TileAnchor.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2173104493146169030, guid: 6d27f1fbfb0ec3049bca3a633029737f,
+        type: 3}
+      propertyPath: m_TileAnchor.y
+      value: -0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 7750796441879212809, guid: 6d27f1fbfb0ec3049bca3a633029737f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -844,9 +866,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grid
       objectReference: {fileID: 0}
+    - target: {fileID: 7750796441879212815, guid: 6d27f1fbfb0ec3049bca3a633029737f,
+        type: 3}
+      propertyPath: groundTiles
+      value: 
+      objectReference: {fileID: 1973603387}
+    - target: {fileID: 7750796441879212815, guid: 6d27f1fbfb0ec3049bca3a633029737f,
+        type: 3}
+      propertyPath: highlightTiles
+      value: 
+      objectReference: {fileID: 2032544971}
+    - target: {fileID: 7750796441879212815, guid: 6d27f1fbfb0ec3049bca3a633029737f,
+        type: 3}
+      propertyPath: highlightTile
+      value: 
+      objectReference: {fileID: 11400000, guid: 24ff9d31d85a31149b5ab108dafe4d0e,
+        type: 2}
     - target: {fileID: 8663551883534137058, guid: 6d27f1fbfb0ec3049bca3a633029737f,
         type: 3}
-      propertyPath: m_SortingOrder
+      propertyPath: m_Mode
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

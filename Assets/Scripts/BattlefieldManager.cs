@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Battlefield : MonoBehaviour, IBattlefield
+public class BattlefieldManager : MonoBehaviour, IBattlefield
 {
     protected HashSet<Cell> world;
     
-    public Battlefield(HashSet<Cell> world)
+    public BattlefieldManager(HashSet<Cell> world)
     {
         this.world = world;
     }
