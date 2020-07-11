@@ -40,17 +40,7 @@ public class GameManager : MonoBehaviour, IGameManager
         throw new NotImplementedException();
     }
 
-    public bool PerformMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
-    {
-        throw new NotImplementedException();
-    }
-
     public void StartLevel()
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool Undo()
     {
         throw new NotImplementedException();
     }
@@ -64,10 +54,5 @@ public class GameManager : MonoBehaviour, IGameManager
     protected void Update()
     {
 
-    }
-
-    bool IGameManager.EndTurn()
-    {
-        throw new NotImplementedException();
     }
 }

@@ -4,83 +4,56 @@ using UnityEngine.Tilemaps;
 
 public abstract class Team : MonoBehaviour, ITeam
 {
-    public string Discription { get; protected set; }
-    public string Name { get; protected set; }
-    public Sprite Icon { get; protected set; }
-    public Color Color { get; protected set; }
-    public Teams Type { get; protected set; }
-    public IGameManager GameManager { get; protected set; }
-    public bool hasMove { get; protected set; }
-    public int RemainingUnits => units.Count;
+    [SerializeField] IGameManager gameManager;
+    [SerializeField] protected string teamName;
+    [SerializeField] protected string description;
+    [SerializeField] protected Sprite icon;
+    [SerializeField] protected TileBase tile;
 
+    protected List<IUnit> units;
 
-    protected HashSet<IUnit> units = new HashSet<IUnit>();
-    public IEnumerable<IUnit> Units => units;
+    public string Name { get => teamName; }
+    public string Description { get => description; }
+    public Sprite Icon { get => icon; }
+    public TileBase Tile { get => tile; }
+    public IGameManager GameManager { get => gameManager; }
+    public IEnumerable<IUnit> Units { get => units; }
+    public IEnumerable<Vector3Int> HighlightMove { get; set; }
+    public IEnumerable<Vector3Int> HighlightAttack { get; set; }
+    public IEnumerable<Vector3Int> HighlightOverlap { get; set; }
 
-    protected HashSet<Vector3Int> highlightMove;
-    public IEnumerable<Vector3Int> HighlightMove => highlightMove;
-    protected HashSet<Vector3Int> highlightAttack;
-    public IEnumerable<Vector3Int> HighlightAttack => highlightAttack;
-    protected HashSet<Vector3Int> highlightOverlap;
-    public IEnumerable<Vector3Int> HighlightOverlap => highlightOverlap;
+    //Get and Set
+    public Color Color { get; set; }
+    public Teams Type { get; set; }
+    public bool HasMove { get; set; }
 
-    public string Description => throw new System.NotImplementedException();
-
-    public TileBase Tile => throw new System.NotImplementedException();
-
-    public bool HasMove => throw new System.NotImplementedException();
-
-    public void UpdateColor(Color newColor) { Color = newColor; }
-
-    public bool DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
+    public virtual void StartTurn()
     {
-        if (!hasMove)
-            return false;
-        return GameManager.PerformMove(unit, ablity, target);
+
     }
 
-    public bool EndTurn()
+    public virtual void Undo()
     {
-        if (!hasMove)
-            return false;
-        hasMove = false;
-        return GameManager.EndTurn();
+        return;
     }
 
-    public bool HasUnitsAfterLosses(IEnumerable<IUnit> losses)
+    public virtual void EndTurn()
     {
-        foreach (IUnit loss in losses)
-            if (this.units.Contains(loss))
-                this.units.Remove(loss);
-        return this.units.Count > 0;
+        
     }
     
+    public virtual void DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
+    {
+        //This needs to not have no parameters.
+    }
 
     public virtual void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
     {
-        hasMove = true;
+        // This needs to take in a collection of Vector3Ints
     }
 
-    public bool Undo()
+    public bool HasUnitsAfterLosses(IEnumerable<IUnit> deadUnits)
     {
-        if (!hasMove)
-            return false;
-        return GameManager.Undo();
-    }
-
-    bool ITeam.EndTurn()
-    {
-        return GameManager.EndTurn();
-    }
-
-    public void StartTurn()
-    {
-        throw new System.NotImplementedException();
-    }
-
-
-    void ITeam.DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
-    {
-        throw new System.NotImplementedException();
+        return false;
     }
 }

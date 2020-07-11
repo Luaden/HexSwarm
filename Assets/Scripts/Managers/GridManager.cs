@@ -32,23 +32,8 @@ public class GridManager : MonoBehaviour, IGrid
     protected HashSet<Cell> highlightedCells;
     protected BattlefieldManager battlefieldManager;
 
-    protected void GenerateCell(Vector3Int pos, TileBase tile)
-    {
-        Cell newCell = new Cell(pos, default, tile);
-        world.Add(pos, newCell);
-        groundTiles.SetTile(pos, tile);
-    }
 
-
-    protected void GenerateRow(int Y, int xMin, int xMax, TileBase tile)
-    {
-        int currentX = xMin;
-        while (currentX <= xMax)
-            GenerateCell(new Vector3Int(currentX++, Y, 0), tile);
-    }
-
-
-    public void GenerateSquareGrid(int gridHeight, TileBase tile)
+    public void GenerateGrid(int gridHeight, TileBase tile)
     {
         for (int i = gridHeight; i >= -gridHeight; i--)
         {
@@ -61,40 +46,6 @@ public class GridManager : MonoBehaviour, IGrid
                     world.Add(cellPositionModified, new Cell(cellPositionModified, null, tile));
             }
         }
-
-    }
-    public void Clear()
-    {
-        groundTiles.ClearAllTiles();
-        world.Clear();
-    }
-
-    //protected void GenerateSquare(int radius, TileBase tile)
-    //{
-    //    GenerateRow(0, -radius,radius, tile);
-    //    for (int i = 1; i < radius; i++)
-    //    {
-    //        GenerateRow(i, -radius, radius, tile);
-    //        GenerateRow(-i, -radius, radius, tile);
-    //    }
-    //}
-
-    protected void GenerateHexagon(int radius, TileBase tile)
-    {
-        GenerateRow(0, -radius, radius, tile);
-        for (int i = 1; i <= radius; i++)
-        {
-            int half = i / 2;
-            int oddCorrection = i % 2;
-            GenerateRow(i, -radius + half, radius - half - oddCorrection, tile);
-            GenerateRow(-i, -radius + half, radius - half - oddCorrection, tile);
-        }
-    }
-
-    public void GenerateGrid(int gridHeight, TileBase tile)
-    {
-        Clear();
-        GenerateHexagon(gridHeight, tile);
     }
 
     public Vector3Int GetCellByClick(Vector2 mouseScreenPos)
@@ -159,7 +110,7 @@ public class GridManager : MonoBehaviour, IGrid
     [ContextMenu("Delete Grid")]
     protected void DebugDeleteGrid()
     {
-        Clear();
+        GenerateGrid(gridHeight, null);
     }
 
     [ContextMenu("Generate Unit")]

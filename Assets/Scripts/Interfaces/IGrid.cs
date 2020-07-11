@@ -10,9 +10,9 @@ public interface IGrid
     Vector3Int GetCellByClick(Vector2 mouseScreenPos);
 
     void GenerateGrid(int gridHeight, TileBase tile);
-    void Clear();
 
     void HighlightGrid(IEnumerable<Cell> tilesToHighlight);
 
     void ClearHighlightedTiles();
+
 }
