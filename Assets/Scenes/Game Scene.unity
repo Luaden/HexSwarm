@@ -547,6 +547,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Game Options Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 873528705796347614, guid: 34e89fa67f100c345b6cdb1eadea55fc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 873528706027552069, guid: 34e89fa67f100c345b6cdb1eadea55fc,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -689,7 +694,7 @@ PrefabInstance:
     - target: {fileID: 4895928416855737684, guid: 0c49b2e23a835a64e9d6c7b35d8d1f9e,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4895928418067011315, guid: 0c49b2e23a835a64e9d6c7b35d8d1f9e,
         type: 3}
@@ -838,6 +843,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Grid
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663551883534137058, guid: 6d27f1fbfb0ec3049bca3a633029737f,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d27f1fbfb0ec3049bca3a633029737f, type: 3}

@@ -5,12 +5,15 @@ using UnityEngine.Tilemaps;
 public class GridControls : MonoBehaviour, IGrid
 {
     [SerializeField] protected Grid mapGrid;
-    [SerializeField] protected Tilemap mapTiles;
+    [SerializeField] protected Tilemap groundTiles;
+    [SerializeField] protected Tilemap highlightTiles;
     [SerializeField] protected TileBase tile;
+    [SerializeField] protected TileBase highlightTile;
     [SerializeField] protected int gridHeight = 3;
 
     protected Camera mainCamera;
     protected HashSet<Cell> world;
+    protected HashSet<Cell> highlightedCells;
 
 
     public void GenerateGrid(int gridHeight, TileBase tile)
@@ -20,14 +23,14 @@ public class GridControls : MonoBehaviour, IGrid
         for (int i = gridHeight; i >= -gridHeight; i--)
         {
             Vector3Int cellPositionModified = new Vector3Int(cellPosition.x, cellPosition.y = i, cellPosition.z);
-            mapTiles.SetTile(cellPositionModified, tile);
+            groundTiles.SetTile(cellPositionModified, tile);
 
             world.Add(new Cell(cellPositionModified, null, tile));
 
             for (int j = gridHeight; j >= -gridHeight; j--)
             {
                 cellPositionModified = new Vector3Int(cellPositionModified.x = j, cellPositionModified.y, cellPositionModified.z);
-                mapTiles.SetTile(cellPositionModified, tile);
+                groundTiles.SetTile(cellPositionModified, tile);
 
                 world.Add(new Cell(cellPositionModified, null, tile));
             }
@@ -44,20 +47,40 @@ public class GridControls : MonoBehaviour, IGrid
         return mouseCellPos;
     }
 
-    public IEnumerable<ICell> GetNeighborCells(Vector3Int origin, int range = 1)
+    public IEnumerable<ICell> GetNeighborCells(Cell origin, int range = 1)
     {
         return world;
+    }
+
+    public void HighlightGrid(IEnumerable<Cell> tilesToHighlight)
+    {
+        foreach(Cell cell in tilesToHighlight)
+        {
+            highlightTiles.SetTile(cell.Position, highlightTile);
+            highlightedCells.Add(cell);
+        }
+    }
+
+    public void ClearHighlightedTiles()
+    {
+        foreach (Cell cell in highlightedCells)
+        {
+            highlightTiles.SetTile(cell.Position, null);
+        }
+
+        highlightedCells.Clear();
     }
 
     protected void Awake()
     {
         if (mapGrid == null)
             mapGrid = GetComponent<Grid>();
-        if (mapTiles == null)
-            mapTiles = GetComponentInChildren<Tilemap>();
+        if (groundTiles == null)
+            groundTiles = GetComponentInChildren<Tilemap>();
 
         mainCamera = Camera.main;
         world = new HashSet<Cell>();
+        highlightedCells = new HashSet<Cell>();
     }
 
     [ContextMenu("Generate Grid")]
@@ -71,5 +94,4 @@ public class GridControls : MonoBehaviour, IGrid
     {
         GenerateGrid(gridHeight, null);
     }
-
 }
