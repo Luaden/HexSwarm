@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class Cell : MonoBehaviour, ICell
+public class Cell : ICell
 {
     protected Vector3Int position;
     protected IUnit unit;
