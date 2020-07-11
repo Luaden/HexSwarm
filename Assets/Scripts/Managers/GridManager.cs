@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -32,19 +33,16 @@ public class GridManager : MonoBehaviour, IGrid
     protected BattlefieldManager battlefieldManager;
 
 
-    public void GenerateGrid(int gridHeight, TileBase tile)
+    public void GenerateSquareGrid(int gridHeight, TileBase tile)
     {
         Vector3Int cellPosition = new Vector3Int(0, 0, 0);
-        Cell checkCell;
 
         for (int i = gridHeight; i >= -gridHeight; i--)
         {
             Vector3Int cellPositionModified = new Vector3Int(cellPosition.x, cellPosition.y = i, cellPosition.z);
             groundTiles.SetTile(cellPositionModified, tile);
 
-            world.TryGetValue(cellPositionModified, out checkCell);
-
-            if (checkCell == null)
+            if (!world.ContainsKey(cellPositionModified))
                 world.Add(cellPositionModified, new Cell(cellPositionModified, null, tile));
 
             for (int j = gridHeight; j >= -gridHeight; j--)
@@ -52,9 +50,7 @@ public class GridManager : MonoBehaviour, IGrid
                 cellPositionModified = new Vector3Int(cellPositionModified.x = j, cellPositionModified.y, cellPositionModified.z);
                 groundTiles.SetTile(cellPositionModified, tile);
 
-                world.TryGetValue(cellPositionModified, out checkCell);
-
-                if (checkCell == null)
+                if (!world.ContainsKey(cellPositionModified))
                     world.Add(cellPositionModified, new Cell(cellPositionModified, null, tile));
             }
         }
