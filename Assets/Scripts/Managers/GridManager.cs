@@ -31,8 +31,7 @@ public class GridManager : MonoBehaviour, IGrid
     protected Dictionary<Vector3Int, Cell> world;
     protected HashSet<Cell> highlightedCells;
     protected BattlefieldManager battlefieldManager;
-
-
+    
     public void GenerateGrid(int gridHeight, TileBase tile)
     {
         for (int i = gridHeight; i >= -gridHeight; i--)
@@ -55,6 +54,11 @@ public class GridManager : MonoBehaviour, IGrid
         Vector3Int mouseCellPos = mapGrid.WorldToCell(mouseWorldPos);
 
         return mouseCellPos;
+    }
+
+    public bool CheckWorldForVector(Vector3Int location)
+    {
+        return world.ContainsKey(location);
     }
 
     public IEnumerable<ICell> GetNeighborCells(Cell origin, int range = 1)

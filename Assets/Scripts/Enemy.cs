@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class Enemy : Team
 {
@@ -12,18 +10,14 @@ public class Enemy : Team
 
     public override void StartTurn()
     {
-        //For each unit in list, move randomly.
-    }
+        foreach(IUnit unit in units)
+        {
+            GetRandomMove(unit);
+        }
 
-    public void EndTurn()
-    {
-
-    }
-
-    public void DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
-    {
-
-    }
+        HasMove = false;
+        EndTurn();
+    }    
 
     public override void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
     {
@@ -35,9 +29,20 @@ public class Enemy : Team
         units = new List<IUnit>();
     }
 
-    protected void GetRandomMove()
+    protected void GetRandomMove(IUnit unit)
     {
+        //Get game manager difficulty here;
+        //subtract GameManager.Difficulty from Max;
+        int moveToUse = Random.Range(0, 10);
 
+        if(moveToUse > 0)
+        {
+            //Random unit ability.
+        }
+        else
+        {
+            //Best unit ability.
+        }
     }
 
 }
