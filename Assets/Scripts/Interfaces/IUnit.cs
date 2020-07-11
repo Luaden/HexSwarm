@@ -31,8 +31,14 @@ public interface IPosAbilityDefault
 
 public interface IPosAblity : IPosAbilityDefault
 {
-    IEnumerable<Vector2> PossiblePlacements { get; }
-    IReadOnlyDictionary<Vector2, HashSet<Vector2>> AttackZone { get; }
+    IEnumerable<Vector3Int> PossiblePlacements { get; }
+    IReadOnlyDictionary<Vector3Int, HashSet<Vector3Int>> AttackZone { get; }
+}
+
+public interface IAIUnit : IUnit
+{
+    void MakeBestAttack();
+    void MakeRandomAttack();
 }
 
 public interface IUnit
@@ -48,6 +54,8 @@ public interface IUnit
 
     IReadOnlyList<IPosAbilityDefault> Abilites { get; }
 
-    IPosAblity GeneratePosAblity(IPosAbilityDefault move);
-    void ApplyAbility(IPosAbilityDefault move, Vector2 temp);
+    IEnumerable<Vector3Int> CalcuateValidNewLocation(IPosAbilityDefault move);
+    IEnumerable<Vector3Int> DiscoverHits(Vector3Int location, IPosAbilityDefault move);
+
+    void ApplyAbility(IPosAbilityDefault move, Vector3Int temp);
 }

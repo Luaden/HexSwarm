@@ -20,7 +20,7 @@ public class Unit : IUnit
 
     [SerializeField] protected int unitRange;
 
-    [SerializeField] protected IReadOnlyList<IPosAbilityDefault> abilites;
+
 
     [SerializeField] Team member;
     public ITeam Member => member;
@@ -33,6 +33,9 @@ public class Unit : IUnit
     public Vector3Int Location { get; set; }
     public IGrid World => world;
     public int UnitRange => unitRange;
+
+
+    [SerializeField] protected List<IPosAbilityDefault> abilites;
     public IReadOnlyList<IPosAbilityDefault> Abilites => abilites;
 
     public Unit() { }
@@ -50,13 +53,19 @@ public class Unit : IUnit
         member = unit.member;
     }
 
-    void IUnit.ApplyAbility(IPosAbilityDefault move, Vector2 temp)
+    public void ApplyAbility(IPosAbilityDefault move, Vector3Int temp)
+    {
+        Member.DoMove(this, move, temp);
+    }
+
+    public IEnumerable<Vector3Int> CalcuateValidNewLocation(IPosAbilityDefault move)
     {
         throw new System.NotImplementedException();
     }
 
-    IPosAblity IUnit.GeneratePosAblity(IPosAbilityDefault move)
+    public IEnumerable<Vector3Int> DiscoverHits(Vector3Int location, IPosAbilityDefault move)
     {
         throw new System.NotImplementedException();
-    }    
+    }
+
 }
