@@ -15,7 +15,7 @@ public interface ITeam
     IEnumerable<Vector3Int> HighlightAttack { get; }
     IEnumerable<Vector3Int> HighlightOverlap { get; }
 
-    void DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);)
+    void DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
     void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
 }
 
