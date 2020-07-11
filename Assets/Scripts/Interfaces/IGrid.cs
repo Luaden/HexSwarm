@@ -7,7 +7,7 @@ public interface IGrid
 {
     IEnumerable<ICell> GetNeighborCells(Cell origin, int range = 1);
 
-    Vector3Int GetCellByClick();
+    Vector3Int GetCellByClick(Vector2 mouseScreenPos);
 
     void GenerateGrid(int gridHeight, TileBase tile);
 

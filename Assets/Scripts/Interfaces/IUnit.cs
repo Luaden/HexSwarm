@@ -40,7 +40,7 @@ public interface IUnit
     string Description { get; }
     Sprite Icon { get; }
     Color Color { get; }
-    Vector3Int location { get; }
+    Vector3Int Location { get; }
     IGrid World { get; }
     int UnitRange { get; }
 

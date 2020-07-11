@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattlefieldManager : MonoBehaviour, IBattlefield
+[System.Serializable]
+public class BattlefieldManager : IBattlefield
 {
-    protected HashSet<Cell> world;
     
-    public BattlefieldManager(HashSet<Cell> world)
+    protected Dictionary<Vector3Int, Cell> world;
+
+    public Dictionary<Vector3Int, Cell> World { get => world; }
+    
+    public BattlefieldManager(Dictionary<Vector3Int, Cell> world)
     {
         this.world = world;
     }
@@ -19,6 +23,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefield
     public void MoveUnit(Vector3Int from, Vector3Int to)
     {
         throw new System.NotImplementedException();
+
     }
 
     public void PlaceNewUnit(IUnit unit, Vector3Int position)
