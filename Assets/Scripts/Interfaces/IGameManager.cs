@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public interface IGameManager
 {
-    int turnCounter { get; }
-    int levelCounter { get; }
+    int TurnCounter { get; }
+    int LevelCounter { get; }
     
     Queue<ITeam> ActiveTeams { get; }
 

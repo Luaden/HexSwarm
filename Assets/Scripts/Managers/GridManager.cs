@@ -32,19 +32,53 @@ public class GridManager : MonoBehaviour, IGrid
     protected HashSet<Cell> highlightedCells;
     protected BattlefieldManager battlefieldManager;
     
+
+    protected void GenerateRow(int Y, int xMin, int xMax, TileBase tile)
+    {
+        int currentX = xMin;
+        while (currentX <= xMax)
+            GenerateCell(new Vector3Int(currentX++, Y, 0), tile);
+    }
+
+    protected void GenerateCell(Vector3Int pos, TileBase tile)
+    {
+        Cell newCell = new Cell(pos, default, tile);
+        world.Add(pos, newCell);
+        groundTiles.SetTile(pos, tile);
+    }
+
+    public void Clear()
+    {
+        groundTiles.ClearAllTiles();
+        world.Clear();
+    }
+
+    //protected void GenerateSquare(int radius, TileBase tile)
+    //{
+    //    GenerateRow(0, -radius,radius, tile);
+    //    for (int i = 1; i < radius; i++)
+    //    {
+    //        GenerateRow(i, -radius, radius, tile);
+    //        GenerateRow(-i, -radius, radius, tile);
+    //    }
+    //}
+
+    protected void GenerateHexagon(int radius, TileBase tile)
+    {
+        GenerateRow(0, -radius, radius, tile);
+        for (int i = 1; i <= radius; i++)
+        {
+            int half = i / 2;
+            int oddCorrection = i % 2;
+            GenerateRow(i, -radius + half, radius - half - oddCorrection, tile);
+            GenerateRow(-i, -radius + half, radius - half - oddCorrection, tile);
+        }
+    }
+
     public void GenerateGrid(int gridHeight, TileBase tile)
     {
-        for (int i = gridHeight; i >= -gridHeight; i--)
-        {
-            for (int j = gridHeight; j >= -gridHeight; j--)
-            {
-                Vector3Int cellPositionModified = new Vector3Int(j, i, 0);
-                groundTiles.SetTile(cellPositionModified, tile);  
-
-                if (!world.ContainsKey(cellPositionModified))
-                    world.Add(cellPositionModified, new Cell(cellPositionModified, null, tile));
-            }
-        }
+        Clear();
+        GenerateHexagon(gridHeight, tile);
     }
 
     public Vector3Int GetCellByClick(Vector2 mouseScreenPos)
@@ -63,7 +97,7 @@ public class GridManager : MonoBehaviour, IGrid
 
     public IEnumerable<ICell> GetNeighborCells(Cell origin, int range = 1)
     {
-        //Need logic here that gets neighbor cells in a hexagonal pattern;
+
         return new List<Cell>();
     }
 

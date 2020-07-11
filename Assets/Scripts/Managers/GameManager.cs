@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditorInternal;
 using UnityEngine;
 
@@ -8,17 +9,24 @@ public class GameManager : MonoBehaviour, IGameManager
 {
     //Editor variables
     [SerializeField] protected GridManager gridManager;
+    [SerializeField] protected TurnOrderDisplay turnOrderDisplay;
+    [SerializeField] protected int totalTeamCount;
+    [SerializeField] protected Enemy tempEnemy;
 
     //Cached references
     protected BattlefieldManager battlefieldManager;
 
-    public int turnCounter => throw new NotImplementedException();
+    [SerializeField] protected int turnCounter;
+    public int TurnCounter => turnCounter;
 
-    public int levelCounter => throw new NotImplementedException();
+    [SerializeField] protected int levelCounter;
+    public int LevelCounter => levelCounter;
 
-    public Queue<ITeam> ActiveTeams => throw new NotImplementedException();
+    [SerializeField] protected Queue<ITeam> activeTeams = new Queue<ITeam>();
+    public Queue<ITeam> ActiveTeams => activeTeams;
 
-    public IUnit DisplayedUnit => throw new NotImplementedException();
+    [SerializeField] protected IUnit displayedUnit;
+    public IUnit DisplayedUnit => displayedUnit;
 
     public void AnimateMove()
     {
@@ -27,7 +35,9 @@ public class GameManager : MonoBehaviour, IGameManager
 
     public void EndTurn()
     {
-        throw new NotImplementedException();
+        activeTeams.Peek().StartTurn();
+        activeTeams.Enqueue(activeTeams.Dequeue());
+        turnOrderDisplay.UpdateUI(activeTeams);
     }
 
     public void InspectUnitAt(Vector3Int location)
@@ -59,11 +69,26 @@ public class GameManager : MonoBehaviour, IGameManager
     {
         if (gridManager == null)
             gridManager = FindObjectOfType<GridManager>();
+        if (turnOrderDisplay == null)
+            turnOrderDisplay = FindObjectOfType<TurnOrderDisplay>();
     }
 
-    protected void Update()
+    protected void Start()
+    {
+        BuildTeams(totalTeamCount);
+        EndTurn();
+    }
+
+    protected void BuildTeams(int totalTeams)
     {
 
-    }
+        for (int i = 0; i < totalTeams; i++)
+        {
+            ITeam newEnemy = new Enemy(tempEnemy);
+            activeTeams.Enqueue(newEnemy);
+            print(activeTeams.Count); 
+        }
 
+        turnOrderDisplay.UpdateUI(activeTeams);
+    }
 }

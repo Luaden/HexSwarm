@@ -1,25 +1,40 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Tilemaps;
 
 /// <summary>
 /// Enemy after having StartTurnCalled will for each unit
 /// randomly pick to call the AIUnit's best or random move
 /// </summary>
+/// 
 [System.Serializable]
 public class Enemy : Team
 {
     [SerializeField] GridManager gridManager;
 
+    public Enemy(Enemy enemy)
+    {
+        this.gameManager = enemy.gameManager;
+        this.gridManager = enemy.gridManager;
+        teamName = enemy.Name;
+        description = enemy.Description;
+        icon = enemy.Icon;
+        tile = enemy.tile;
+    }
+
     public override void StartTurn()
     {
-        foreach(IUnit unit in units)
+        IUnit tempUnit = gridManager.DebugGenerateUnit();
+        units.Add(tempUnit);
+
+        foreach (IUnit unit in units)
         {
             GetRandomMove(unit);
         }
 
-        //HasMove = false;
-        //EndTurn();
-    }    
+        HasMove = false;
+        
+        EndTurn();
+    } 
 
     public override void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
     {
@@ -28,13 +43,6 @@ public class Enemy : Team
 
     protected void Start()
     {
-        gridManager = FindObjectOfType<GridManager>();
-        
-        IUnit tempUnit = gridManager.DebugGenerateUnit();
-
-        units.Add(tempUnit);
-
-        StartTurn();
     }
     
     protected void GetRandomMove(IUnit unit)
@@ -46,12 +54,12 @@ public class Enemy : Team
         if(moveToUse > 0)
         {
             unit.CalcuateValidNewLocation(default);
-            print("Used dumb ability");
+            Debug.Log("Used dumb ability");
         }
         else
         {
             unit.CalcuateValidNewLocation(default);
-            print("Used smart ability");
+            Debug.Log("Used smart ability");
         }
     }
 }

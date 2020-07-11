@@ -2,9 +2,9 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public abstract class Team : MonoBehaviour, ITeam
+public abstract class Team : ITeam
 {
-    [SerializeField] GameManager gameManager;
+    [SerializeField] protected GameManager gameManager;
     [SerializeField] protected string teamName;
     [SerializeField] protected string description;
     [SerializeField] protected Sprite icon;
@@ -39,7 +39,8 @@ public abstract class Team : MonoBehaviour, ITeam
 
     public virtual void EndTurn()
     {
-        
+        if(HasMove)
+            gameManager.EndTurn();
     }
     
     public virtual void DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
