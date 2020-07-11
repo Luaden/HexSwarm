@@ -1,13 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+[System.Serializable]
 public class GridManager : MonoBehaviour, IGrid
 {
+    //Editor/debug variables
+    [SerializeField] protected Unit templateUnit;
+    [SerializeField] protected Vector3Int unitSpawnPos;
+
+    //Editor variables
     [SerializeField] protected SelectedUnitPanel selectedUnitPanel;
     [SerializeField] protected Grid mapGrid;
     [SerializeField] protected Tilemap groundTiles;
     [SerializeField] protected Tilemap highlightTiles;
+    [SerializeField] protected Tilemap unitTiles;
     [SerializeField] protected TileBase tile;
     [SerializeField] protected TileBase highlightTile;
     [SerializeField] protected int gridHeight = 3;
@@ -16,12 +24,20 @@ public class GridManager : MonoBehaviour, IGrid
     protected Vector3Int currentLocation;
     protected Cell selectedCell;
     protected IUnit selectedUnit;
+    protected bool canMove;
 
     //Cached references
     protected Camera mainCamera;
     protected Dictionary<Vector3Int, Cell> world;
     protected HashSet<Cell> highlightedCells;
     protected BattlefieldManager battlefieldManager;
+
+    protected void GenerateCell(Vector3Int pos, TileBase tile)
+    {
+        Cell newCell = new Cell(pos, default, tile);
+        world.Add(pos, newCell);
+        groundTiles.SetTile(pos, tile);
+    }
 
 
     protected void GenerateRow(int Y, int xMin, int xMax, TileBase tile)
@@ -31,13 +47,30 @@ public class GridManager : MonoBehaviour, IGrid
             GenerateCell(new Vector3Int(currentX++, Y, 0), tile);
     }
 
-    protected void GenerateCell(Vector3Int pos, TileBase tile)
-    {
-        Cell newCell = new Cell(pos, default, tile);
-        world.Add(pos, newCell);
-        groundTiles.SetTile(pos, tile);
-    }
 
+    public void GenerateSquareGrid(int gridHeight, TileBase tile)
+    {
+        Vector3Int cellPosition = new Vector3Int(0, 0, 0);
+
+        for (int i = gridHeight; i >= -gridHeight; i--)
+        {
+            Vector3Int cellPositionModified = new Vector3Int(cellPosition.x, cellPosition.y = i, cellPosition.z);
+            groundTiles.SetTile(cellPositionModified, tile);
+
+            if (!world.ContainsKey(cellPositionModified))
+                world.Add(cellPositionModified, new Cell(cellPositionModified, null, tile));
+
+            for (int j = gridHeight; j >= -gridHeight; j--)
+            {
+                cellPositionModified = new Vector3Int(cellPositionModified.x = j, cellPositionModified.y, cellPositionModified.z);
+                groundTiles.SetTile(cellPositionModified, tile);
+
+                if (!world.ContainsKey(cellPositionModified))
+                    world.Add(cellPositionModified, new Cell(cellPositionModified, null, tile));
+            }
+        }
+
+    }
     public void Clear()
     {
         groundTiles.ClearAllTiles();
@@ -106,6 +139,8 @@ public class GridManager : MonoBehaviour, IGrid
         highlightedCells.Clear();
     }
 
+    public void PaintUnitTile(Vector3Int cellToPaint, TileBase tileToPaint) => unitTiles.SetTile(cellToPaint, tileToPaint);
+
     protected void Awake()
     {
         if (mapGrid == null)
@@ -119,10 +154,11 @@ public class GridManager : MonoBehaviour, IGrid
         world = new Dictionary<Vector3Int, Cell>();
         highlightedCells = new HashSet<Cell>();
 
-        battlefieldManager = new BattlefieldManager(world);
+        battlefieldManager = new BattlefieldManager(world, this);
+
+        DebugGenerateGrid();
     }
 
-    [ContextMenu("Generate Grid")]
     protected void DebugGenerateGrid()
     {
         GenerateGrid(gridHeight, tile);
@@ -134,53 +170,55 @@ public class GridManager : MonoBehaviour, IGrid
         Clear();
     }
 
+    [ContextMenu("Generate Unit")]
+    protected void DebugGenerateUnit()
+    {
+        battlefieldManager.PlaceNewUnit(new Unit(templateUnit), unitSpawnPos);
+    }
+
     //Make OnMouseDown if cells have colliders.
-    private void Update()
+    protected void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            GetMouseCell();
+            GetMouseCell(); // assigns SelectedCell
+            GetUnitFromCell(selectedCell); //Looks at SelectedCell and assigns SelectedUnit to the Unit in the cell.
         }
 
         if (Input.GetMouseButtonDown(1))
         {
-            CheckMoveUnit();
+            MoveUnit();
         }
     }
 
-    private void GetMouseCell()
+    protected void GetMouseCell()
     {
         currentLocation = GetCellByClick(Input.mousePosition);
         battlefieldManager.World.TryGetValue(currentLocation, out selectedCell);
-
-        if(selectedCell != null)
-            print(selectedCell.Position);
     }
 
-    private void CheckCellForUnit(Cell selectedCell)
+    protected void GetUnitFromCell(Cell selectedCell)
     {
         if (selectedCell == null)
             return;
 
-        if (selectedCell.Unit != null)
-        {
-            selectedUnitPanel.UpdateUI(selectedCell.Unit);
-            selectedUnit = selectedCell.Unit;
-            return;
-        }
+        selectedUnit = selectedCell.Unit;
+        selectedUnitPanel.UpdateUI(selectedUnit);
     }
 
-    private void CheckMoveUnit()
+    protected bool CheckCanMove(Cell selectedCell) => canMove = selectedCell.Unit == default ? true : false;
+
+    protected void MoveUnit()
     {
         if (selectedUnit == null)
             return;
 
-        GetMouseCell();
-
-        if (selectedCell.Unit != null)
-            return;
-
-        battlefieldManager.MoveUnit(selectedUnit.Location, selectedCell.Position);
+        GetMouseCell(); // assigns new Selected Cell
+        if(CheckCanMove(selectedCell))
+        {
+            Debug.Log("Unit named: " + selectedUnit.Name + " is moving to " + selectedCell.Position);
+            battlefieldManager.MoveUnit(selectedUnit.Location, selectedCell.Position);
+            selectedUnit = null;
+        }
     }
-
 }
