@@ -19,7 +19,7 @@ public enum Teams
 }
 
 
-public interface PosAblityDefault
+public interface PosAbilityDefault
 {
     int ID { get; }
     string Name { get; }
@@ -28,7 +28,7 @@ public interface PosAblityDefault
     Sprite DamageGrid { get; }
 }
 
-public interface PosAblity : PosAblityDefault
+public interface PosAblity : PosAbilityDefault
 {
     IEnumerable<Vector2> PossiblePlacements { get; }
     IReadOnlyDictionary<Vector2, HashSet<Vector2>> AttackZone { get; }
@@ -40,8 +40,8 @@ public interface IUnit
     IGrid World { get; }
     int UnitRange { get; }
     Teams Team { get; }
-    IReadOnlyList<PosAblityDefault> Abilites { get; }
+    IReadOnlyList<PosAbilityDefault> Abilites { get; }
 
-    PosAblity GeneratePosAblity(PosAblityDefault move);
-    void ApplyAbility(PosAblityDefault move, Vector2 temp);
+    PosAblity GeneratePosAblity(PosAbilityDefault move);
+    void ApplyAbility(PosAbilityDefault move, Vector2 temp);
 }
