@@ -36,10 +36,15 @@ public interface IPosAblity : IPosAbilityDefault
 
 public interface IUnit
 {
+    string Name { get; }
+    Sprite Icon { get; }
+    ITeam Member { get; }
+    string Discription { get; }
+
     Vector3Int location { get; }
     IGrid World { get; }
     int UnitRange { get; }
-    Teams Team { get; }
+
     IReadOnlyList<IPosAbilityDefault> Abilites { get; }
 
     IPosAblity GeneratePosAblity(IPosAbilityDefault move);

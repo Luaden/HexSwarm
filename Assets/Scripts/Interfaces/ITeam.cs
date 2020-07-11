@@ -3,6 +3,12 @@ using System.Collections.Generic;
 
 public interface ITeam
 {
+    string Name { get; }
+    string Discription { get; }
+    Sprite Icon { get; }
+    Color Color { get; }
+    Teams Type { get; }
+
     IGameManager Game { get; }
     IEnumerable<IUnit> Units { get;}
     bool hasUnitsAfterLosses(IEnumerable<IUnit> losses);
