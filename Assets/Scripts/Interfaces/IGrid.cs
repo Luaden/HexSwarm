@@ -11,7 +11,7 @@ public interface IGrid
 
     void GenerateGrid(int gridHeight, TileBase tile);
 
-    void HighlightGrid(IEnumerable<Cells> tilesToHighlight);
+    void HighlightGrid(IEnumerable<Cell> tilesToHighlight);
 
     void ClearHighlightedTiles();
 
