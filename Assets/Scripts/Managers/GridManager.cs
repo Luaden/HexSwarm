@@ -24,16 +24,13 @@ public class GridManager : MonoBehaviour, IGrid
     protected BattlefieldManager battlefieldManager;
 
 
-    protected void GenerateRow(int Y, int halfLessOne, TileBase tile)
+    protected void GenerateRow(int Y, int xMin, int xMax, TileBase tile)
     {
-        GenerateCell(new Vector3Int(0, Y, 0), tile);
-
-        for(int i = 1; i < halfLessOne; i++)
-        {
-            GenerateCell(new Vector3Int(-i, Y, 0), tile);
-            GenerateCell(new Vector3Int(i, Y, 0), tile);
-        }
+        int currentX = xMin;
+        while (currentX <= xMax)
+            GenerateCell(new Vector3Int(currentX++, Y, 0), tile);
     }
+
     protected void GenerateCell(Vector3Int pos, TileBase tile)
     {
         Cell newCell = new Cell(pos, default, tile);
@@ -47,16 +44,32 @@ public class GridManager : MonoBehaviour, IGrid
         world.Clear();
     }
 
+    //protected void GenerateSquare(int radius, TileBase tile)
+    //{
+    //    GenerateRow(0, -radius,radius, tile);
+    //    for (int i = 1; i < radius; i++)
+    //    {
+    //        GenerateRow(i, -radius, radius, tile);
+    //        GenerateRow(-i, -radius, radius, tile);
+    //    }
+    //}
+
+    protected void GenerateHexagon(int radius, TileBase tile)
+    {
+        GenerateRow(0, -radius, radius, tile);
+        for (int i = 1; i <= radius; i++)
+        {
+            int half = i / 2;
+            int oddCorrection = i % 2;
+            GenerateRow(i, -radius + half, radius - half - oddCorrection, tile);
+            GenerateRow(-i, -radius + half, radius - half - oddCorrection, tile);
+        }
+    }
+
     public void GenerateGrid(int gridHeight, TileBase tile)
     {
         Clear();
-        GenerateRow(0, gridHeight, tile);
-
-        for(int i = 1; i < gridHeight; i++)
-        {
-            GenerateRow(i, gridHeight - i, tile);
-            GenerateRow(-i, gridHeight - i, tile);
-        }
+        GenerateHexagon(gridHeight, tile);
     }
 
     public Vector3Int GetCellByClick(Vector2 mouseScreenPos)
