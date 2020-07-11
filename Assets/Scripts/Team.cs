@@ -29,9 +29,11 @@ public class Team : ITeam
 
     public void UpdateColor(Color newColor) { Color = newColor; }
 
-    public void DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
+    public bool DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
     {
-        Game.PerformMove(unit, ablity, target);
+        if (!hasMove)
+            return false;
+        return Game.PerformMove(unit, ablity, target);
     }
 
     public void EndTurn()
@@ -62,4 +64,5 @@ public class Team : ITeam
     {
         Game.Undo();
     }
+
 }

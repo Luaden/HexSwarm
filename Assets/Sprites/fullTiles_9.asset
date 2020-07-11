@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 4455136270256314017, guid: e5abf7a6297fd724682aaf3013f6fcb9,
     type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.14373499, g: 0.9716981, b: 0, a: 0.5568628}
   m_Transform:
     e00: 1
     e01: 0

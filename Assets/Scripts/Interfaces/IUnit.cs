@@ -37,13 +37,12 @@ public interface IPosAblity : IPosAbilityDefault
 public interface IUnit
 {
     string Name { get; }
+    string Description { get; }
     Sprite Icon { get; }
     ITeam Member { get; }
-    string Discription { get; }
-
-    Vector3Int location { get; }
     IGrid World { get; }
     int UnitRange { get; }
+    Vector3Int Location { get; }
 
     IReadOnlyList<IPosAbilityDefault> Abilites { get; }
 
