@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
-public class Team : ITeam
+public abstract class Team : MonoBehaviour, ITeam
 {
     public string Discription { get; protected set; }
     public string Name { get; protected set; }
     public Sprite Icon { get; protected set; }
     public Color Color { get; protected set; }
     public Teams Type { get; protected set; }
-    public IGameManager Game { get; protected set; }
+    public IGameManager GameManager { get; protected set; }
     public bool hasMove { get; protected set; }
     public int RemainingUnits => units.Count;
 
@@ -27,13 +24,19 @@ public class Team : ITeam
     protected HashSet<Vector3Int> highlightOverlap;
     public IEnumerable<Vector3Int> HighlightOverlap => highlightOverlap;
 
+    public string Description => throw new System.NotImplementedException();
+
+    public TileBase Tile => throw new System.NotImplementedException();
+
+    public bool HasMove => throw new System.NotImplementedException();
+
     public void UpdateColor(Color newColor) { Color = newColor; }
 
     public bool DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
     {
         if (!hasMove)
             return false;
-        return Game.PerformMove(unit, ablity, target);
+        return GameManager.PerformMove(unit, ablity, target);
     }
 
     public bool EndTurn()
@@ -41,7 +44,7 @@ public class Team : ITeam
         if (!hasMove)
             return false;
         hasMove = false;
-        return Game.EndTurn();
+        return GameManager.EndTurn();
     }
 
     public bool HasUnitsAfterLosses(IEnumerable<IUnit> losses)
@@ -51,13 +54,9 @@ public class Team : ITeam
                 this.units.Remove(loss);
         return this.units.Count > 0;
     }
+    
 
-    public void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void StartTurn()
+    public virtual void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
     {
         hasMove = true;
     }
@@ -66,11 +65,22 @@ public class Team : ITeam
     {
         if (!hasMove)
             return false;
-        return Game.Undo();
+        return GameManager.Undo();
     }
 
     bool ITeam.EndTurn()
     {
-        return Game.EndTurn();
+        return GameManager.EndTurn();
+    }
+
+    public void StartTurn()
+    {
+        throw new System.NotImplementedException();
+    }
+
+
+    void ITeam.DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
+    {
+        throw new System.NotImplementedException();
     }
 }
