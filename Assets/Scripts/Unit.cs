@@ -60,10 +60,10 @@ public class Unit : IUnit
     public IEnumerable<Vector3Int> CalcuateValidNewLocation(IPosAbilityDefault move)
     {
         Vector3Int targetLocation = new Vector3Int(Location.x, Location.y - 1, Location.z);
-        // if (CheckWorldForVector(targetlocation)
-        //  return new Vector3Int[] {targetLocation};
-        // else
-         return new Vector3Int[0];
+        if (world.CheckWorldForVector(targetLocation))
+            return new Vector3Int[] { targetLocation };
+        else
+            return new Vector3Int[0];
     }
 
     public IEnumerable<Vector3Int> DiscoverHits(Vector3Int location, IPosAbilityDefault move)

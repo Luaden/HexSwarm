@@ -118,9 +118,12 @@ public class GridManager : MonoBehaviour, IGrid
     }
 
     [ContextMenu("Generate Unit")]
-    protected void DebugGenerateUnit()
+    public IUnit DebugGenerateUnit()
     {
-        battlefieldManager.PlaceNewUnit(new Unit(templateUnit), unitSpawnPos);
+        Unit newUnit = new Unit(templateUnit);
+   
+           battlefieldManager.PlaceNewUnit(newUnit, unitSpawnPos);
+        return newUnit;
     }
 
     //Make OnMouseDown if cells have colliders.

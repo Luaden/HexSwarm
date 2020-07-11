@@ -5,12 +5,10 @@ using UnityEngine;
 /// Enemy after having StartTurnCalled will for each unit
 /// randomly pick to call the AIUnit's best or random move
 /// </summary>
+[System.Serializable]
 public class Enemy : Team
 {
-
-    [SerializeField] IGameManager gameManager;
-    [SerializeField] IGrid gridManager;
-
+    [SerializeField] GridManager gridManager;
 
     public override void StartTurn()
     {
@@ -19,8 +17,8 @@ public class Enemy : Team
             GetRandomMove(unit);
         }
 
-        HasMove = false;
-        EndTurn();
+        //HasMove = false;
+        //EndTurn();
     }    
 
     public override void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
@@ -28,11 +26,17 @@ public class Enemy : Team
 
     }
 
-    protected void Awake()
+    protected void Start()
     {
-        units = new List<IUnit>();
-    }
+        gridManager = FindObjectOfType<GridManager>();
+        
+        IUnit tempUnit = gridManager.DebugGenerateUnit();
 
+        units.Add(tempUnit);
+
+        StartTurn();
+    }
+    
     protected void GetRandomMove(IUnit unit)
     {
         //Get game manager difficulty here;
@@ -41,12 +45,13 @@ public class Enemy : Team
 
         if(moveToUse > 0)
         {
-            //Random unit ability.
+            unit.CalcuateValidNewLocation(default);
+            print("Used dumb ability");
         }
         else
         {
-            //Best unit ability.
+            unit.CalcuateValidNewLocation(default);
+            print("Used smart ability");
         }
     }
-
 }

@@ -4,13 +4,13 @@ using UnityEngine.Tilemaps;
 
 public abstract class Team : MonoBehaviour, ITeam
 {
-    [SerializeField] IGameManager gameManager;
+    [SerializeField] GameManager gameManager;
     [SerializeField] protected string teamName;
     [SerializeField] protected string description;
     [SerializeField] protected Sprite icon;
     [SerializeField] protected TileBase tile;
 
-    protected List<IUnit> units;
+    protected List<IUnit> units = new List<IUnit>();
 
     public string Name { get => teamName; }
     public string Description { get => description; }
