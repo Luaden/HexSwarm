@@ -40,8 +40,8 @@ public interface IUnit
     IGrid World { get; }
     int UnitRange { get; }
     Teams Team { get; }
-    IReadOnlyList<PosAbilityDefault> Abilites { get; }
+    IReadOnlyList<IPosAbilityDefault> Abilites { get; }
 
-    PosAblity GeneratePosAblity(PosAbilityDefault move);
-    void ApplyAbility(PosAbilityDefault move, Vector2 temp);
+    IPosAblity GeneratePosAblity(IPosAbilityDefault move);
+    void ApplyAbility(IPosAbilityDefault move, Vector2 temp);
 }
