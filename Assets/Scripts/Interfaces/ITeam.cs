@@ -12,7 +12,6 @@ public interface ITeam
     Teams Type { get; }
     bool HasMove { get; }
     IGameManager GameManager { get; }
-    int RemainingUnits { get; }
     IEnumerable<IUnit> Units { get;}
     IEnumerable<Vector3Int> HighlightMove { get; }
     IEnumerable<Vector3Int> HighlightAttack { get; }
@@ -20,8 +19,8 @@ public interface ITeam
 
     bool HasUnitsAfterLosses(IEnumerable<IUnit> units);
     void StartTurn();
-    bool Undo();
-    bool EndTurn();
+    void Undo();
+    void EndTurn();
     void DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
     void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
 }

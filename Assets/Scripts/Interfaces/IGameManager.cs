@@ -11,9 +11,7 @@ public interface IGameManager
 
     void NewGame();
     void StartLevel();
-    bool PerformMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
-    bool Undo();
-    bool EndTurn();
+    void EndTurn();
 
     IUnit DisplayedUnit { get; }
     void InspectUnitAt(Vector3Int location);

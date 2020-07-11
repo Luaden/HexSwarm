@@ -20,10 +20,7 @@ public class Unit : IUnit
 
     [SerializeField] protected int unitRange;
 
-
-
-    [SerializeField] Team member;
-    public ITeam Member => member;
+    [SerializeField] protected IReadOnlyList<IPosAbilityDefault> abilites;
 
     public string Name => name;
     public string Description => description; 
@@ -33,9 +30,6 @@ public class Unit : IUnit
     public Vector3Int Location { get; set; }
     public IGrid World => world;
     public int UnitRange => unitRange;
-
-
-    [SerializeField] protected List<IPosAbilityDefault> abilites;
     public IReadOnlyList<IPosAbilityDefault> Abilites => abilites;
 
     public Unit() { }
@@ -50,10 +44,9 @@ public class Unit : IUnit
         world = unit.world;
         unitRange = unit.unitRange;
         abilites = unit.abilites;
-        member = unit.member;
     }
 
-    public void ApplyAbility(IPosAbilityDefault move, Vector3Int temp)
+    void IUnit.ApplyAbility(IPosAbilityDefault move, Vector2 temp)
     {
         Member.DoMove(this, move, temp);
     }
