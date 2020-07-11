@@ -24,31 +24,38 @@ public class GridManager : MonoBehaviour, IGrid
     protected BattlefieldManager battlefieldManager;
 
 
+    protected void GenerateRow(int Y, int halfLessOne, TileBase tile)
+    {
+        GenerateCell(new Vector3Int(0, Y, 0), tile);
+
+        for(int i = 1; i < halfLessOne; i++)
+        {
+            GenerateCell(new Vector3Int(-i, Y, 0), tile);
+            GenerateCell(new Vector3Int(i, Y, 0), tile);
+        }
+    }
+    protected void GenerateCell(Vector3Int pos, TileBase tile)
+    {
+        Cell newCell = new Cell(pos, default, tile);
+        world.Add(pos, newCell);
+        groundTiles.SetTile(pos, tile);
+    }
+
+    public void Clear()
+    {
+        groundTiles.ClearAllTiles();
+        world.Clear();
+    }
+
     public void GenerateGrid(int gridHeight, TileBase tile)
     {
-        Vector3Int cellPosition = new Vector3Int(0, 0, 0);
-        Cell checkCell;
+        Clear();
+        GenerateRow(0, gridHeight, tile);
 
-        for (int i = gridHeight; i >= -gridHeight; i--)
+        for(int i = 1; i < gridHeight; i++)
         {
-            Vector3Int cellPositionModified = new Vector3Int(cellPosition.x, cellPosition.y = i, cellPosition.z);
-            groundTiles.SetTile(cellPositionModified, tile);
-
-            world.TryGetValue(cellPositionModified, out checkCell);
-
-            if (checkCell == null)
-                world.Add(cellPositionModified, new Cell(cellPositionModified, null, tile));
-
-            for (int j = gridHeight; j >= -gridHeight; j--)
-            {
-                cellPositionModified = new Vector3Int(cellPositionModified.x = j, cellPositionModified.y, cellPositionModified.z);
-                groundTiles.SetTile(cellPositionModified, tile);
-
-                world.TryGetValue(cellPositionModified, out checkCell);
-
-                if (checkCell == null)
-                    world.Add(cellPositionModified, new Cell(cellPositionModified, null, tile));
-            }
+            GenerateRow(i, gridHeight - i, tile);
+            GenerateRow(-i, gridHeight - i, tile);
         }
     }
 
@@ -111,7 +118,7 @@ public class GridManager : MonoBehaviour, IGrid
     [ContextMenu("Delete Grid")]
     protected void DebugDeleteGrid()
     {
-        GenerateGrid(gridHeight, null);
+        Clear();
     }
 
     //Make OnMouseDown if cells have colliders.

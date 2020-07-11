@@ -16,8 +16,8 @@ public interface ITeam
     bool HasUnitsAfterLosses(IEnumerable<IUnit> losses);
     bool hasMove { get; }
     void StartTurn();
-    void Undo();
-    void EndTurn();
+    bool Undo();
+    bool EndTurn();
 
     IEnumerable<Vector3Int> HighlightMove { get; }
     IEnumerable<Vector3Int> HighlightAttack { get; }

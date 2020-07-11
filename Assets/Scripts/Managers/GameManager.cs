@@ -15,9 +15,6 @@ public class GameManager : MonoBehaviour
     //Cached references
     protected BattlefieldManager battlefieldManager;
 
-    
-
-
     protected void Awake()
     {
         if (gridManager == null)

@@ -36,10 +36,12 @@ public class Team : ITeam
         return Game.PerformMove(unit, ablity, target);
     }
 
-    public void EndTurn()
+    public bool EndTurn()
     {
+        if (!hasMove)
+            return false;
         hasMove = false;
-        Game.EndTurn();
+        return Game.EndTurn();
     }
 
     public bool HasUnitsAfterLosses(IEnumerable<IUnit> losses)
@@ -60,9 +62,15 @@ public class Team : ITeam
         hasMove = true;
     }
 
-    public void Undo()
+    public bool Undo()
     {
-        Game.Undo();
+        if (!hasMove)
+            return false;
+        return Game.Undo();
     }
 
+    bool ITeam.EndTurn()
+    {
+        return Game.EndTurn();
+    }
 }
