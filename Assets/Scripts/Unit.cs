@@ -16,8 +16,6 @@ public class Unit : IUnit
 
     [SerializeField] protected Color color;
     
-    [SerializeField] protected Vector3Int location;
-
     [SerializeField] protected IGrid world;
 
     [SerializeField] protected int unitRange;
@@ -29,10 +27,24 @@ public class Unit : IUnit
     public TileBase Tile => tile;
     public Sprite Icon => icon;
     public Color Color => color;
-    public Vector3Int Location => location;
+    public Vector3Int Location { get; set; }
     public IGrid World => world;
     public int UnitRange => unitRange;
     public IReadOnlyList<IPosAbilityDefault> Abilites => abilites;
+
+    public Unit() { }
+
+    public Unit(Unit unit)
+    {
+        name = unit.Name;
+        description = unit.Description;
+        tile = unit.Tile;
+        icon = unit.Icon;
+        color = unit.Color;
+        world = unit.world;
+        unitRange = unit.unitRange;
+        abilites = unit.abilites;
+    }
 
     void IUnit.ApplyAbility(IPosAbilityDefault move, Vector2 temp)
     {

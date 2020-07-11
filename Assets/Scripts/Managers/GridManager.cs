@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -8,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class GridManager : MonoBehaviour, IGrid
 {
     //Editor/debug variables
-    [SerializeField] protected Unit tempUnit = new Unit();
+    [SerializeField] protected Unit templateUnit;
     [SerializeField] protected Vector3Int unitSpawnPos;
 
     //Editor variables
@@ -25,6 +23,7 @@ public class GridManager : MonoBehaviour, IGrid
     protected Vector3Int currentLocation;
     protected Cell selectedCell;
     protected IUnit selectedUnit;
+    protected bool canMove;
 
     //Cached references
     protected Camera mainCamera;
@@ -129,8 +128,7 @@ public class GridManager : MonoBehaviour, IGrid
     [ContextMenu("Generate Unit")]
     protected void DebugGenerateUnit()
     {
-        battlefieldManager.PlaceNewUnit(tempUnit, unitSpawnPos);
-        print("Unit generated at: " + unitSpawnPos);
+        battlefieldManager.PlaceNewUnit(new Unit(templateUnit), unitSpawnPos);
     }
 
     //Make OnMouseDown if cells have colliders.
@@ -138,13 +136,13 @@ public class GridManager : MonoBehaviour, IGrid
     {
         if (Input.GetMouseButtonDown(0))
         {
-            GetMouseCell();
-            CheckCellForUnit(selectedCell);
+            GetMouseCell(); // assigns SelectedCell
+            GetUnitFromCell(selectedCell); //Looks at SelectedCell and assigns SelectedUnit to the Unit in the cell.
         }
 
         if (Input.GetMouseButtonDown(1))
         {
-            CheckMoveUnit();
+            MoveUnit();
         }
     }
 
@@ -154,34 +152,28 @@ public class GridManager : MonoBehaviour, IGrid
         battlefieldManager.World.TryGetValue(currentLocation, out selectedCell);
     }
 
-    protected void CheckCellForUnit(Cell selectedCell)
+    protected void GetUnitFromCell(Cell selectedCell)
     {
         if (selectedCell == null)
             return;
 
-        if (selectedCell.Unit != null)
-        {
-            selectedUnit = selectedCell.Unit;
-            selectedUnitPanel.UpdateUI(selectedUnit);
-
-            if (selectedCell.Unit != null)
-                print("Selected: " + selectedUnit.Name);
-
-            return;
-        }
+        selectedUnit = selectedCell.Unit;
+        selectedUnitPanel.UpdateUI(selectedUnit);
     }
 
-    protected void CheckMoveUnit()
+    protected bool CheckCanMove(Cell selectedCell) => canMove = selectedCell.Unit == default ? true : false;
+
+    protected void MoveUnit()
     {
         if (selectedUnit == null)
             return;
 
-        GetMouseCell();
-
-        if (selectedCell.Unit != null)
-            return;
-
-        battlefieldManager.MoveUnit(selectedUnit.Location, selectedCell.Position);
+        GetMouseCell(); // assigns new Selected Cell
+        if(CheckCanMove(selectedCell))
+        {
+            Debug.Log("Unit named: " + selectedUnit.Name + " is moving to " + selectedCell.Position);
+            battlefieldManager.MoveUnit(selectedUnit.Location, selectedCell.Position);
+            selectedUnit = null;
+        }
     }
-
 }

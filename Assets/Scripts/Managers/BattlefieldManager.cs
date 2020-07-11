@@ -37,7 +37,8 @@ public class BattlefieldManager : IBattlefield
         world.TryGetValue(to, out toCell);
 
         toCell.Unit = fromCell.Unit;
-        fromCell.Unit = default;
+        (toCell.Unit as Unit).Location = to;
+        fromCell.Unit = default;        
         
         gridManager.PaintUnitTile(fromCell.Position, default);
         gridManager.PaintUnitTile(toCell.Position, toCell.Unit.Tile);
