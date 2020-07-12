@@ -31,7 +31,33 @@ public class GridManager : MonoBehaviour, IGrid
     protected Dictionary<Vector3Int, Cell> world;
     protected HashSet<Cell> highlightedCells;
     protected BattlefieldManager battlefieldManager;
-    
+    protected List<Cell> neighbors;
+
+
+    public void Clear()
+    {
+        groundTiles.ClearAllTiles();
+        world.Clear();
+    }
+
+    #region MapGeneration
+    public void GenerateGrid(int gridHeight, TileBase tile)
+    {
+        Clear();
+        GenerateHexagon(gridHeight, tile);
+    }
+
+    protected void GenerateHexagon(int radius, TileBase tile)
+    {
+        GenerateRow(0, -radius, radius, tile);
+        for (int i = 1; i <= radius; i++)
+        {
+            int half = i / 2;
+            int oddCorrection = i % 2;
+            GenerateRow(i, -radius + half, radius - half - oddCorrection, tile);
+            GenerateRow(-i, -radius + half, radius - half - oddCorrection, tile);
+        }
+    }
 
     protected void GenerateRow(int Y, int xMin, int xMax, TileBase tile)
     {
@@ -47,12 +73,6 @@ public class GridManager : MonoBehaviour, IGrid
         groundTiles.SetTile(pos, tile);
     }
 
-    public void Clear()
-    {
-        groundTiles.ClearAllTiles();
-        world.Clear();
-    }
-
     //protected void GenerateSquare(int radius, TileBase tile)
     //{
     //    GenerateRow(0, -radius,radius, tile);
@@ -62,25 +82,9 @@ public class GridManager : MonoBehaviour, IGrid
     //        GenerateRow(-i, -radius, radius, tile);
     //    }
     //}
+    #endregion
 
-    protected void GenerateHexagon(int radius, TileBase tile)
-    {
-        GenerateRow(0, -radius, radius, tile);
-        for (int i = 1; i <= radius; i++)
-        {
-            int half = i / 2;
-            int oddCorrection = i % 2;
-            GenerateRow(i, -radius + half, radius - half - oddCorrection, tile);
-            GenerateRow(-i, -radius + half, radius - half - oddCorrection, tile);
-        }
-    }
-
-    public void GenerateGrid(int gridHeight, TileBase tile)
-    {
-        Clear();
-        GenerateHexagon(gridHeight, tile);
-    }
-
+    #region MouseClickFunctions
     public Vector3Int GetCellByClick(Vector2 mouseScreenPos)
     {
         Vector2 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
@@ -90,15 +94,111 @@ public class GridManager : MonoBehaviour, IGrid
         return mouseCellPos;
     }
 
+    protected void GetMouseCell()
+    {
+        currentLocation = GetCellByClick(Input.mousePosition);
+        battlefieldManager.World.TryGetValue(currentLocation, out selectedCell);
+    }
+    #endregion
+
+    #region Cell/Vector Check
+
     public bool CheckWorldForVector(Vector3Int location)
     {
         return world.ContainsKey(location);
     }
 
-    public IEnumerable<ICell> GetNeighborCells(Cell origin, int range = 1)
+    protected void GetUnitFromCell(Cell selectedCell)
     {
+        if (selectedCell == null)
+            return;
 
-        return new List<Cell>();
+        selectedUnit = selectedCell.Unit;
+        selectedUnitPanel.UpdateUI(selectedUnit);
+    }
+
+    protected bool CheckCanMove(Cell selectedCell) => canMove = selectedCell.Unit == default ? true : false;
+    #endregion
+
+    #region Unit Functions
+    protected void MoveUnit()
+    {
+        if (selectedUnit == null)
+            return;
+
+        GetMouseCell(); // assigns new Selected Cell
+        if (CheckCanMove(selectedCell))
+        {
+            Debug.Log("Unit named: " + selectedUnit.Name + " is moving to " + selectedCell.Position);
+            battlefieldManager.MoveUnit(selectedUnit.Location, selectedCell.Position);
+            selectedUnit = null;
+        }
+    }
+
+    public void PaintUnitTile(Vector3Int cellToPaint, TileBase tileToPaint) => unitTiles.SetTile(cellToPaint, tileToPaint);
+
+    #endregion
+
+    #region Debug
+
+    [ContextMenu("Generate Unit")]
+    public IUnit DebugGenerateUnit()
+    {
+        Unit newUnit = new Unit(templateUnit);
+
+        battlefieldManager.PlaceNewUnit(newUnit, unitSpawnPos);
+        return newUnit;
+    }
+
+    protected void DebugGenerateGrid()
+    {
+        GenerateGrid(gridHeight, tile);
+    }
+    #endregion
+
+    public IEnumerable<Cell> GetNeighborCells(Cell origin, int range = 1)
+    {
+        print(origin.Position);
+        neighbors = new List<Cell>();
+
+        int y = origin.Position.y;
+        int xMax = origin.Position.x + range;
+        int xMin = origin.Position.x - range;
+
+        GetNeighborCellRow(y, xMin, xMax);
+
+        for (int i = 1; i <= range; i++)
+        {
+            int half = i / 2;
+            print(half);
+            int oddCorrection = i % 2;
+            
+            if(Mathf.Abs(y) % 2 > 0)
+            {
+                GetNeighborCellRow(y - i, xMin + half + oddCorrection, xMax - half);
+                GetNeighborCellRow(y + i, xMin + half + oddCorrection, xMax - half);
+            }
+            else
+            {
+                GetNeighborCellRow(y - i, xMin + half, xMax - half - oddCorrection);
+                GetNeighborCellRow(y + i, xMin + half, xMax - half - oddCorrection);
+            }
+        }
+
+        return neighbors;
+    }
+
+    protected void GetNeighborCellRow(int y, int xMin, int xMax)
+    {
+        Vector3Int currentLoc;
+        Cell currentCell;
+
+        for (int i = xMin; i <= xMax; i++)
+        {
+            currentLoc = new Vector3Int(i, y, 0);
+            world.TryGetValue(currentLoc, out currentCell);
+            neighbors.Add(currentCell);
+        }
     }
 
     public void HighlightGrid(IEnumerable<Cell> tilesToHighlight)
@@ -120,7 +220,6 @@ public class GridManager : MonoBehaviour, IGrid
         highlightedCells.Clear();
     }
 
-    public void PaintUnitTile(Vector3Int cellToPaint, TileBase tileToPaint) => unitTiles.SetTile(cellToPaint, tileToPaint);
 
     protected void Awake()
     {
@@ -140,27 +239,6 @@ public class GridManager : MonoBehaviour, IGrid
         DebugGenerateGrid();
     }
 
-    protected void DebugGenerateGrid()
-    {
-        GenerateGrid(gridHeight, tile);
-    }
-
-    [ContextMenu("Delete Grid")]
-    protected void DebugDeleteGrid()
-    {
-        GenerateGrid(gridHeight, null);
-    }
-
-    [ContextMenu("Generate Unit")]
-    public IUnit DebugGenerateUnit()
-    {
-        Unit newUnit = new Unit(templateUnit);
-   
-           battlefieldManager.PlaceNewUnit(newUnit, unitSpawnPos);
-        return newUnit;
-    }
-
-    //Make OnMouseDown if cells have colliders.
     protected void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -174,37 +252,5 @@ public class GridManager : MonoBehaviour, IGrid
             MoveUnit();
         }
     }
-
-    protected void GetMouseCell()
-    {
-        currentLocation = GetCellByClick(Input.mousePosition);
-        battlefieldManager.World.TryGetValue(currentLocation, out selectedCell);
-    }
-
-    protected void GetUnitFromCell(Cell selectedCell)
-    {
-        if (selectedCell == null)
-            return;
-
-        selectedUnit = selectedCell.Unit;
-        selectedUnitPanel.UpdateUI(selectedUnit);
-    }
-
-    protected bool CheckCanMove(Cell selectedCell) => canMove = selectedCell.Unit == default ? true : false;
-
-    protected void MoveUnit()
-    {
-        if (selectedUnit == null)
-            return;
-
-        GetMouseCell(); // assigns new Selected Cell
-        if(CheckCanMove(selectedCell))
-        {
-            Debug.Log("Unit named: " + selectedUnit.Name + " is moving to " + selectedCell.Position);
-            battlefieldManager.MoveUnit(selectedUnit.Location, selectedCell.Position);
-            selectedUnit = null;
-        }
-    }
-
 
 }
