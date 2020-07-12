@@ -35,6 +35,7 @@ public class Player : Team
             GameManager.DisplayedUnit,
             default,//GameManager.DisplayedUnit.Abilites[0],
             GameManager.GetMousePosition());
+        GameManager.EndTurn();
     }
 
     public override void Update()

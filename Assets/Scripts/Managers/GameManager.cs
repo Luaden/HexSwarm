@@ -88,7 +88,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
         IEnumerable<Cell> neighbors = gridManager.GetNeighborCells(unit.Location);
 
-        IEnumerable<IUnit> deaths = neighbors.Where(x => (x.Unit != default) && (x.Unit.Member != activeTeams.Peek())).Select(X=>X.Unit);
+        List<IUnit> deaths = neighbors.Select(X => X.Unit).Where(X=>X!=default).Where(X=>X.Member !=unit.Member) .ToList();
 
         ResolveDeaths(deaths, unit);
 
@@ -99,6 +99,9 @@ public class GameManager : MonoBehaviour, IGameManager
     {
         ITeam currentTurn = activeTeams.Dequeue();
         activeTeams.Enqueue(currentTurn);
+
+        foreach (IUnit corspe in deaths)
+            BattlefieldManager.DestroyUnits(corspe.Location);
 
         while(activeTeams.Peek() != currentTurn)
         {
@@ -125,13 +128,6 @@ public class GameManager : MonoBehaviour, IGameManager
 
         gridManager.GenerateGrid(Gridrange, gridManager.BasicTile);
 
-        Player1 = new Player(this, "Player1", "First Goo", teamSprites[0], default);
-        activeTeams.Enqueue(Player1);
-
-        GenerateUnitForTeam(Player1,
-            playerOneUnitTemplates[0],
-            new Vector3Int(0, -Gridrange / 2, 0));
-
         Player2 = new Player(this, "Player2", "Gooier", teamSprites[1], default);
         activeTeams.Enqueue(Player2);
 
@@ -139,6 +135,14 @@ public class GameManager : MonoBehaviour, IGameManager
             playerTwoTemplates[0],
             new Vector3Int(0, +Gridrange / 2, 0));
 
+        Player1 = new Player(this, "Player1", "First Goo", teamSprites[0], default);
+        activeTeams.Enqueue(Player1);
+
+        GenerateUnitForTeam(Player1,
+            playerOneUnitTemplates[0],
+            new Vector3Int(0, -Gridrange / 2, 0));
+
+        EndTurn();
     }
 
     protected void Update()

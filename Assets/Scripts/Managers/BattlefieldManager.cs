@@ -28,7 +28,12 @@ public class BattlefieldManager : IBattlefield
 
     public void DestroyUnits(Vector3Int unitPosition)
     {
-        throw new System.NotImplementedException();
+        Cell killbox;
+        if (world.TryGetValue(unitPosition, out killbox))
+        {
+            killbox.Unit = default;
+            gridManager.PaintUnitTile(unitPosition, default);
+        }
     }
 
     public void MoveUnit(Vector3Int unitPosition, Vector3Int destination)
