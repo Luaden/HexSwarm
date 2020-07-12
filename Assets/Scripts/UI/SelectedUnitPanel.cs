@@ -6,17 +6,18 @@ using TMPro;
 public class SelectedUnitPanel : CoreUIElement<IUnit>
 {
     [SerializeField] protected Image unitImage;
+    [SerializeField] protected Image unitImageBackground;
     [SerializeField] protected TMP_Text unitName;
     [SerializeField] protected TMP_Text unitDescription;
 
     [SerializeField] protected Image ability1Image;
-    [SerializeField] protected Image ability1Background;
+    [SerializeField] protected Image ability1ImageBackground;
     [SerializeField] protected Button ability1Button;
     [SerializeField] protected TMP_Text ability1Name;
     [SerializeField] protected TMP_Text ability1Description;
 
     [SerializeField] protected Image ability2Image;
-    [SerializeField] protected Image ability2Background;
+    [SerializeField] protected Image ability2ImageBackground;
     [SerializeField] protected Button ability2Button;
     [SerializeField] protected TMP_Text ability2Name;    
     [SerializeField] protected TMP_Text ability2Description;
@@ -63,6 +64,10 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>
             UpdateText(ability2Name, string.Empty);
             UpdateText(ability2Description, string.Empty);
 
+            unitImageBackground.color = Color.grey;
+            ability1ImageBackground.color = Color.grey;
+            ability2ImageBackground.color = Color.grey;
+
             return true;
         }
 
@@ -75,10 +80,10 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>
 
         if(firstIsSelected)
         {
-            ability1Background.color = Color.green;
+            ability1ImageBackground.color = Color.green;
         }
 
-        ability1Background.color = firstIsSelected ? Color.white : Color.grey;
-        ability2Background.color = firstIsSelected ? Color.grey : Color.white;
+        ability1ImageBackground.color = firstIsSelected ? Color.white : Color.grey;
+        ability2ImageBackground.color = firstIsSelected ? Color.grey : Color.white;
     }
 }

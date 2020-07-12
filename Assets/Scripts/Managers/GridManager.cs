@@ -110,7 +110,7 @@ public class GridManager : MonoBehaviour, IGrid
     }
 
 
-    //[ContextMenu("GenerateGrid")]
+    [ContextMenu("GenerateGrid")]
     protected void DebugGenerateGrid()
     {
         GenerateGrid(gridHeight, tile);
@@ -130,7 +130,6 @@ public class GridManager : MonoBehaviour, IGrid
 
     public IEnumerable<Cell> GetNeighborCells(Cell origin, int range = 1)
     {
-        print(origin.Position);
         neighbors = new List<Cell>();
 
         int y = origin.Position.y;
@@ -142,7 +141,6 @@ public class GridManager : MonoBehaviour, IGrid
         for (int i = 1; i <= range; i++)
         {
             int half = i / 2;
-            print(half);
             int oddCorrection = i % 2;
             
             if(Mathf.Abs(y) % 2 > 0)
@@ -208,7 +206,6 @@ public class GridManager : MonoBehaviour, IGrid
 
         battlefieldManager = new BattlefieldManager(world, this);
 
-        //DebugGenerateGrid();
     }
 
 

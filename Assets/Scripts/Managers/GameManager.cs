@@ -153,7 +153,7 @@ public class GameManager : MonoBehaviour, IGameManager
         BattlefieldManager.World.TryGetValue(originVector, out origin);
         BattlefieldManager.World.TryGetValue(destinationVector, out destination);
 
-        HashSet<Cell> newRoute = pathFinder.AvoidUnitsPath(origin, destination) as HashSet<Cell>;
+        List<Cell> newRoute = pathFinder.AvoidUnitsPath(origin, destination) as List<Cell>;
 
         gridManager.HighlightGrid(newRoute);
     }

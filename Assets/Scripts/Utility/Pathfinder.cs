@@ -17,7 +17,7 @@ public class Pathfinder : IPathfinder
     protected List<Cell> orderedEvaluatedCells = new List<Cell>();
     protected List<Cell> neighborCells = new List<Cell>();
     protected List<Cell> blockedCells = new List<Cell>();
-    protected HashSet<Cell> currentRoute;
+    protected List<Cell> currentRoute = new List<Cell>();
     protected HashSet<Cell> newRoute;
     protected Cell closestCell;
     protected Cell lastClosestCell;
@@ -33,18 +33,23 @@ public class Pathfinder : IPathfinder
     public IEnumerable<Cell> AvoidUnitsPath(Cell origin, Cell destination)
     {
         GetFreshWorld();
-        currentRoute = new HashSet<Cell>();
+        currentRoute = new List<Cell>();
 
         //gets a direct path
         cellsToEvaluate = DirectPath(origin, destination) as List<Cell>;
         blockedCells = new List<Cell>();
         closestCell = origin;
 
+        Debug.Log("There are :" + cellsToEvaluate.Count + " left to count.");
+
         //checks each cell for blocked path, adds to evaluatedCells if not blocked.
-        while(closestCell != destination)
+        while (closestCell != destination)
         {
             for (int i = 0; i < cellsToEvaluate.Count; i++)
             {
+                Debug.Log(cellsToEvaluate[i]);
+                Debug.Log("There are :" + (cellsToEvaluate.Count - i) + " left to count.");
+
                 while (CellIsBlocked(cellsToEvaluate[i]))
                 {
                     blockedCells.Add(cellsToEvaluate[i]);                    
@@ -99,8 +104,9 @@ public class Pathfinder : IPathfinder
 
     public IEnumerable<Cell> DirectPath(Cell origin, Cell destination)
     {
+        Debug.Log("Got a direct path");
         GetFreshWorld();
-        currentRoute = new HashSet<Cell>();
+        currentRoute = new List<Cell>();
 
         cellsToEvaluate = gridManager.GetNeighborCells(origin) as List<Cell>;
         cellsToEvaluate.Remove(origin);
