@@ -33,6 +33,7 @@ public class GridManager : MonoBehaviour, IGrid
     protected BattlefieldManager battlefieldManager;
     protected List<Cell> neighbors;
 
+    public BattlefieldManager BattlefieldManager => battlefieldManager;
 
     public void Clear()
     {
@@ -108,7 +109,7 @@ public class GridManager : MonoBehaviour, IGrid
         return world.ContainsKey(location);
     }
 
-    protected void GetUnitFromCell(Cell selectedCell)
+    public void GetUnitFromCell(Cell selectedCell)
     {
         if (selectedCell == null)
             return;
@@ -117,7 +118,7 @@ public class GridManager : MonoBehaviour, IGrid
         selectedUnitPanel.UpdateUI(selectedUnit);
     }
 
-    protected bool CheckCanMove(Cell selectedCell) => canMove = selectedCell.Unit == default ? true : false;
+    public bool CheckCanMove(Cell selectedCell) => canMove = selectedCell.Unit == default ? true : false;
     #endregion
 
     #region Unit Functions
