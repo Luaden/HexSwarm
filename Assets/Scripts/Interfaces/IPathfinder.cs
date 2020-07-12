@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IPathfinder
 {
-    IEnumerable<Vector3Int> DirectPath(Vector3Int origin, Vector3Int destination);
+    IEnumerable<Cell> DirectPath(Cell origin, Cell destination);
 
-    IEnumerable<Vector3Int> AvoidUnitsPath(Vector3Int origin, Vector3Int destination);
+    IEnumerable<Cell> AvoidUnitsPath(Cell origin, Cell destination);
 }

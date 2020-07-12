@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour, IGameManager
     [SerializeField] protected TurnOrderDisplay turnOrderDisplay;
     [SerializeField] protected int totalTeamCount;
     [SerializeField] protected Enemy tempEnemy;
+    [SerializeField] protected Pathfinder pathFinder;
 
     //Cached references
     protected BattlefieldManager battlefieldManager;
@@ -75,8 +76,11 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void Start()
     {
-        BuildTeams(totalTeamCount);
-        EndTurn();
+        //BuildTeams(totalTeamCount);
+        //EndTurn();
+
+        battlefieldManager = gridManager.BattlefieldManager;
+        pathFinder = new Pathfinder(battlefieldManager, gridManager);
     }
 
     protected void BuildTeams(int totalTeams)
@@ -90,5 +94,27 @@ public class GameManager : MonoBehaviour, IGameManager
         }
 
         turnOrderDisplay.UpdateUI(activeTeams);
+    }
+
+    [ContextMenu("Generate Path From 0,0 to 0, 6")]
+    protected void DebugPathTest()
+    {
+        Vector3Int originVector = new Vector3Int(0, -6, 0);
+        Vector3Int destinationVector = new Vector3Int(0, 6, 0);
+        Cell origin;
+        Cell destination;
+
+        battlefieldManager.World.TryGetValue(originVector, out origin);
+        battlefieldManager.World.TryGetValue(destinationVector, out destination);
+
+        HashSet<Cell> newRoute = pathFinder.AvoidUnitsPath(origin, destination) as HashSet<Cell>;
+
+        gridManager.HighlightGrid(newRoute);
+    }
+
+    [ContextMenu("Generate Unit")]
+    protected void DebugGenerateUnit()
+    {
+        gridManager.DebugGenerateUnit();
     }
 }
