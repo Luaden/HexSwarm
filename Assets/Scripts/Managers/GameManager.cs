@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour, IGameManager
     {
         activeTeams.Enqueue(activeTeams.Dequeue());
         activeTeams.Peek().StartTurn();
-        turnOrderDisplay.UpdateUI(activeTeams);
+        turnOrderDisplay.UpdateUI(this);
     }
 
     public void InspectUnitAt(Vector3Int location)
@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour, IGameManager
             print(activeTeams.Count); 
         }
 
-        turnOrderDisplay.UpdateUI(activeTeams);
+        turnOrderDisplay.UpdateUI(this);
     }
 
     [ContextMenu("Generate Path From 0,0 to 0, 6")]
