@@ -31,13 +31,10 @@ public class BattlefieldManager : IBattlefield
         throw new System.NotImplementedException();
     }
 
-    public void MoveUnit(Vector3Int unitPosition, Vector3Int destination, Color teamColor)
+    public void MoveUnit(Vector3Int unitPosition, Vector3Int destination)
     {
         world.TryGetValue(unitPosition, out fromCell);
         world.TryGetValue(destination, out toCell);
-
-        if (teamColor != fromCell.Unit.Color)
-            return;
 
         if (gridManager.CheckCanMove(toCell))
         {

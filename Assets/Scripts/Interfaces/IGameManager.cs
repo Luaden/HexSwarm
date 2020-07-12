@@ -8,14 +8,15 @@ public interface IGameManager
     
     Queue<ITeam> ActiveTeams { get; }
 
-
     void NewGame();
     void StartLevel();
     void EndTurn();
 
     IUnit DisplayedUnit { get; }
-    void InspectUnitAt(Vector3Int location);
+    void InspectUnitUnderMouse();
+    bool PerformMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
 
     void AnimateMove();
+    Vector3Int GetMousePosition();
 }
 

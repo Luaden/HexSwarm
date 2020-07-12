@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour, IGameManager
     [SerializeField] protected List<Unit> playerOneUnitTemplates = new List<Unit>();
     [SerializeField] protected Player Player2;
     [SerializeField] protected List<Unit> playerTwoTemplates = new List<Unit>();
+    [SerializeField] protected SelectedUnitPanel selectedUnitPanel;
+
 
     protected BattlefieldManager battlefieldManager;
 
@@ -50,9 +52,22 @@ public class GameManager : MonoBehaviour, IGameManager
         turnOrderDisplay.UpdateUI(activeTeams);
     }
 
-    public void InspectUnitAt(Vector3Int location)
+    public Vector3Int GetMousePosition() => gridManager.GetCellByClick(Input.mousePosition);
+
+
+    public void InspectUnitUnderMouse()
     {
-        throw new NotImplementedException();
+        Cell selectedcell;
+        if (!battlefieldManager.World.TryGetValue(GetMousePosition(), out selectedcell))
+            return;
+
+        if (selectedcell.Unit == default)
+            return;
+
+        if (displayedUnit != selectedcell.Unit)
+            selectedUnitPanel.UpdateUI(selectedcell.Unit);
+
+        displayedUnit = selectedcell.Unit;
     }
 
     [ContextMenu("NewGame")]
@@ -66,7 +81,42 @@ public class GameManager : MonoBehaviour, IGameManager
 
     public bool PerformMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
     {
-        throw new NotImplementedException();
+        if (unit.Member != activeTeams.Peek())
+            return false;
+
+        BattlefieldManager.MoveUnit(unit.Location, target);
+
+        IEnumerable<Cell> neighbors = gridManager.GetNeighborCells(unit.Location);
+
+        IEnumerable<IUnit> deaths = neighbors.Where(x => (x.Unit != default) && (x.Unit.Member != activeTeams.Peek())).Select(X=>X.Unit);
+
+        ResolveDeaths(deaths, unit);
+
+        return true;
+    }
+
+    protected void ResolveDeaths(IEnumerable<IUnit> deaths, IUnit unit)
+    {
+        ITeam currentTurn = activeTeams.Dequeue();
+        activeTeams.Enqueue(currentTurn);
+
+        while(activeTeams.Peek() != currentTurn)
+        {
+            ITeam teamToResolve = activeTeams.Dequeue();
+            if (teamToResolve.HasUnitsAfterLosses(deaths))
+                activeTeams.Enqueue(teamToResolve);
+        }
+
+        if ((activeTeams.Peek().Type & Teams.Player) == 0)
+            foreach (IUnit freshKill in deaths)
+                GenerateUnitForTeam(unit.Member, unit as Unit, freshKill.Location);
+    }
+
+    protected void GenerateUnitForTeam(ITeam team, Unit template, Vector3Int location)
+    {
+        Unit newUnit = new Unit(template);
+        BattlefieldManager.PlaceNewUnit(newUnit, location);
+        team.GetUnit(newUnit);
     }
 
     public void StartLevel()
@@ -76,21 +126,25 @@ public class GameManager : MonoBehaviour, IGameManager
         gridManager.GenerateGrid(Gridrange, gridManager.BasicTile);
 
         Player1 = new Player(this, "Player1", "First Goo", teamSprites[0], default);
-
-        BattlefieldManager.PlaceNewUnit(new Unit(playerOneUnitTemplates[0]), new Vector3Int(0, -Gridrange / 2, 0));
-
         activeTeams.Enqueue(Player1);
 
+        GenerateUnitForTeam(Player1,
+            playerOneUnitTemplates[0],
+            new Vector3Int(0, -Gridrange / 2, 0));
+
         Player2 = new Player(this, "Player2", "Gooier", teamSprites[1], default);
-
-        BattlefieldManager.PlaceNewUnit(new Unit(playerTwoTemplates[0]), new Vector3Int(0, Gridrange / 2, 0));
-
         activeTeams.Enqueue(Player2);
 
-        foreach(Player player in activeTeams)
-        {
-            print(player.Name);
-        }
+        GenerateUnitForTeam(Player2,
+            playerTwoTemplates[0],
+            new Vector3Int(0, +Gridrange / 2, 0));
+
+    }
+
+    protected void Update()
+    {
+        if (activeTeams.Count > 0)
+            activeTeams.Peek().Update();
     }
 
     [ContextMenu("EndPlayer1")]
@@ -114,6 +168,8 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void Awake()
     {
+        if (selectedUnitPanel == null)
+            selectedUnitPanel = FindObjectOfType<SelectedUnitPanel>();
         if (gridManager == null)
             gridManager = FindObjectOfType<GridManager>();
         if (turnOrderDisplay == null)

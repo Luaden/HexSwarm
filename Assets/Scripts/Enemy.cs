@@ -62,4 +62,9 @@ public class Enemy : Team
             Debug.Log("Used smart ability");
         }
     }
+
+    public override void Update()
+    {
+        throw new System.NotImplementedException();
+    }
 }

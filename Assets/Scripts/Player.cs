@@ -11,8 +11,6 @@ public class Player : Team
     protected GridManager gridManager;
 
     //State variable
-    Cell selectedCell;
-    Cell unitCell;
     Vector3Int currentMouseLocation;
 
     public Player(GameManager game, string name, string description, Sprite icon, TileBase tile)
@@ -31,40 +29,23 @@ public class Player : Team
             gridManager = gameManager.GridManager;
     }
 
-    protected void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            GetUnitAtMouse(GetMousePosition());
-        }
-
-        if (Input.GetMouseButtonDown(1))
-        {
-            MoveUnit();
-        }
-    }
-
     private void MoveUnit()
     {
-        if (unitCell == null)
-            return;
-
-        battlefield.MoveUnit(unitCell.Position, GetMousePosition(), Color);
-        unitCell = null;
+        GameManager.PerformMove(
+            GameManager.DisplayedUnit,
+            default,//GameManager.DisplayedUnit.Abilites[0],
+            GameManager.GetMousePosition());
     }
 
-    protected Vector3Int GetMousePosition() => gridManager.GetCellByClick(Input.mousePosition);
-
-    protected void GetUnitAtMouse(Vector3Int mousePosition)
+    public override void Update()
     {
-        battlefield.World.TryGetValue(mousePosition, out selectedCell);
+        if (Input.GetMouseButtonDown(0))
+            GameManager.InspectUnitUnderMouse();
 
-        if (selectedCell.Unit == null)
-        {
-            unitCell = null;
-            return;
-        }            
+        if ((GameManager.DisplayedUnit == null)||(GameManager.DisplayedUnit.Member != this))
+                return;
 
-        unitCell = selectedCell;
+        if (Input.GetMouseButtonDown(1))
+            MoveUnit();
     }
 }

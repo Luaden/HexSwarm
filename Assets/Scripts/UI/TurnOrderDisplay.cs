@@ -27,13 +27,14 @@ public class TurnOrderDisplay : CoreUIElement<Queue<ITeam>>
 
     protected override bool ClearedIfEmpty(Queue<ITeam> teamQueue)
     {
-        if (teamQueue.Count <= 0)
-            for (int i = 0; i < turnOrderIcons.Length; i++)
-            {
-                UpdateSprite(turnOrderIcons[i], default);
-                return true;
-            }                
+        if (teamQueue.Count > 0)
+            return false;
 
-        return false;
+        for (int i = 0; i < turnOrderIcons.Length; i++)
+        {
+            UpdateSprite(turnOrderIcons[i], default);
+        }                
+
+        return true;
     }
 }

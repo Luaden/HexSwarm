@@ -10,7 +10,7 @@ public abstract class Team : ITeam
     [SerializeField] protected Sprite icon;
     [SerializeField] protected TileBase tile;
 
-    protected List<IUnit> units = new List<IUnit>();
+    protected HashSet<IUnit> units = new HashSet<IUnit>();
 
     public string Name { get => teamName; }
     public string Description { get => description; }
@@ -38,6 +38,14 @@ public abstract class Team : ITeam
         this.tile = tile;
     }
 
+    public void GetUnit(IUnit newUnit)
+    {
+        newUnit.Member = this;
+        this.units.Add(newUnit);
+    }
+
+
+    public abstract void Update();
 
     public abstract void StartTurn();
 

@@ -11,7 +11,7 @@ public class GridManager : MonoBehaviour, IGrid
     [SerializeField] protected Vector3Int unitSpawnPos;
 
     //Editor variables
-    [SerializeField] protected SelectedUnitPanel selectedUnitPanel;
+
     [SerializeField] protected Grid mapGrid;
     [SerializeField] protected Tilemap groundTiles;
     [SerializeField] protected Tilemap highlightTiles;
@@ -127,15 +127,13 @@ public class GridManager : MonoBehaviour, IGrid
         return mouseCellPos;
     }
     #endregion
-
-    public IEnumerable<Cell> GetNeighborCells(Cell origin, int range = 1)
+    public IEnumerable<Cell> GetNeighborCells(Vector3Int origin, int range = 1)
     {
-        print(origin.Position);
         neighbors = new List<Cell>();
 
-        int y = origin.Position.y;
-        int xMax = origin.Position.x + range;
-        int xMin = origin.Position.x - range;
+        int y = origin.y;
+        int xMax = origin.x + range;
+        int xMin = origin.x - range;
 
         GetNeighborCellRow(y, xMin, xMax);
 
@@ -144,8 +142,8 @@ public class GridManager : MonoBehaviour, IGrid
             int half = i / 2;
             print(half);
             int oddCorrection = i % 2;
-            
-            if(Mathf.Abs(y) % 2 > 0)
+
+            if (Mathf.Abs(y) % 2 > 0)
             {
                 GetNeighborCellRow(y - i, xMin + half + oddCorrection, xMax - half);
                 GetNeighborCellRow(y + i, xMin + half + oddCorrection, xMax - half);
@@ -159,17 +157,21 @@ public class GridManager : MonoBehaviour, IGrid
 
         return neighbors;
     }
+    public IEnumerable<Cell> GetNeighborCells(Cell origin, int range = 1)
+    {
+        print(origin.Position);
+        return GetNeighborCells(origin.Position, range);
+    }
 
     protected void GetNeighborCellRow(int y, int xMin, int xMax)
     {
         Vector3Int currentLoc;
         Cell currentCell;
-
         for (int i = xMin; i <= xMax; i++)
         {
             currentLoc = new Vector3Int(i, y, 0);
-            world.TryGetValue(currentLoc, out currentCell);
-            neighbors.Add(currentCell);
+            if (world.TryGetValue(currentLoc, out currentCell))
+                neighbors.Add(currentCell);
         }
     }
 
@@ -199,8 +201,7 @@ public class GridManager : MonoBehaviour, IGrid
             mapGrid = GetComponent<Grid>();
         if (groundTiles == null)
             groundTiles = GetComponentInChildren<Tilemap>();
-        if (selectedUnitPanel == null)
-            selectedUnitPanel = FindObjectOfType<SelectedUnitPanel>();
+
 
         mainCamera = Camera.main;
         world = new Dictionary<Vector3Int, Cell>();

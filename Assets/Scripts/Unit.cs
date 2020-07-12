@@ -22,8 +22,7 @@ public class Unit : IUnit
 
     [SerializeField] protected IReadOnlyList<IPosAbilityDefault> abilites;
 
-    [SerializeField] protected Team member;
-    public ITeam Member => member;
+    public ITeam Member { get; set; }
 
     public string Name => name;
     public string Description => description; 
@@ -34,9 +33,6 @@ public class Unit : IUnit
     public IGrid World => world;
     public int UnitRange => unitRange;
     public IReadOnlyList<IPosAbilityDefault> Abilites => abilites;
-
-
-
 
     public Unit() { }
 

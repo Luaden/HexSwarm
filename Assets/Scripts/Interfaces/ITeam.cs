@@ -17,6 +17,8 @@ public interface ITeam
     IEnumerable<Vector3Int> HighlightAttack { get; }
     IEnumerable<Vector3Int> HighlightOverlap { get; }
 
+    void GetUnit(IUnit unit);
+    void Update();
     bool HasUnitsAfterLosses(IEnumerable<IUnit> units);
     void StartTurn();
     bool Undo();

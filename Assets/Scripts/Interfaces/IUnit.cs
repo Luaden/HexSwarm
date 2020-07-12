@@ -37,7 +37,7 @@ public interface IUnit
     string Description { get; }
     TileBase Tile { get; }
     Sprite Icon { get; }
-    Color Color { get; }
+    ITeam Member { get; set; }
     Vector3Int Location { get; }
     IGrid World { get; }
     int UnitRange { get; }
