@@ -47,10 +47,38 @@ public class GameManager : MonoBehaviour, IGameManager
 
     public void EndTurn()
     {
+        if (activeTeams.Peek() == Player1)
+            turnCounter++;
+
         activeTeams.Enqueue(activeTeams.Dequeue());
         activeTeams.Peek().StartTurn();
         turnOrderDisplay.UpdateUI(activeTeams);
+
+        if (!Player1.HasUnitsAfterLosses(new IUnit[0]))
+        {
+            Loss();
+            return;
+        }
+
+        if (activeTeams.Count == 1)
+        {
+            Win();
+            return;
+        }
+
     }
+    protected void Loss()
+    {
+        this.levelCounter--;
+        StartLevel();
+    }
+    protected void Win()
+    {
+        this.levelCounter++;
+        StartLevel();
+    }
+
+
 
     public Vector3Int GetMousePosition() => gridManager.GetCellByClick(Input.mousePosition);
 
@@ -122,11 +150,15 @@ public class GameManager : MonoBehaviour, IGameManager
         team.GetUnit(newUnit);
     }
 
+
+
     public void StartLevel()
     {
-        int Gridrange = (int)Mathf.Log(levelCounter + 5, 3) + 1;
+        int Gridrange = levelCounter + 2;
 
         gridManager.GenerateGrid(Gridrange, gridManager.BasicTile);
+        activeTeams.Clear();
+
 
         Player2 = new Player(this, "Player2", "Gooier", teamSprites[1], default);
         activeTeams.Enqueue(Player2);
@@ -144,6 +176,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
         EndTurn();
     }
+
 
     protected void Update()
     {

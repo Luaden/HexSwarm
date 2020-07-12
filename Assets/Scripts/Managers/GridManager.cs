@@ -39,6 +39,8 @@ public class GridManager : MonoBehaviour, IGrid
     public void Clear()
     {
         groundTiles.ClearAllTiles();
+        highlightTiles.ClearAllTiles();
+        unitTiles.ClearAllTiles();
         world.Clear();
     }
 
