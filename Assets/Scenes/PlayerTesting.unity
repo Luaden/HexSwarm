@@ -292,7 +292,7 @@ MonoBehaviour:
     icon: {fileID: 0}
     color: {r: 1, g: 1, b: 1, a: 1}
     world: {fileID: 0}
-    unitRange: 3
+    unitRange: 1
 --- !u!1 &552896649
 GameObject:
   m_ObjectHideFlags: 0
