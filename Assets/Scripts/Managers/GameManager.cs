@@ -163,6 +163,12 @@ public class GameManager : MonoBehaviour, IGameManager
         Player2 = new Player(this, "Player2", "Gooier", teamSprites[1], default);
         activeTeams.Enqueue(Player2);
 
+
+        GenerateTeam(Player2,
+             playerTwoTemplates[0],
+             new Vector3Int(UnityEngine.Random.Range(-Gridrange / 4, Gridrange / 4), Gridrange / 2, 0),
+             Gridrange / 4);
+
         GenerateUnitForTeam(Player2,
             playerTwoTemplates[0],
             new Vector3Int(0, +Gridrange / 2, 0));
@@ -170,13 +176,21 @@ public class GameManager : MonoBehaviour, IGameManager
         Player1 = new Player(this, "Player1", "First Goo", teamSprites[0], default);
         activeTeams.Enqueue(Player1);
 
-        GenerateUnitForTeam(Player1,
+        GenerateTeam(Player1,
             playerOneUnitTemplates[0],
-            new Vector3Int(0, -Gridrange / 2, 0));
+            new Vector3Int(UnityEngine.Random.Range(-Gridrange / 4, Gridrange/4 ), -Gridrange / 2, 0),
+            Gridrange/4);
 
         EndTurn();
     }
 
+    protected void GenerateTeam(Player team,Unit template, Vector3Int centerPoint, int radius = 0)
+    {
+        foreach(Cell cell in gridManager.GetNeighborCells(centerPoint,radius))
+                    GenerateUnitForTeam(team,
+                    template,
+                    cell.Position);
+    }
 
     protected void Update()
     {
