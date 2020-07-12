@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,9 +27,13 @@ public class TurnOrderDisplay : CoreUIElement<Queue<ITeam>>
 
     protected override bool ClearedIfEmpty(Queue<ITeam> teamQueue)
     {
-        if(teamQueue.Count <= 0)
-            return false;
+        if (teamQueue.Count <= 0)
+            for (int i = 0; i < turnOrderIcons.Length; i++)
+            {
+                UpdateSprite(turnOrderIcons[i], default);
+                return true;
+            }                
 
-        return true;
+        return false;
     }
 }

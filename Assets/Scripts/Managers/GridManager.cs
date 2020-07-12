@@ -25,16 +25,14 @@ public class GridManager : MonoBehaviour, IGrid
 
     //State variables
     protected Vector3Int currentLocation;
-    protected Cell selectedCell;
-    protected IUnit selectedUnit;
     protected bool canMove;
 
     //Cached references
-    protected Camera mainCamera;
     protected Dictionary<Vector3Int, Cell> world;
     protected HashSet<Cell> highlightedCells;
     protected BattlefieldManager battlefieldManager;
     protected List<Cell> neighbors;
+    protected Camera mainCamera;
 
     public BattlefieldManager BattlefieldManager => battlefieldManager;
 
@@ -88,23 +86,6 @@ public class GridManager : MonoBehaviour, IGrid
     //}
     #endregion
 
-    #region MouseClickFunctions
-    public Vector3Int GetCellByClick(Vector2 mouseScreenPos)
-    {
-        Vector2 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
-        
-        Vector3Int mouseCellPos = mapGrid.WorldToCell(mouseWorldPos);
-
-        return mouseCellPos;
-    }
-
-    protected void GetMouseCell()
-    {
-        currentLocation = GetCellByClick(Input.mousePosition);
-        battlefieldManager.World.TryGetValue(currentLocation, out selectedCell);
-    }
-    #endregion
-
     #region Cell/Vector Check
 
     public bool CheckWorldForVector(Vector3Int location)
@@ -112,36 +93,10 @@ public class GridManager : MonoBehaviour, IGrid
         return world.ContainsKey(location);
     }
 
-    public void GetUnitFromCell(Cell selectedCell)
-    {
-        if (selectedCell == null)
-            return;
-
-        selectedUnit = selectedCell.Unit;
-        selectedUnitPanel.UpdateUI(selectedUnit);
-    }
-
     public bool CheckCanMove(Cell selectedCell) => canMove = selectedCell.Unit == default ? true : false;
     #endregion
 
-    #region Unit Functions
-    protected void MoveUnit()
-    {
-        if (selectedUnit == null)
-            return;
-
-        GetMouseCell(); // assigns new Selected Cell
-        if (CheckCanMove(selectedCell))
-        {
-            Debug.Log("Unit named: " + selectedUnit.Name + " is moving to " + selectedCell.Position);
-            battlefieldManager.MoveUnit(selectedUnit.Location, selectedCell.Position);
-            selectedUnit = null;
-        }
-    }
-
     public void PaintUnitTile(Vector3Int cellToPaint, TileBase tileToPaint) => unitTiles.SetTile(cellToPaint, tileToPaint);
-
-    #endregion
 
     #region Debug
 
@@ -159,6 +114,17 @@ public class GridManager : MonoBehaviour, IGrid
     protected void DebugGenerateGrid()
     {
         GenerateGrid(gridHeight, tile);
+    }
+    #endregion
+
+    #region Mouse
+    public Vector3Int GetCellByClick(Vector2 mouseScreenPos)
+    {
+        Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
+
+        Vector3Int mouseCellPos = mapGrid.WorldToCell(mouseWorldPos);
+
+        return mouseCellPos;
     }
     #endregion
 
@@ -245,18 +211,6 @@ public class GridManager : MonoBehaviour, IGrid
         //DebugGenerateGrid();
     }
 
-    protected void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            GetMouseCell(); // assigns SelectedCell
-            GetUnitFromCell(selectedCell); //Looks at SelectedCell and assigns SelectedUnit to the Unit in the cell.
-        }
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            MoveUnit();
-        }
-    }
 
 }

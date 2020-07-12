@@ -26,22 +26,28 @@ public class BattlefieldManager : IBattlefield
         this.gridManager = gridManager;
     }
 
-    public void DestroyUnits(Vector3Int Vector2)
+    public void DestroyUnits(Vector3Int unitPosition)
     {
         throw new System.NotImplementedException();
     }
 
-    public void MoveUnit(Vector3Int from, Vector3Int to)
+    public void MoveUnit(Vector3Int unitPosition, Vector3Int destination, Color teamColor)
     {
-        world.TryGetValue(from, out fromCell);
-        world.TryGetValue(to, out toCell);
+        world.TryGetValue(unitPosition, out fromCell);
+        world.TryGetValue(destination, out toCell);
 
-        toCell.Unit = fromCell.Unit;
-        (toCell.Unit as Unit).Location = to;
-        fromCell.Unit = default;        
-        
-        gridManager.PaintUnitTile(fromCell.Position, default);
-        gridManager.PaintUnitTile(toCell.Position, toCell.Unit.Tile);
+        if (teamColor != fromCell.Unit.Color)
+            return;
+
+        if (gridManager.CheckCanMove(toCell))
+        {
+            toCell.Unit = fromCell.Unit;
+            (toCell.Unit as Unit).Location = destination;
+            fromCell.Unit = default;
+
+            gridManager.PaintUnitTile(fromCell.Position, default);
+            gridManager.PaintUnitTile(toCell.Position, toCell.Unit.Tile);
+        }
     }
 
     public void PlaceNewUnit(IUnit unit, Vector3Int position)

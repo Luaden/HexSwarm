@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 66566386}
   - component: {fileID: 66566385}
   m_Layer: 5
-  m_Name: AI 3 Icon (1)
+  m_Name: Team 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -570,6 +570,7 @@ MonoBehaviour:
   - {fileID: 297283798}
   - {fileID: 1301590121}
   - {fileID: 251225608}
+  - {fileID: 66566385}
 --- !u!1 &2012025893
 GameObject:
   m_ObjectHideFlags: 0

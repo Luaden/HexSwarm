@@ -14,8 +14,17 @@ public class GameManager : MonoBehaviour, IGameManager
     [SerializeField] protected Enemy tempEnemy;
     [SerializeField] protected Pathfinder pathFinder;
 
-    //Cached references
+    [SerializeField] protected List<Sprite> teamSprites = new List<Sprite>();
+    [SerializeField] protected Player Player1;
+    [SerializeField] protected List<Unit> playerOneUnitTemplates = new List<Unit>();
+    [SerializeField] protected Player Player2;
+    [SerializeField] protected List<Unit> playerTwoTemplates = new List<Unit>();
+
     protected BattlefieldManager battlefieldManager;
+
+    //Cached references
+    public BattlefieldManager BattlefieldManager => battlefieldManager;
+    public GridManager GridManager => gridManager;
 
     [SerializeField] protected int turnCounter;
     public int TurnCounter => turnCounter;
@@ -60,12 +69,6 @@ public class GameManager : MonoBehaviour, IGameManager
         throw new NotImplementedException();
     }
 
-    [SerializeField] protected List<Sprite> teamSprites = new List<Sprite>();
-    [SerializeField] protected Player Player1;
-    [SerializeField] protected List<Unit> playerOneUnitTemplates = new List<Unit>();
-    [SerializeField] protected Player Player2;
-    [SerializeField] protected List<Unit> playerTwoTemplates = new List<Unit>();
-
     public void StartLevel()
     {
         int Gridrange = (int)Mathf.Log(levelCounter + 5, 3) + 1;
@@ -74,15 +77,20 @@ public class GameManager : MonoBehaviour, IGameManager
 
         Player1 = new Player(this, "Player1", "First Goo", teamSprites[0], default);
 
-        battlefieldManager.PlaceNewUnit(new Unit(playerOneUnitTemplates[0]), new Vector3Int(0, -Gridrange / 2, 0));
+        BattlefieldManager.PlaceNewUnit(new Unit(playerOneUnitTemplates[0]), new Vector3Int(0, -Gridrange / 2, 0));
 
         activeTeams.Enqueue(Player1);
 
         Player2 = new Player(this, "Player2", "Gooier", teamSprites[1], default);
 
-        battlefieldManager.PlaceNewUnit(new Unit(playerTwoTemplates[0]), new Vector3Int(0, Gridrange / 2, 0));
+        BattlefieldManager.PlaceNewUnit(new Unit(playerTwoTemplates[0]), new Vector3Int(0, Gridrange / 2, 0));
 
         activeTeams.Enqueue(Player2);
+
+        foreach(Player player in activeTeams)
+        {
+            print(player.Name);
+        }
     }
 
     [ContextMenu("EndPlayer1")]
@@ -118,7 +126,7 @@ public class GameManager : MonoBehaviour, IGameManager
         //EndTurn();
 
         battlefieldManager = gridManager.BattlefieldManager;
-        pathFinder = new Pathfinder(battlefieldManager, gridManager);
+        pathFinder = new Pathfinder(BattlefieldManager, gridManager);
     }
 
     protected void BuildTeams(int totalTeams)
@@ -142,8 +150,8 @@ public class GameManager : MonoBehaviour, IGameManager
         Cell origin;
         Cell destination;
 
-        battlefieldManager.World.TryGetValue(originVector, out origin);
-        battlefieldManager.World.TryGetValue(destinationVector, out destination);
+        BattlefieldManager.World.TryGetValue(originVector, out origin);
+        BattlefieldManager.World.TryGetValue(destinationVector, out destination);
 
         HashSet<Cell> newRoute = pathFinder.AvoidUnitsPath(origin, destination) as HashSet<Cell>;
 

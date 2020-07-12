@@ -14,6 +14,8 @@ public class Pathfinder : IPathfinder
     protected List<Cell> cellsToEvaluate = new List<Cell>();
     protected HashSet<Cell> currentRoute;
     protected HashSet<Cell> newRoute;
+    protected Cell closestCell;
+    protected Cell lastClosestCell;
 
     public Pathfinder(BattlefieldManager battlefieldManager, GridManager gridManager)
     {
@@ -27,7 +29,8 @@ public class Pathfinder : IPathfinder
         currentRoute = new HashSet<Cell>();
 
         cellsToEvaluate = gridManager.GetNeighborCells(origin) as List<Cell>;
-        Cell closestCell = origin;
+        closestCell = origin;
+        lastClosestCell = closestCell;
 
         while (closestCell != destination)
         {
@@ -38,7 +41,13 @@ public class Pathfinder : IPathfinder
                 if (EvaluateCellDistance(cellsToEvaluate[i].Position, destination.Position) < 
                     EvaluateCellDistance(closestCell.Position, destination.Position) && 
                     gridManager.CheckCanMove(cellsToEvaluate[i]))
+                {
                     closestCell = cellsToEvaluate[i];
+                    lastClosestCell = closestCell;
+                }
+
+                if (closestCell == lastClosestCell)
+                    break;
             }
 
             currentRoute.Add(closestCell);
@@ -53,7 +62,7 @@ public class Pathfinder : IPathfinder
         currentRoute = new HashSet<Cell>();
 
         cellsToEvaluate = gridManager.GetNeighborCells(origin) as List<Cell>;
-        Cell closestCell = origin;
+        closestCell = origin;
 
         while(closestCell != destination)
         {
