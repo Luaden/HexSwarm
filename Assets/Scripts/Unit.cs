@@ -71,9 +71,4 @@ public class Unit : IUnit
         return new Vector3Int[0];
     }
 
-    public IPosAblity GeneratePosAblity(IPosAbilityDefault move)
-    {
-        throw new System.NotImplementedException();
-    }
-
 }

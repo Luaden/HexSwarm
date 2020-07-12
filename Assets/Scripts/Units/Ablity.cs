@@ -1,29 +1,52 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-
 [System.Serializable]
-public class HashSetVector3Int : SerializableHashset<int> { }
-[System.Serializable]
-public class Ablity : IPosAblity
+public abstract class Ablity : IPosAbilityDefault
 {
-    [SerializeField] protected HashSetVector3Int starting;
+    protected static int _ID;
+    public HashSet<Vector3Int> movePattern;
+    public HashSet<Vector3Int> attackPattern;
+    public IEnumerable<Vector3Int> MovePattern { get; }
+    public IEnumerable<Vector3Int> AttackPattern { get; }
 
-    public IEnumerable<Vector3Int> PossiblePlacements => throw new System.NotImplementedException();
+    protected readonly int _iD;
+    public int ID => _iD;
 
-    public IReadOnlyDictionary<Vector3Int, HashSet<Vector3Int>> AttackZone => throw new System.NotImplementedException();
+    [SerializeField] protected string name;
+    public string Name => name;
+    [SerializeField] protected string description;
+    public string Description => description;
+    [SerializeField] protected Sprite movementGrid;
+    public Sprite MovementGrid => movementGrid;
+    [SerializeField] protected Sprite damageGrid;
+    public Sprite DamageGrid => damageGrid;
 
-    public int ID => throw new System.NotImplementedException();
+    public Ablity()
+    {
+        GenerateMoves();
+        GenerateAttack();
+        _iD = _ID++;
+    }
+    protected abstract HashSet<Vector3Int> GenerateMoves();
+    protected abstract HashSet<Vector3Int> GenerateAttack();
 
-    public string Name => throw new System.NotImplementedException();
+    protected void GenerateRow(int Y, int Z, int xMin, int xMax, HashSet<Vector3Int> collection)
+    {
+        int currentX = xMin;
+        while (currentX <= xMax)
+            collection.Add(new Vector3Int(currentX++, Y, Z));
+    }
+    protected void GenerateHexagon(int radius, HashSet<Vector3Int> collection, int Z = 0)
+    {
+        GenerateRow(0,Z, -radius, radius, collection);
+        for (int i = 1; i <= radius; i++)
+        {
+            int half = i / 2;
+            int oddCorrection = i % 2;
+            GenerateRow(i,Z, -radius + half, radius - half - oddCorrection, collection);
+            GenerateRow(-i,Z, -radius + half, radius - half - oddCorrection, collection);
+        }
+    }
 
-    public string Description => throw new System.NotImplementedException();
-
-    public Sprite MovementGrid => throw new System.NotImplementedException();
-
-    public Sprite DamageGrid => throw new System.NotImplementedException();
-
-    IEnumerable<Vector2> IPosAblity.PossiblePlacements => throw new System.NotImplementedException();
-
-    IReadOnlyDictionary<Vector2, HashSet<Vector2>> IPosAblity.AttackZone => throw new System.NotImplementedException();
 }

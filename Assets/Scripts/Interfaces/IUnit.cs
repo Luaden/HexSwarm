@@ -27,12 +27,8 @@ public interface IPosAbilityDefault
     string Description { get; }
     Sprite MovementGrid { get; }
     Sprite DamageGrid { get; }
-}
-
-public interface IPosAblity : IPosAbilityDefault
-{
-    IEnumerable<Vector2> PossiblePlacements { get; }
-    IReadOnlyDictionary<Vector2, HashSet<Vector2>> AttackZone { get; }
+    IEnumerable<Vector3Int> MovePattern { get; }
+    IEnumerable<Vector3Int> AttackPattern { get; }
 }
 
 public interface IUnit
