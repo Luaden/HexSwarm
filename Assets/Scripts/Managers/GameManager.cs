@@ -36,8 +36,8 @@ public class GameManager : MonoBehaviour, IGameManager
 
     public void EndTurn()
     {
-        activeTeams.Peek().StartTurn();
         activeTeams.Enqueue(activeTeams.Dequeue());
+        activeTeams.Peek().StartTurn();
         turnOrderDisplay.UpdateUI(activeTeams);
     }
 
@@ -46,9 +46,13 @@ public class GameManager : MonoBehaviour, IGameManager
         throw new NotImplementedException();
     }
 
+    [ContextMenu("NewGame")]
     public void NewGame()
     {
-        throw new NotImplementedException();
+        levelCounter = 0;
+        turnCounter = 0;
+
+        StartLevel();
     }
 
     public bool PerformMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
@@ -56,9 +60,43 @@ public class GameManager : MonoBehaviour, IGameManager
         throw new NotImplementedException();
     }
 
+    [SerializeField] protected List<Sprite> teamSprites = new List<Sprite>();
+    [SerializeField] protected Player Player1;
+    [SerializeField] protected List<Unit> playerOneUnitTemplates = new List<Unit>();
+    [SerializeField] protected Player Player2;
+    [SerializeField] protected List<Unit> playerTwoTemplates = new List<Unit>();
+
     public void StartLevel()
     {
-        throw new NotImplementedException();
+        int Gridrange = (int)Mathf.Log(levelCounter + 5, 3) + 1;
+
+        gridManager.GenerateGrid(Gridrange, gridManager.BasicTile);
+
+        Player1 = new Player(this, "Player1", "First Goo", teamSprites[0], default);
+
+        battlefieldManager.PlaceNewUnit(new Unit(playerOneUnitTemplates[0]), new Vector3Int(0, -Gridrange / 2, 0));
+
+        activeTeams.Enqueue(Player1);
+
+        Player2 = new Player(this, "Player2", "Gooier", teamSprites[1], default);
+
+        battlefieldManager.PlaceNewUnit(new Unit(playerTwoTemplates[0]), new Vector3Int(0, Gridrange / 2, 0));
+
+        activeTeams.Enqueue(Player2);
+    }
+
+    [ContextMenu("EndPlayer1")]
+    protected void EndPlayer1Turn()
+    {
+        if (Player1 == activeTeams.Peek())
+            EndTurn();
+    }
+
+    [ContextMenu("EndPlayer2")]
+    protected void EndPlayer2Turn()
+    {
+        if (Player2 == activeTeams.Peek())
+            EndTurn();
     }
 
     public bool Undo()

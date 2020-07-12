@@ -1,17 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Player : Team
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Player(GameManager game, string name, string description, Sprite icon, TileBase tile) 
+        : base(game, name, description,icon, tile) { }
 
-    // Update is called once per frame
-    void Update()
+    public override void StartTurn()
     {
         
     }

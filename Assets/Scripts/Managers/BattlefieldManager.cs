@@ -52,10 +52,8 @@ public class BattlefieldManager : IBattlefield
         if (toCell.Unit != null)
             return;
 
-        toCell = new Cell(toCell.Position, unit, toCell.Tile);
-
-        world.Remove(toCell.Position);
-        world.Add(toCell.Position, toCell);
+        toCell.Unit = unit;
+        (toCell.Unit as Unit).Location = position;
 
         gridManager.PaintUnitTile(toCell.Position, toCell.Unit.Tile);
     }

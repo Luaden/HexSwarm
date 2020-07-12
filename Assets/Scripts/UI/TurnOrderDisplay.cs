@@ -14,12 +14,14 @@ public class TurnOrderDisplay : CoreUIElement<Queue<ITeam>>
 
         Queue<ITeam> tempQueue = new Queue<ITeam>(teamQueue);
 
-        if(ClearedIfEmpty(teamQueue))
-            for (int i = 0; i < turnOrderIcons.Length; i++)
-            {
-                turnOrderIcons[i].sprite = tempQueue.Dequeue().Icon;
-                tempQueue.Enqueue(tempQueue.Dequeue());
-            }
+        if (ClearedIfEmpty(teamQueue))
+            return;
+
+        for (int i = 0; i < turnOrderIcons.Length; i++)
+        {
+            turnOrderIcons[i].sprite = tempQueue.Peek().Icon;
+            tempQueue.Enqueue(tempQueue.Dequeue());
+        }
     }
 
     protected override bool ClearedIfEmpty(Queue<ITeam> teamQueue)

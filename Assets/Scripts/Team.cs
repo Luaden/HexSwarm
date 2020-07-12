@@ -27,25 +27,33 @@ public abstract class Team : ITeam
     public Teams Type { get; set; }
     public bool HasMove { get; set; }
 
-    public virtual void StartTurn()
-    {
 
+    public Team() { }
+    public Team(GameManager game, string name, string description, Sprite icon, TileBase tile)
+    {
+        this.gameManager = game;
+        this.teamName = name;
+        this.description = description;
+        this.icon = icon;
+        this.tile = tile;
     }
 
-    public virtual void Undo()
+
+    public abstract void StartTurn();
+
+    public virtual bool Undo()
     {
-        return;
+        return false;
     }
 
     public virtual void EndTurn()
     {
-        if(HasMove)
-            gameManager.EndTurn();
+        gameManager.EndTurn();
     }
-    
+
     public virtual void DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
     {
-        //This needs to not have no parameters.
+        gameManager.PerformMove(unit, ablity, target);
     }
 
     public virtual void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
@@ -55,6 +63,9 @@ public abstract class Team : ITeam
 
     public bool HasUnitsAfterLosses(IEnumerable<IUnit> deadUnits)
     {
-        return false;
+        foreach (IUnit loss in deadUnits)
+            if (this.units.Contains(loss))
+                this.units.Remove(loss);
+        return this.units.Count > 0;
     }
 }

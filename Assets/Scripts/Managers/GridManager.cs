@@ -17,7 +17,10 @@ public class GridManager : MonoBehaviour, IGrid
     [SerializeField] protected Tilemap highlightTiles;
     [SerializeField] protected Tilemap unitTiles;
     [SerializeField] protected TileBase tile;
+    public TileBase BasicTile => tile;
     [SerializeField] protected TileBase highlightTile;
+    public TileBase HighlightTile => highlightTile;
+
     [SerializeField] protected int gridHeight = 3;
 
     //State variables
@@ -151,6 +154,8 @@ public class GridManager : MonoBehaviour, IGrid
         return newUnit;
     }
 
+
+    //[ContextMenu("GenerateGrid")]
     protected void DebugGenerateGrid()
     {
         GenerateGrid(gridHeight, tile);
@@ -237,7 +242,7 @@ public class GridManager : MonoBehaviour, IGrid
 
         battlefieldManager = new BattlefieldManager(world, this);
 
-        DebugGenerateGrid();
+        //DebugGenerateGrid();
     }
 
     protected void Update()

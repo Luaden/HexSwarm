@@ -19,7 +19,7 @@ public interface ITeam
 
     bool HasUnitsAfterLosses(IEnumerable<IUnit> units);
     void StartTurn();
-    void Undo();
+    bool Undo();
     void EndTurn();
     void DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
     void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
