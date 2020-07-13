@@ -65,23 +65,21 @@ public class GameManager : MonoBehaviour, IGameManager
             Win();
             return;
         }
-
     }
+    
     protected void Loss()
     {
         this.levelCounter--;
         StartLevel();
     }
+    
     protected void Win()
     {
         this.levelCounter++;
         StartLevel();
     }
 
-
-
     public Vector3Int GetMousePosition() => gridManager.GetCellByClick(Input.mousePosition);
-
 
     public void InspectUnitUnderMouse()
     {
@@ -98,7 +96,6 @@ public class GameManager : MonoBehaviour, IGameManager
         displayedUnit = selectedcell.Unit;
     }
 
-    [ContextMenu("NewGame")]
     public void NewGame()
     {
         levelCounter = 0;
@@ -123,38 +120,9 @@ public class GameManager : MonoBehaviour, IGameManager
         return true;
     }
 
-    protected void ResolveDeaths(IEnumerable<IUnit> deaths, IUnit unit)
-    {
-        ITeam currentTurn = activeTeams.Dequeue();
-        activeTeams.Enqueue(currentTurn);
-
-        foreach (IUnit corspe in deaths)
-            BattlefieldManager.DestroyUnits(corspe.Location);
-
-        while(activeTeams.Peek() != currentTurn)
-        {
-            ITeam teamToResolve = activeTeams.Dequeue();
-            if (teamToResolve.HasUnitsAfterLosses(deaths))
-                activeTeams.Enqueue(teamToResolve);
-        }
-
-        if ((activeTeams.Peek().Type & Teams.Player) == 0)
-            foreach (IUnit freshKill in deaths)
-                GenerateUnitForTeam(unit.Member, unit as Unit, freshKill.Location);
-    }
-
-    protected void GenerateUnitForTeam(ITeam team, Unit template, Vector3Int location)
-    {
-        Unit newUnit = new Unit(template);
-        BattlefieldManager.PlaceNewUnit(newUnit, location);
-        team.GetUnit(newUnit);
-    }
-
-
-
     public void StartLevel()
     {
-        int Gridrange = levelCounter + 2;
+        int Gridrange = levelCounter + 10;
 
         gridManager.GenerateGrid(Gridrange, gridManager.BasicTile);
         activeTeams.Clear();
@@ -163,15 +131,11 @@ public class GameManager : MonoBehaviour, IGameManager
         Player2 = new Player(this, "Player2", "Gooier", teamSprites[1], default);
         activeTeams.Enqueue(Player2);
 
-
         GenerateTeam(Player2,
              playerTwoTemplates[0],
              new Vector3Int(UnityEngine.Random.Range(-Gridrange / 4, Gridrange / 4), Gridrange / 2, 0),
              Gridrange / 4);
-
-        GenerateUnitForTeam(Player2,
-            playerTwoTemplates[0],
-            new Vector3Int(0, +Gridrange / 2, 0));
+        Debug.Log("second player made.");
 
         Player1 = new Player(this, "Player1", "First Goo", teamSprites[0], default);
         activeTeams.Enqueue(Player1);
@@ -180,41 +144,9 @@ public class GameManager : MonoBehaviour, IGameManager
             playerOneUnitTemplates[0],
             new Vector3Int(UnityEngine.Random.Range(-Gridrange / 4, Gridrange/4 ), -Gridrange / 2, 0),
             Gridrange/4);
+        Debug.Log("First player made.");
 
         EndTurn();
-    }
-
-    protected void GenerateTeam(Player team,Unit template, Vector3Int centerPoint, int radius = 0)
-    {
-        foreach(Cell cell in gridManager.GetNeighborCells(centerPoint,radius))
-                    GenerateUnitForTeam(team,
-                    template,
-                    cell.Position);
-    }
-
-    protected void Update()
-    {
-        if (activeTeams.Count > 0)
-            activeTeams.Peek().Update();
-    }
-
-    [ContextMenu("EndPlayer1")]
-    protected void EndPlayer1Turn()
-    {
-        if (Player1 == activeTeams.Peek())
-            EndTurn();
-    }
-
-    [ContextMenu("EndPlayer2")]
-    protected void EndPlayer2Turn()
-    {
-        if (Player2 == activeTeams.Peek())
-            EndTurn();
-    }
-
-    public bool Undo()
-    {
-        throw new NotImplementedException();
     }
 
     protected void Awake()
@@ -229,11 +161,43 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void Start()
     {
-        //BuildTeams(totalTeamCount);
-        //EndTurn();
-
         battlefieldManager = gridManager.BattlefieldManager;
         pathFinder = new Pathfinder(BattlefieldManager, gridManager);
+        NewGame();
+    }
+
+    protected void Update()
+    {
+        if (activeTeams.Count > 0)
+            activeTeams.Peek().Update();
+    }
+
+    protected void ResolveDeaths(IEnumerable<IUnit> deaths, IUnit unit)
+    {
+        ITeam currentTurn = activeTeams.Dequeue();
+        activeTeams.Enqueue(currentTurn);
+
+        foreach (IUnit corspe in deaths)
+            BattlefieldManager.DestroyUnits(corspe.Location);
+
+        while (activeTeams.Peek() != currentTurn)
+        {
+            ITeam teamToResolve = activeTeams.Dequeue();
+            if (teamToResolve.HasUnitsAfterLosses(deaths))
+                activeTeams.Enqueue(teamToResolve);
+        }
+
+        if ((activeTeams.Peek().Type & Teams.Player) == 0)
+            foreach (IUnit freshKill in deaths)
+                GenerateUnitForTeam(unit.Member, unit as Unit, freshKill.Location);
+    }
+
+    protected void GenerateUnitForTeam(ITeam team, Unit template, Vector3Int location)
+    {
+        Debug.Log("Made a unit");
+        Unit newUnit = new Unit(template);
+        BattlefieldManager.PlaceNewUnit(newUnit, location);
+        team.GetUnit(newUnit);
     }
 
     protected void BuildTeams(int totalTeams)
@@ -247,6 +211,36 @@ public class GameManager : MonoBehaviour, IGameManager
         }
 
         turnOrderDisplay.UpdateUI(this);
+    }
+
+    protected void GenerateTeam(Player team, Unit template, Vector3Int centerPoint, int radius = 0)
+    {
+        foreach (Cell cell in gridManager.GetNeighborCells(centerPoint, radius))
+            GenerateUnitForTeam(team,
+            template,
+            cell.Position);
+    }
+ 
+
+    #region Debug
+    [ContextMenu("EndPlayer1")]
+    protected void EndPlayer1Turn()
+    {
+        if (Player1 == activeTeams.Peek())
+            EndTurn();
+    }
+
+    [ContextMenu("EndPlayer2")]
+    protected void EndPlayer2Turn()
+    {
+        if (Player2 == activeTeams.Peek())
+            EndTurn();
+    }
+
+    [ContextMenu("Generate Unit")]
+    protected void DebugGenerateUnit()
+    {
+        gridManager.DebugGenerateUnit();
     }
 
     [ContextMenu("Generate Path From 0,0 to 0, 6")]
@@ -264,10 +258,5 @@ public class GameManager : MonoBehaviour, IGameManager
 
         gridManager.HighlightGrid(newRoute);
     }
-
-    [ContextMenu("Generate Unit")]
-    protected void DebugGenerateUnit()
-    {
-        gridManager.DebugGenerateUnit();
-    }
+    #endregion
 }

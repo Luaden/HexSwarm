@@ -21,6 +21,8 @@ public abstract class Ablity : IPosAbilityDefault
     public Sprite MovementGrid => movementGrid;
     [SerializeField] protected Sprite damageGrid;
     public Sprite DamageGrid => damageGrid;
+    [SerializeField] protected AudioClip soundEffect;
+    public AudioClip SoundEffect => soundEffect;
 
     public Ablity()
     {

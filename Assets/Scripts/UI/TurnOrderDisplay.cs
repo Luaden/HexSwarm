@@ -33,7 +33,7 @@ public class TurnOrderDisplay : CoreUIElement<IGameManager>
 
     protected override bool ClearedIfEmpty(IGameManager gameManager)
     {
-        if (teamQueue.Count > 0)
+        if (gameManager.ActiveTeams.Count > 0)
             return false;
 
         for (int i = 0; i < turnOrderIcons.Length; i++)

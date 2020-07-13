@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 412638876399670559}
   - component: {fileID: 412638876399670556}
   - component: {fileID: 412638875887894215}
-  - component: {fileID: 2603546863364804637}
   m_Layer: 0
-  m_Name: Title UI Controller
+  m_Name: Title UI Controller 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,18 +47,6 @@ MonoBehaviour:
   mainCanvas: {fileID: 0}
   optionsCanvas: {fileID: 0}
 --- !u!114 &412638875887894215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 412638876399670557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c21329f01d3004499a09357e4c23b8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2603546863364804637
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -130,7 +130,7 @@ public class GridManager : MonoBehaviour, IGrid
     }
     #endregion
 
-    public IEnumerable<Cell> GetNeighborCells(Cell origin, int range = 1)
+    public IEnumerable<Cell> GetNeighborCells(Vector3Int origin, int range = 1)
     {
         neighbors = new List<Cell>();
 
@@ -159,9 +159,9 @@ public class GridManager : MonoBehaviour, IGrid
 
         return neighbors;
     }
+
     public IEnumerable<Cell> GetNeighborCells(Cell origin, int range = 1)
     {
-        print(origin.Position);
         return GetNeighborCells(origin.Position, range);
     }
 

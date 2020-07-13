@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6712041247140805694}
-  - component: {fileID: 6712041247140805693}
   - component: {fileID: 6712041247140805692}
   - component: {fileID: 6712041247140805691}
+  - component: {fileID: 6712041247140805693}
+  - component: {fileID: 6933599285082438714}
   m_Layer: 0
   m_Name: Audio Manager
   m_TagString: Untagged
@@ -28,24 +29,11 @@ Transform:
   m_GameObject: {fileID: 6712041247140805690}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 599.7771, y: 163.67702, z: -41.458336}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6712041247140805693
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6712041247140805690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9a1e90d160fe804cb66e4248c062f1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bgmSong: {fileID: 0}
 --- !u!82 &6712041247140805692
 AudioSource:
   m_ObjectHideFlags: 0
@@ -238,3 +226,34 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6712041247140805693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6712041247140805690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9a1e90d160fe804cb66e4248c062f1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bgmSongs:
+  - {fileID: 8300000, guid: cbf35fd79f55e3f4a8a4d9328c05649d, type: 3}
+  - {fileID: 8300000, guid: 405717674c9193d4e96620ec1c0ecb5d, type: 3}
+  - {fileID: 8300000, guid: 6ea4be7a9ae86484dbf68703c367a4f1, type: 3}
+  - {fileID: 8300000, guid: dafaf7560f1a09f4f92ba6fa01d32a5f, type: 3}
+--- !u!114 &6933599285082438714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6712041247140805690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42db375ea46c68d4caa5e37185d8fd70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraSensitivity: 1
+  cameraSpeed: 1

@@ -25,6 +25,7 @@ public interface IPosAbilityDefault
     int ID { get; }
     string Name { get; }
     string Description { get; }
+    AudioClip SoundEffect { get; }
     Sprite MovementGrid { get; }
     Sprite DamageGrid { get; }
     IEnumerable<Vector3Int> MovePattern { get; }
