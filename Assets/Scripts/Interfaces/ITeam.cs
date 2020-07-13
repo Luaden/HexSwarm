@@ -9,7 +9,7 @@ public interface ITeam
     Sprite Icon { get; }
     TileBase Tile { get; }
     Color Color { get; }
-    Teams Type { get; }
+    Teams Member { get; }
     bool HasMove { get; }
     IGameManager GameManager { get; }
     IEnumerable<IUnit> Units { get;}
@@ -18,7 +18,7 @@ public interface ITeam
     IEnumerable<Vector3Int> HighlightOverlap { get; }
 
     void GetUnit(IUnit unit);
-    void Update();
+    //void Update();
     bool HasUnitsAfterLosses(IEnumerable<IUnit> units);
     void StartTurn();
     bool Undo();

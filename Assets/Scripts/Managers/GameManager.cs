@@ -10,35 +10,31 @@ public class GameManager : MonoBehaviour, IGameManager
     //Editor variables
     [SerializeField] protected GridManager gridManager;
     [SerializeField] protected TurnOrderDisplay turnOrderDisplay;
+    [SerializeField] protected SelectedUnitPanel selectedUnitPanel;    
     [SerializeField] protected int totalTeamCount;
-    [SerializeField] protected Enemy tempEnemy;
-    [SerializeField] protected Pathfinder pathFinder;
-
     [SerializeField] protected List<Sprite> teamSprites = new List<Sprite>();
     [SerializeField] protected Player Player1;
     [SerializeField] protected List<Unit> playerOneUnitTemplates = new List<Unit>();
     [SerializeField] protected Player Player2;
     [SerializeField] protected List<Unit> playerTwoTemplates = new List<Unit>();
-    [SerializeField] protected SelectedUnitPanel selectedUnitPanel;
+    [SerializeField] protected Enemy tempEnemy;
+    [SerializeField] protected Queue<ITeam> activeTeams = new Queue<ITeam>();
 
 
     protected BattlefieldManager battlefieldManager;
+    protected Pathfinder pathFinder;
+    protected int turnCounter;
+    protected int levelCounter;
 
-    //Cached references
     public BattlefieldManager BattlefieldManager => battlefieldManager;
+    public Pathfinder Pathfinder => pathFinder;
     public GridManager GridManager => gridManager;
-
-    [SerializeField] protected int turnCounter;
     public int TurnCounter => turnCounter;
-
-    [SerializeField] protected int levelCounter;
     public int LevelCounter => levelCounter;
-
-    [SerializeField] protected Queue<ITeam> activeTeams = new Queue<ITeam>();
     public Queue<ITeam> ActiveTeams => activeTeams;
 
-    [SerializeField] protected IUnit displayedUnit;
-    public IUnit DisplayedUnit => displayedUnit;
+    //[SerializeField] protected IUnit displayedUnit;
+    //public IUnit DisplayedUnit => displayedUnit;
 
     public void AnimateMove()
     {
@@ -66,35 +62,23 @@ public class GameManager : MonoBehaviour, IGameManager
             return;
         }
     }
-    
-    protected void Loss()
-    {
-        this.levelCounter--;
-        StartLevel();
-    }
-    
-    protected void Win()
-    {
-        this.levelCounter++;
-        StartLevel();
-    }
 
-    public Vector3Int GetMousePosition() => gridManager.GetCellByClick(Input.mousePosition);
+    //public Vector3Int GetMousePosition() => gridManager.GetCellByClick(Input.mousePosition);
 
-    public void InspectUnitUnderMouse()
-    {
-        Cell selectedcell;
-        if (!battlefieldManager.World.TryGetValue(GetMousePosition(), out selectedcell))
-            return;
+    //public void InspectUnitUnderMouse()
+    //{
+    //    Cell selectedcell;
+    //    if (!battlefieldManager.World.TryGetValue(GetMousePosition(), out selectedcell))
+    //        return;
 
-        if (selectedcell.Unit == default)
-            return;
+    //    if (selectedcell.Unit == default)
+    //        return;
 
-        if (displayedUnit != selectedcell.Unit)
-            selectedUnitPanel.UpdateUI(selectedcell.Unit);
+    //    if (displayedUnit != selectedcell.Unit)
+    //        selectedUnitPanel.UpdateUI(selectedcell.Unit);
 
-        displayedUnit = selectedcell.Unit;
-    }
+    //    displayedUnit = selectedcell.Unit;
+    //}
 
     public void NewGame()
     {
@@ -104,49 +88,54 @@ public class GameManager : MonoBehaviour, IGameManager
         StartLevel();
     }
 
-    public bool PerformMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
+    public void UpdateUnitUI(IUnit unit)
     {
-        if (unit.Member != activeTeams.Peek())
-            return false;
-
-        BattlefieldManager.MoveUnit(unit.Location, target);
-
-        IEnumerable<Cell> neighbors = gridManager.GetNeighborCells(unit.Location);
-
-        List<IUnit> deaths = neighbors.Select(X => X.Unit).Where(X=>X!=default).Where(X=>X.Member !=unit.Member) .ToList();
-
-        ResolveDeaths(deaths, unit);
-
-        return true;
+        selectedUnitPanel.UpdateUI(unit);
     }
+
+    //public bool PerformMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
+    //{
+    //    if (unit.Team != activeTeams.Peek())
+    //        return false;
+
+    //    BattlefieldManager.MoveUnit(unit.Location, target);
+
+    //    IEnumerable<Cell> neighbors = gridManager.GetNeighborCells(unit.Location);
+
+    //    List<IUnit> deaths = neighbors.Select(X => X.Unit).Where(X=>X!=default).Where(X=>X.Member !=unit.Member) .ToList();
+
+    //    ResolveDeaths(deaths, unit);
+
+    //    return true;
+    //}
 
     public void StartLevel()
     {
-        int Gridrange = levelCounter + 10;
+        //int Gridrange = levelCounter + 10;
 
-        gridManager.GenerateGrid(Gridrange, gridManager.BasicTile);
-        activeTeams.Clear();
+        //gridManager.GenerateGrid(Gridrange, gridManager.BasicTile);
+        //activeTeams.Clear();
 
 
-        Player2 = new Player(this, "Player2", "Gooier", teamSprites[1], default);
-        activeTeams.Enqueue(Player2);
+        //Player2 = new Player(this, "Player2", "Gooier", teamSprites[1], default);
+        //activeTeams.Enqueue(Player2);
 
-        GenerateTeam(Player2,
-             playerTwoTemplates[0],
-             new Vector3Int(UnityEngine.Random.Range(-Gridrange / 4, Gridrange / 4), Gridrange / 2, 0),
-             Gridrange / 4);
-        Debug.Log("second player made.");
+        //GenerateTeam(Player2,
+        //     playerTwoTemplates[0],
+        //     new Vector3Int(UnityEngine.Random.Range(-Gridrange / 4, Gridrange / 4), Gridrange / 2, 0),
+        //     Gridrange / 4);
+        //Debug.Log("second player made.");
 
-        Player1 = new Player(this, "Player1", "First Goo", teamSprites[0], default);
-        activeTeams.Enqueue(Player1);
+        //Player1 = new Player(this, "Player1", "First Goo", teamSprites[0], default);
+        //activeTeams.Enqueue(Player1);
 
-        GenerateTeam(Player1,
-            playerOneUnitTemplates[0],
-            new Vector3Int(UnityEngine.Random.Range(-Gridrange / 4, Gridrange/4 ), -Gridrange / 2, 0),
-            Gridrange/4);
-        Debug.Log("First player made.");
+        //GenerateTeam(Player1,
+        //    playerOneUnitTemplates[0],
+        //    new Vector3Int(UnityEngine.Random.Range(-Gridrange / 4, Gridrange/4 ), -Gridrange / 2, 0),
+        //    Gridrange/4);
+        //Debug.Log("First player made.");
 
-        EndTurn();
+        //EndTurn();
     }
 
     protected void Awake()
@@ -168,28 +157,28 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void Update()
     {
-        if (activeTeams.Count > 0)
-            activeTeams.Peek().Update();
+        //if (activeTeams.Count > 0)
+        //    activeTeams.Peek().Update();
     }
 
     protected void ResolveDeaths(IEnumerable<IUnit> deaths, IUnit unit)
     {
-        ITeam currentTurn = activeTeams.Dequeue();
-        activeTeams.Enqueue(currentTurn);
+        //ITeam currentTurn = activeTeams.Dequeue();
+        //activeTeams.Enqueue(currentTurn);
 
-        foreach (IUnit corspe in deaths)
-            BattlefieldManager.DestroyUnits(corspe.Location);
+        //foreach (IUnit corspe in deaths)
+        //    BattlefieldManager.DestroyUnits(corspe.Location);
 
-        while (activeTeams.Peek() != currentTurn)
-        {
-            ITeam teamToResolve = activeTeams.Dequeue();
-            if (teamToResolve.HasUnitsAfterLosses(deaths))
-                activeTeams.Enqueue(teamToResolve);
-        }
+        //while (activeTeams.Peek() != currentTurn)
+        //{
+        //    ITeam teamToResolve = activeTeams.Dequeue();
+        //    if (teamToResolve.HasUnitsAfterLosses(deaths))
+        //        activeTeams.Enqueue(teamToResolve);
+        //}
 
-        if ((activeTeams.Peek().Type & Teams.Player) == 0)
-            foreach (IUnit freshKill in deaths)
-                GenerateUnitForTeam(unit.Member, unit as Unit, freshKill.Location);
+        //if ((activeTeams.Peek().Type & Teams.Player) == 0)
+        //    foreach (IUnit freshKill in deaths)
+        //        GenerateUnitForTeam(unit.Member, unit as Unit, freshKill.Location);
     }
 
     protected void GenerateUnitForTeam(ITeam team, Unit template, Vector3Int location)
@@ -220,7 +209,19 @@ public class GameManager : MonoBehaviour, IGameManager
             template,
             cell.Position);
     }
- 
+
+    protected void Loss()
+    {
+        this.levelCounter--;
+        StartLevel();
+    }
+
+    protected void Win()
+    {
+        this.levelCounter++;
+        StartLevel();
+    }
+
 
     #region Debug
     [ContextMenu("EndPlayer1")]

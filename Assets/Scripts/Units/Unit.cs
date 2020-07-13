@@ -22,8 +22,7 @@ public class Unit : IUnit
 
     [SerializeField] protected IReadOnlyList<IPosAbilityDefault> abilites;
 
-    public ITeam Member { get; set; }
-
+    public ITeam Team { get; set; }
     public string Name => name;
     public string Description => description; 
     public TileBase Tile => tile;
@@ -50,7 +49,7 @@ public class Unit : IUnit
 
     public void ApplyAbility(IPosAbilityDefault move, Vector3Int temp)
     {
-        Member.DoMove(this, move, temp);
+        //Member.DoMove(this, move, temp);
     }
 
     public IEnumerable<Vector3Int> CalcuateValidNewLocation(IPosAbilityDefault move)

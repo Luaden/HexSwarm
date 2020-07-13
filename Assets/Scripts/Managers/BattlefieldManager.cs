@@ -8,7 +8,7 @@ using UnityEngine;
 public class BattlefieldManager : IBattlefield
 {
     //Cached references
-    GridManager gridManager;
+    protected GridManager gridManager;
 
     //State variables
     protected Dictionary<Vector3Int, Cell> world;
@@ -36,20 +36,25 @@ public class BattlefieldManager : IBattlefield
         }
     }
 
-    public void MoveUnit(Vector3Int unitPosition, Vector3Int destination)
+    public bool MoveUnit(Vector3Int unitPosition, Vector3Int destination, ITeam team)
     {
         world.TryGetValue(unitPosition, out fromCell);
         world.TryGetValue(destination, out toCell);
 
-        if (gridManager.CheckCanMove(toCell))
-        {
-            toCell.Unit = fromCell.Unit;
-            (toCell.Unit as Unit).Location = destination;
-            fromCell.Unit = default;
+        if (team != fromCell.Unit.Team)
+            return false;
 
-            gridManager.PaintUnitTile(fromCell.Position, default);
-            gridManager.PaintUnitTile(toCell.Position, toCell.Unit.Tile);
-        }
+        if (!gridManager.CheckCanMove(toCell))
+            return false;
+        
+        toCell.Unit = fromCell.Unit;
+        (toCell.Unit as Unit).Location = destination;
+        fromCell.Unit = default;
+
+        gridManager.PaintUnitTile(fromCell.Position, default);
+        gridManager.PaintUnitTile(toCell.Position, toCell.Unit.Tile);
+
+        return true;
     }
 
     public void PlaceNewUnit(IUnit unit, Vector3Int position)

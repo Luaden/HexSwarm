@@ -7,46 +7,74 @@ using UnityEngine.Tilemaps;
 public class Player : Team
 {
     //Cached references
-    protected BattlefieldManager battlefield;
+    protected BattlefieldManager battlefieldManager;
     protected GridManager gridManager;
 
     //State variable
     Vector3Int currentMouseLocation;
+    Cell selectedCell;
+    IUnit selectedUnit;
+
 
     public Player(GameManager game, string name, string description, Sprite icon, TileBase tile)
         : base(game, name, description, icon, tile) { }
 
-    public override void StartTurn()
-    {
-
-    }
+    public override void StartTurn() => HasMove = true;
+    
+    public override void EndTurn() => gameManager.EndTurn();
 
     protected void Awake()
     {
-        if (battlefield == null)
-            battlefield = gameManager.BattlefieldManager;
+        if (battlefieldManager == null)
+            battlefieldManager = gameManager.BattlefieldManager;
         if (gridManager == null)
             gridManager = gameManager.GridManager;
     }
 
-    private void MoveUnit()
+    protected void Update()
     {
-        GameManager.PerformMove(
-            GameManager.DisplayedUnit,
-            default,//GameManager.DisplayedUnit.Abilites[0],
-            GameManager.GetMousePosition());
-        GameManager.EndTurn();
+        if (HasMove)
+            ListenForMouseInput();
+        else
+            EndTurn();
     }
 
-    public override void Update()
+    protected void SelectCell()
+    {
+        gridManager.ClearHighlightedTiles();
+
+        if (!battlefieldManager.World.TryGetValue(GetMousePosition(), out selectedCell))
+            return;
+
+        gridManager.HighlightGrid(selectedCell);
+
+        if (selectedCell.Unit == default)
+            return;
+
+        selectedUnit = selectedCell.Unit;
+        gameManager.UpdateUnitUI(selectedUnit);
+    }
+
+    private void ListenForMouseInput()
     {
         if (Input.GetMouseButtonDown(0))
-            GameManager.InspectUnitUnderMouse();
-
-        if ((GameManager.DisplayedUnit == null)||(GameManager.DisplayedUnit.Member != this))
-                return;
+            SelectCell();
 
         if (Input.GetMouseButtonDown(1))
             MoveUnit();
     }
+
+    protected void MoveUnit()
+    {
+        if (selectedCell.Unit == null)
+            return;
+
+        if (!battlefieldManager.World.TryGetValue(GetMousePosition(), out selectedCell))
+            return;
+
+        if (battlefieldManager.MoveUnit(selectedUnit.Location, selectedCell.Position, this))
+            HasMove = false;
+    }
+
+    protected Vector3Int GetMousePosition() => gridManager.GetCellByClick(Input.mousePosition);
 }

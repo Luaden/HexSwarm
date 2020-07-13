@@ -98,7 +98,32 @@ public class GridManager : MonoBehaviour, IGrid
     public bool CheckCanMove(Cell selectedCell) => canMove = selectedCell.Unit == default ? true : false;
     #endregion
 
-    public void PaintUnitTile(Vector3Int cellToPaint, TileBase tileToPaint) => unitTiles.SetTile(cellToPaint, tileToPaint);
+    #region Highlight Functions
+    public void HighlightGrid(IEnumerable<Cell> tilesToHighlight)
+    {
+        foreach (Cell cell in tilesToHighlight)
+        {
+            highlightTiles.SetTile(cell.Position, highlightTile);
+            highlightedCells.Add(cell);
+        }
+    }
+
+    public void HighlightGrid(Cell tileToHighlight)
+    {
+        highlightTiles.SetTile(tileToHighlight.Position, highlightTile);
+        highlightedCells.Add(tileToHighlight);
+    }
+
+    public void ClearHighlightedTiles()
+    {
+        foreach (Cell cell in highlightedCells)
+        {
+            highlightTiles.SetTile(cell.Position, null);
+        }
+
+        highlightedCells.Clear();
+    }
+    #endregion
 
     #region Debug
 
@@ -129,6 +154,8 @@ public class GridManager : MonoBehaviour, IGrid
         return mouseCellPos;
     }
     #endregion
+
+    public void PaintUnitTile(Vector3Int cellToPaint, TileBase tileToPaint) => unitTiles.SetTile(cellToPaint, tileToPaint);
 
     public IEnumerable<Cell> GetNeighborCells(Vector3Int origin, int range = 1)
     {
@@ -177,26 +204,6 @@ public class GridManager : MonoBehaviour, IGrid
         }
     }
 
-    public void HighlightGrid(IEnumerable<Cell> tilesToHighlight)
-    {
-        foreach(Cell cell in tilesToHighlight)
-        {
-            highlightTiles.SetTile(cell.Position, highlightTile);
-            highlightedCells.Add(cell);
-        }
-    }
-
-    public void ClearHighlightedTiles()
-    {
-        foreach (Cell cell in highlightedCells)
-        {
-            highlightTiles.SetTile(cell.Position, null);
-        }
-
-        highlightedCells.Clear();
-    }
-
-
     protected void Awake()
     {
         if (mapGrid == null)
@@ -212,7 +219,4 @@ public class GridManager : MonoBehaviour, IGrid
         battlefieldManager = new BattlefieldManager(world, this);
 
     }
-
-
-
 }

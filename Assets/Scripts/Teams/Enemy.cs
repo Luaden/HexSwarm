@@ -63,7 +63,7 @@ public class Enemy : Team
         }
     }
 
-    public override void Update()
+    protected void Update()
     {
         throw new System.NotImplementedException();
     }

@@ -5,6 +5,6 @@ using UnityEngine;
 public interface IBattlefield
 {
     void PlaceNewUnit(IUnit unit, Vector3Int position);
-    void MoveUnit(Vector3Int unitPosition, Vector3Int destination);
+    bool MoveUnit(Vector3Int unitPosition, Vector3Int destination, ITeam team);
     void DestroyUnits(Vector3Int unitPosition);
 }

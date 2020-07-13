@@ -24,7 +24,7 @@ public abstract class Team : ITeam
 
     //Get and Set
     public Color Color { get; set; }
-    public Teams Type { get; set; }
+    public Teams Member { get; set; }
     public bool HasMove { get; set; }
 
 
@@ -40,12 +40,12 @@ public abstract class Team : ITeam
 
     public void GetUnit(IUnit newUnit)
     {
-        newUnit.Member = this;
+        newUnit.Team = this;
         this.units.Add(newUnit);
     }
 
 
-    public abstract void Update();
+    //protected abstract void Update();
 
     public abstract void StartTurn();
 
@@ -61,7 +61,7 @@ public abstract class Team : ITeam
 
     public virtual void DoMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
     {
-        gameManager.PerformMove(unit, ablity, target);
+        //gameManager.PerformMove(unit, ablity, target);
     }
 
     public virtual void ResolveHighlight(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
