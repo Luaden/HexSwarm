@@ -12,7 +12,12 @@ public class AudioManager : MonoBehaviour
     public float SFXVolume { get => sfxAudioSource.volume; set => sfxAudioSource.volume = value; }
     public float BGMVolume { get => bgmAudioSource.volume; set => bgmAudioSource.volume = value; }
 
-    public void PlaySoundEffect(AudioClip clipToPlay) => sfxAudioSource.PlayOneShot(clipToPlay);
+    public void PlaySound(AudioClip clipToPlay) => sfxAudioSource.PlayOneShot(clipToPlay);
+    public void PlayMusic(AudioClip clipToPlay)
+    {
+        bgmAudioSource.clip = clipToPlay;
+        bgmAudioSource.Play();
+    }
 
     protected void Awake()
     {
@@ -27,17 +32,5 @@ public class AudioManager : MonoBehaviour
         audioSources = GetComponents<AudioSource>();
         sfxAudioSource = audioSources[0];
         bgmAudioSource = audioSources[1];
-    }
-
-    protected void OnLevelWasLoaded(int level)
-    {
-        bgmAudioSource.clip = bgmSongs[level];
-        bgmAudioSource.Play();
-    }
-
-    private void Start()
-    {
-        bgmAudioSource.clip = bgmSongs[0];
-        bgmAudioSource.Play();
     }
 }
