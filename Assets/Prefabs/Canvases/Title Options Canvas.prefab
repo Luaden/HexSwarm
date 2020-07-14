@@ -689,7 +689,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 0}
         m_MethodName: set_BGMVolume
-        m_Mode: 0
+        m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -986,7 +986,7 @@ GameObject:
   - component: {fileID: 793479994528931708}
   - component: {fileID: 793479994528931711}
   - component: {fileID: 793479994528931710}
-  - component: {fileID: 793479994528931650}
+  - component: {fileID: 708932248556744127}
   m_Layer: 5
   m_Name: Title Options Canvas
   m_TagString: Untagged
@@ -1079,7 +1079,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &793479994528931650
+--- !u!114 &708932248556744127
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1088,7 +1088,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 793479994528931705}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d671848c3c7005f4fa713830bda80010, type: 3}
+  m_Script: {fileID: 11500000, guid: beed96c31df3bd249820daa6a12d4977, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   bgmVolumeSlider: {fileID: 793479994010673433}

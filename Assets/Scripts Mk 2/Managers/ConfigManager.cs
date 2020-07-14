@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class ConfigManager : MonoBehaviour, IConfigManager
 {
+    [SerializeField] protected GameObject mainCanvas;
+    [SerializeField] protected GameObject optionsCanvas;
     [SerializeField] protected IColorConfig[] teamColors;
+
     protected KeyCode scrollLeft = KeyCode.A;
     protected KeyCode scrollRight = KeyCode.D;
     protected KeyCode scrollUp = KeyCode.W;
@@ -13,11 +16,13 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     protected KeyCode ability2 = KeyCode.Alpha2;
     protected KeyCode ability3 = KeyCode.Alpha3;
     protected KeyCode ability4 = KeyCode.Alpha4;
+    protected float masterVolume = 1f;
     protected float sfxVolume = 1f;
     protected float bgmVolume = 1f;
     protected float sensitivityModifier = 1f;
     protected float speedModifier = 1f;
 
+    public static ConfigManager instance;
     public KeyCode ScrollLeft => scrollLeft;
     public KeyCode ScrollRight => scrollRight;
     public KeyCode ScrollUp => scrollUp;
@@ -32,6 +37,11 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     public AudioController AudioController { get; set; }
     public CameraController CameraController { get; set; }
 
+    public float MasterVolume
+    {
+        get => masterVolume;
+        set => UpdateMasterVolume(value);
+    }
     public float SFXVolume
     {
         get => sfxVolume;
@@ -60,6 +70,22 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     public void PlaySound(AudioClip sfx) => AudioController.PlaySound(sfx);
     public void RepositionCamera(Vector3Int cameraPosition) => CameraController.RepositionCamera(cameraPosition);
     public void ToggleCameraControls(bool cameraControlOnOff) => CameraController.ToggleCameraControls(cameraControlOnOff);
+
+    protected void Awake()
+    {
+        #region Singleton
+        if (instance != null)
+            Destroy(this);
+
+        instance = this;
+        DontDestroyOnLoad(this);
+        #endregion
+    }
+    protected void UpdateMasterVolume(float value)
+    {
+        masterVolume = value;
+        AudioController.MasterVolume = value;
+    }
 
     protected void UpdateSFXVolume(float value)
     {

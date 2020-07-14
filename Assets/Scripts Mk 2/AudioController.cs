@@ -6,9 +6,11 @@ public class AudioController : MonoBehaviour
     protected AudioSource sfxAudioSource;
     protected AudioSource bgmAudioSource;
     protected ConfigManager configManager;
+    protected float masterVolume;
 
-    public float SFXVolume { set => sfxAudioSource.volume = value; }
-    public float BGMVolume { set => bgmAudioSource.volume = value; }
+    public float MasterVolume { set => masterVolume = value; }
+    public float SFXVolume { set => sfxAudioSource.volume = value * masterVolume; }
+    public float BGMVolume { set => bgmAudioSource.volume = value * masterVolume; }
 
     public void PlaySound(AudioClip clipToPlay) => sfxAudioSource.PlayOneShot(clipToPlay);
     public void PlayMusic(AudioClip clipToPlay)
@@ -27,6 +29,7 @@ public class AudioController : MonoBehaviour
 
     protected void Start()
     {
+        MasterVolume = configManager.MasterVolume;
         SFXVolume = configManager.SFXVolume;
         BGMVolume = configManager.BGMVolume;
     }
