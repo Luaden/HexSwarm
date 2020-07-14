@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class AudioController : MonoBehaviour, IAudioController
+public class AudioController : MonoBehaviour, IAudioControls
 {
     protected AudioSource[] audioSources;
     protected AudioSource sfxAudioSource;
