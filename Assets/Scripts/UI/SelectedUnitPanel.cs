@@ -3,116 +3,119 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class SelectedUnitPanel : CoreUIElement<IUnit>
+namespace Old
 {
-    [SerializeField] protected Image unitImage;
-    [SerializeField] protected Image unitImageBackground;
-    [SerializeField] protected TMP_Text unitName;
-    [SerializeField] protected TMP_Text unitDescription;
-
-    [SerializeField] protected Image ability1Image;
-    [SerializeField] protected Image ability1ImageBackground;
-    [SerializeField] protected Button ability1Button;
-    [SerializeField] protected TMP_Text ability1Name;
-    [SerializeField] protected TMP_Text ability1Description;
-
-    [SerializeField] protected Image ability2Image;
-    [SerializeField] protected Image ability2ImageBackground;
-    [SerializeField] protected Button ability2Button;
-    [SerializeField] protected TMP_Text ability2Name;    
-    [SerializeField] protected TMP_Text ability2Description;
-
-    [SerializeField] protected Image ability3Image;
-    [SerializeField] protected Image ability3ImageBackground;
-    [SerializeField] protected Button ability3Button;
-    [SerializeField] protected TMP_Text ability3Name;
-    [SerializeField] protected TMP_Text ability3Description;
-
-    [SerializeField] protected Image ability4Image;
-    [SerializeField] protected Image ability4ImageBackground;
-    [SerializeField] protected Button ability4Button;
-    [SerializeField] protected TMP_Text ability4Name;
-    [SerializeField] protected TMP_Text ability4Description;
-
-    protected GameManager gameManager;
-    protected Color playerColor;
-
-    protected bool firstIsSelected;
-    public bool FirstIsSelected => firstIsSelected;
-
-    public override void UpdateUI(IUnit unit)
+    public class SelectedUnitPanel : CoreUIElement<IUnit>
     {
-        if (ClearedIfEmpty(unit))
-            return;
+        [SerializeField] protected Image unitImage;
+        [SerializeField] protected Image unitImageBackground;
+        [SerializeField] protected TMP_Text unitName;
+        [SerializeField] protected TMP_Text unitDescription;
 
-        UpdateSprite(unitImage, unit.Icon);
-        UpdateText(unitName, unit.Name);
-        UpdateText(unitDescription, unit.Description);
+        [SerializeField] protected Image ability1Image;
+        [SerializeField] protected Image ability1ImageBackground;
+        [SerializeField] protected Button ability1Button;
+        [SerializeField] protected TMP_Text ability1Name;
+        [SerializeField] protected TMP_Text ability1Description;
 
-        UpdateSprite(ability1Image, unit.Abilites[0].DamageGrid);
-        UpdateText(ability1Name, unit.Abilites[0].Name);
-        UpdateText(ability1Description, unit.Abilites[0].Description);
+        [SerializeField] protected Image ability2Image;
+        [SerializeField] protected Image ability2ImageBackground;
+        [SerializeField] protected Button ability2Button;
+        [SerializeField] protected TMP_Text ability2Name;
+        [SerializeField] protected TMP_Text ability2Description;
 
-        UpdateSprite(ability2Image, unit.Abilites[1].DamageGrid);
-        UpdateText(ability2Name, unit.Abilites[1].Name);
-        UpdateText(ability2Description, unit.Abilites[1].Description);
+        [SerializeField] protected Image ability3Image;
+        [SerializeField] protected Image ability3ImageBackground;
+        [SerializeField] protected Button ability3Button;
+        [SerializeField] protected TMP_Text ability3Name;
+        [SerializeField] protected TMP_Text ability3Description;
 
-        if(unit.Abilites.Count >= 3)
+        [SerializeField] protected Image ability4Image;
+        [SerializeField] protected Image ability4ImageBackground;
+        [SerializeField] protected Button ability4Button;
+        [SerializeField] protected TMP_Text ability4Name;
+        [SerializeField] protected TMP_Text ability4Description;
+
+        protected GameManager gameManager;
+        protected Color playerColor;
+
+        protected bool firstIsSelected;
+        public bool FirstIsSelected => firstIsSelected;
+
+        public override void UpdateUI(IUnit unit)
         {
-            UpdateSprite(ability3Image, unit.Abilites[1].DamageGrid);
-            UpdateText(ability3Name, unit.Abilites[1].Name);
-            UpdateText(ability3Description, unit.Abilites[1].Description);
+            if (ClearedIfEmpty(unit))
+                return;
+
+            UpdateSprite(unitImage, unit.Icon);
+            UpdateText(unitName, unit.Name);
+            UpdateText(unitDescription, unit.Description);
+
+            UpdateSprite(ability1Image, unit.Abilites[0].DamageGrid);
+            UpdateText(ability1Name, unit.Abilites[0].Name);
+            UpdateText(ability1Description, unit.Abilites[0].Description);
+
+            UpdateSprite(ability2Image, unit.Abilites[1].DamageGrid);
+            UpdateText(ability2Name, unit.Abilites[1].Name);
+            UpdateText(ability2Description, unit.Abilites[1].Description);
+
+            if (unit.Abilites.Count >= 3)
+            {
+                UpdateSprite(ability3Image, unit.Abilites[1].DamageGrid);
+                UpdateText(ability3Name, unit.Abilites[1].Name);
+                UpdateText(ability3Description, unit.Abilites[1].Description);
+            }
+
+            if (unit.Abilites.Count == 4)
+            {
+                UpdateSprite(ability4Image, unit.Abilites[1].DamageGrid);
+                UpdateText(ability4Name, unit.Abilites[1].Name);
+                UpdateText(ability4Description, unit.Abilites[1].Description);
+            }
+
         }
 
-        if (unit.Abilites.Count == 4)
+        protected override bool ClearedIfEmpty(IUnit unit)
         {
-            UpdateSprite(ability4Image, unit.Abilites[1].DamageGrid);
-            UpdateText(ability4Name, unit.Abilites[1].Name);
-            UpdateText(ability4Description, unit.Abilites[1].Description);
-        }
-            
-    }
+            if (unit == null)
+            {
+                UpdateSprite(unitImage, null);
+                UpdateText(unitName, string.Empty);
+                UpdateText(unitDescription, string.Empty);
 
-    protected override bool ClearedIfEmpty(IUnit unit)
-    {
-        if(unit == null)
-        {
-            UpdateSprite(unitImage, null);
-            UpdateText(unitName, string.Empty);
-            UpdateText(unitDescription, string.Empty);
+                UpdateSprite(ability1Image, null);
+                UpdateText(ability1Name, string.Empty);
+                UpdateText(ability1Description, string.Empty);
 
-            UpdateSprite(ability1Image, null);
-            UpdateText(ability1Name, string.Empty);
-            UpdateText(ability1Description, string.Empty);
+                UpdateSprite(ability2Image, null);
+                UpdateText(ability2Name, string.Empty);
+                UpdateText(ability2Description, string.Empty);
 
-            UpdateSprite(ability2Image, null);
-            UpdateText(ability2Name, string.Empty);
-            UpdateText(ability2Description, string.Empty);
+                UpdateSprite(ability3Image, null);
+                UpdateText(ability3Name, string.Empty);
+                UpdateText(ability3Description, string.Empty);
 
-            UpdateSprite(ability3Image, null);
-            UpdateText(ability3Name, string.Empty);
-            UpdateText(ability3Description, string.Empty);
+                UpdateSprite(ability3Image, null);
+                UpdateText(ability3Name, string.Empty);
+                UpdateText(ability3Description, string.Empty);
 
-            UpdateSprite(ability3Image, null);
-            UpdateText(ability3Name, string.Empty);
-            UpdateText(ability3Description, string.Empty);
+                return true;
+            }
 
-            return true;
+            return false;
         }
 
-        return false;
-    }
-
-    public void SelectAbility(bool ability)
-    {
-        firstIsSelected = ability;
-
-        if(firstIsSelected)
+        public void SelectAbility(bool ability)
         {
-            ability1ImageBackground.color = Color.green;
-        }
+            firstIsSelected = ability;
 
-        ability1ImageBackground.color = firstIsSelected ? Color.white : Color.grey;
-        ability2ImageBackground.color = firstIsSelected ? Color.grey : Color.white;
+            if (firstIsSelected)
+            {
+                ability1ImageBackground.color = Color.green;
+            }
+
+            ability1ImageBackground.color = firstIsSelected ? Color.white : Color.grey;
+            ability2ImageBackground.color = firstIsSelected ? Color.grey : Color.white;
+        }
     }
 }

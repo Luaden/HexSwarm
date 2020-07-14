@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[System.Flags]
+namespace Old
+{
+
+    [System.Flags]
 public enum Teams
 {
     Player  = 1 << 0,
@@ -20,32 +23,34 @@ public enum Teams
 }
 
 
-public interface IPosAbilityDefault
-{
-    int ID { get; }
-    string Name { get; }
-    string Description { get; }
-    AudioClip SoundEffect { get; }
-    Sprite MovementGrid { get; }
-    Sprite DamageGrid { get; }
-    IEnumerable<Vector3Int> MovePattern { get; }
-    IEnumerable<Vector3Int> AttackPattern { get; }
-}
 
-public interface IUnit
-{
-    string Name { get; }
-    string Description { get; }
-    TileBase Tile { get; }
-    Sprite Icon { get; }
-    ITeam Team { get; set; }
-    Vector3Int Location { get; }
-    IGrid World { get; }
-    int UnitRange { get; }
+    public interface IPosAbilityDefault
+    {
+        int ID { get; }
+        string Name { get; }
+        string Description { get; }
+        AudioClip SoundEffect { get; }
+        Sprite MovementGrid { get; }
+        Sprite DamageGrid { get; }
+        IEnumerable<Vector3Int> MovePattern { get; }
+        IEnumerable<Vector3Int> AttackPattern { get; }
+    }
 
-    IReadOnlyList<IPosAbilityDefault> Abilites { get; }
-    IEnumerable<Vector3Int> CalcuateValidNewLocation(IPosAbilityDefault move);
-    IEnumerable<Vector3Int> DiscoverHits(Vector3Int location, IPosAbilityDefault move);
+    public interface IUnit
+    {
+        string Name { get; }
+        string Description { get; }
+        TileBase Tile { get; }
+        Sprite Icon { get; }
+        ITeam Team { get; set; }
+        Vector3Int Location { get; }
+        IGrid World { get; }
+        int UnitRange { get; }
 
-    void ApplyAbility(IPosAbilityDefault move, Vector3Int temp);
+        IReadOnlyList<IPosAbilityDefault> Abilites { get; }
+        IEnumerable<Vector3Int> CalcuateValidNewLocation(IPosAbilityDefault move);
+        IEnumerable<Vector3Int> DiscoverHits(Vector3Int location, IPosAbilityDefault move);
+
+        void ApplyAbility(IPosAbilityDefault move, Vector3Int temp);
+    }
 }

@@ -9,7 +9,7 @@ public interface IGameManager
 {
     int Level { get; }
     int Turn { get; }
-    Queue<ITeam2> TeamList { get; }
+    Queue<ITeam> TeamList { get; }
     /// <summary>
     /// Setup for hotseat or just a quickplay
     /// </summary>
@@ -26,6 +26,6 @@ public interface IGameManager
     IUnit DisplayedUnit { get; }
     void InspectUnitUnderMouse();
 
-    bool PerformMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
+    bool PerformMove(IUnit unit, IAbility ablity, Vector3Int target);
 }
 
