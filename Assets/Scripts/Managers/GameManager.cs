@@ -5,6 +5,8 @@ using System.Linq;
 using UnityEditorInternal;
 using UnityEngine;
 
+namespace Old
+{ 
 public class GameManager : MonoBehaviour, IGameManager
 {
     //Editor variables
@@ -260,4 +262,5 @@ public class GameManager : MonoBehaviour, IGameManager
         gridManager.HighlightGrid(newRoute);
     }
     #endregion
+}
 }

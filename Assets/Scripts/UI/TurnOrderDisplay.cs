@@ -4,43 +4,45 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class TurnOrderDisplay : CoreUIElement<IGameManager>
+namespace Old
 {
-    [SerializeField] protected Image[] turnOrderIcons;
-    [SerializeField] protected TMP_Text turnCount;
-    [SerializeField] protected TMP_Text levelCount;
-
-
-
-    public override void UpdateUI(IGameManager gameManager)
+    public class TurnOrderDisplay : CoreUIElement<IGameManager>
     {
+        [SerializeField] protected Image[] turnOrderIcons;
+        [SerializeField] protected TMP_Text turnCount;
+        [SerializeField] protected TMP_Text levelCount;
 
-        Queue<ITeam> tempQueue = new Queue<ITeam>(gameManager.ActiveTeams);
 
-        if (ClearedIfEmpty(gameManager))
-            return;
 
-        for (int i = 0; i < turnOrderIcons.Length; i++)
+        public override void UpdateUI(IGameManager gameManager)
         {
-            turnOrderIcons[i].sprite = tempQueue.Peek().Icon;
-            tempQueue.Enqueue(tempQueue.Dequeue());
+
+            Queue<ITeam> tempQueue = new Queue<ITeam>(gameManager.ActiveTeams);
+
+            if (ClearedIfEmpty(gameManager))
+                return;
+
+            for (int i = 0; i < turnOrderIcons.Length; i++)
+            {
+                turnOrderIcons[i].sprite = tempQueue.Peek().Icon;
+                tempQueue.Enqueue(tempQueue.Dequeue());
+            }
+
+            UpdateText(turnCount, "Turn Count: " + gameManager.TurnCounter.ToString());
+            UpdateText(levelCount, "Win Count: " + gameManager.LevelCounter.ToString());
         }
 
-        UpdateText(turnCount, "Turn Count: " + gameManager.TurnCounter.ToString());
-        UpdateText(levelCount, "Win Count: " + gameManager.LevelCounter.ToString());
-    }
-
-    protected override bool ClearedIfEmpty(IGameManager gameManager)
-    {
-        if (gameManager.ActiveTeams.Count > 0)
-            return false;
-
-        for (int i = 0; i < turnOrderIcons.Length; i++)
+        protected override bool ClearedIfEmpty(IGameManager gameManager)
         {
-            UpdateSprite(turnOrderIcons[i], default);
-        }                
+            if (gameManager.ActiveTeams.Count > 0)
+                return false;
 
-        return true;
+            for (int i = 0; i < turnOrderIcons.Length; i++)
+            {
+                UpdateSprite(turnOrderIcons[i], default);
+            }
+
+            return true;
+        }
     }
 }

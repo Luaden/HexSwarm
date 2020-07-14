@@ -1,22 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public interface IGameManager
+namespace Old
 {
-    int TurnCounter { get; }
-    int LevelCounter { get; }
-    
-    Queue<ITeam> ActiveTeams { get; }
+    public interface IGameManager
+    {
+        int TurnCounter { get; }
+        int LevelCounter { get; }
 
-    void NewGame();
-    void StartLevel();
-    void EndTurn();
+        Queue<ITeam> ActiveTeams { get; }
 
-    //IUnit DisplayedUnit { get; }
-    //void InspectUnitUnderMouse();
-    //bool PerformMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
+        void NewGame();
+        void StartLevel();
+        void EndTurn();
 
-    //void AnimateMove();
-    //Vector3Int GetMousePosition();
+        //IUnit DisplayedUnit { get; }
+        //void InspectUnitUnderMouse();
+        //bool PerformMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target);
+
+        //void AnimateMove();
+        //Vector3Int GetMousePosition();
+    }
 }
 
