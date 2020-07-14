@@ -2,23 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Move1 : Ablity
+namespace Old
 {
-    [SerializeField] protected float X;
-
-    protected override HashSet<Vector3Int> GenerateAttack()
+    [System.Serializable]
+    public class Move1 : Ablity
     {
-        return new HashSet<Vector3Int>();
-    }
+        [SerializeField] protected float X;
 
-    protected override HashSet<Vector3Int> GenerateMoves()
-    {
-        HashSet<Vector3Int> returnVar = new HashSet<Vector3Int>();
-        GenerateHexagon(1, returnVar);
-        return returnVar;
-    }
+        protected override HashSet<Vector3Int> GenerateAttack()
+        {
+            return new HashSet<Vector3Int>();
+        }
 
-    public Move1() : base() { }
+        protected override HashSet<Vector3Int> GenerateMoves()
+        {
+            HashSet<Vector3Int> returnVar = new HashSet<Vector3Int>();
+            GenerateHexagon(1, returnVar);
+            return returnVar;
+        }
+
+        public Move1() : base() { }
+    }
 }
 

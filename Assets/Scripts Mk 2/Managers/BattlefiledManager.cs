@@ -2,179 +2,186 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-
-public class BattlefiledManager : MonoBehaviour, IBattlefieldManager
+namespace Old
 {
-    [SerializeField] protected Tile[] groundTiles;
-    [SerializeField] protected Tile[] highlightTiles;
-    [SerializeField] protected Tilemap groundMap;
-    [SerializeField] protected Tilemap highlightMap;
-
-    protected Grid mapGrid;
-    protected Dictionary<Vector3Int, Cell> world;
-    protected List<Cell> highlightedCells;
-
-    protected List<Cell> neighbors;
-
-    public IReadOnlyDictionary<Vector3Int, Cell> World => world;
-
-    #region Map Generation
-    public void GenerateGrid(int gridHeight, MapShape mapShape = MapShape.Hexagon)
+    public class BattlefiledManager : MonoBehaviour, IBattlefield
     {
-        Clear();
+        [SerializeField] protected Tile[] groundTiles;
+        [SerializeField] protected Tile[] highlightTiles;
+        [SerializeField] protected Tilemap groundMap;
+        [SerializeField] protected Tilemap highlightMap;
 
-        if (mapShape == MapShape.Hexagon)
-            GenerateHexagon(gridHeight);
-    }
-    public void Clear()
-    {
-        groundMap.ClearAllTiles();
-        highlightMap.ClearAllTiles();
-        world.Clear();
-    }
+        protected Grid mapGrid;
+        protected Dictionary<Vector3Int, Cell> world;
+        protected List<Cell> highlightedCells;
 
-    protected void GenerateHexagon(int radius)
-    {
-        //Add randomization for ground types somewhere using the line below.
-        Tile tile = groundTiles[0];
-        GenerateRow(0, -radius, radius, tile);
-        for (int i = 1; i <= radius; i++)
+        protected List<Cell> neighbors;
+
+        public IReadOnlyDictionary<Vector3Int, Cell> World => world;
+
+        #region Map Generation
+        public void GenerateGrid(int gridHeight, MapShape mapShape = MapShape.Hexagon)
         {
-            int half = i / 2;
-            int oddCorrection = i % 2;
-            GenerateRow(i, -radius + half, radius - half - oddCorrection, tile);
-            GenerateRow(-i, -radius + half, radius - half - oddCorrection, tile);
+            Clear();
+
+            if (mapShape == MapShape.Hexagon)
+                GenerateHexagon(gridHeight);
         }
-    }
-
-    protected void GenerateRow(int Y, int xMin, int xMax, Tile tile)
-    {
-        int currentX = xMin;
-        while (currentX <= xMax)
-            GenerateCell(new Vector3Int(currentX++, Y, 0), tile);
-    }
-
-    protected void GenerateCell(Vector3Int pos, Tile tile)
-    {
-        Cell newCell = new Cell(pos, default, tile);
-
-        world.Add(pos, newCell);
-        groundMap.SetTile(pos, tile);
-    }
-    #endregion
-
-    #region Get Neighbors
-    public IEnumerable<Cell> GetNeighborCells(Cell origin, int range = 1)
-    {
-        return GetNeighborCells(origin.Position, range);
-    }
-
-    public IEnumerable<Cell> GetNeighborCells(Vector3Int origin, int range = 1)
-    {
-        neighbors = new List<Cell>();
-
-        int y = origin.y;
-        int xMax = origin.x + range;
-        int xMin = origin.x - range;
-
-        GetNeighborCellRow(y, xMin, xMax);
-
-        for (int i = 1; i <= range; i++)
+        public void Clear()
         {
-            int half = i / 2;
-            int oddCorrection = i % 2;
+            groundMap.ClearAllTiles();
+            highlightMap.ClearAllTiles();
+            world.Clear();
+        }
 
-            if (Mathf.Abs(y) % 2 > 0)
+        protected void GenerateHexagon(int radius)
+        {
+            //Add randomization for ground types somewhere using the line below.
+            Tile tile = groundTiles[0];
+            GenerateRow(0, -radius, radius, tile);
+            for (int i = 1; i <= radius; i++)
             {
-                GetNeighborCellRow(y - i, xMin + half + oddCorrection, xMax - half);
-                GetNeighborCellRow(y + i, xMin + half + oddCorrection, xMax - half);
-            }
-            else
-            {
-                GetNeighborCellRow(y - i, xMin + half, xMax - half - oddCorrection);
-                GetNeighborCellRow(y + i, xMin + half, xMax - half - oddCorrection);
+                int half = i / 2;
+                int oddCorrection = i % 2;
+                GenerateRow(i, -radius + half, radius - half - oddCorrection, tile);
+                GenerateRow(-i, -radius + half, radius - half - oddCorrection, tile);
             }
         }
 
-        return neighbors;
-    }
-
-    protected void GetNeighborCellRow(int y, int xMin, int xMax)
-    {
-        Vector3Int currentLoc;
-        Cell currentCell;
-        for (int i = xMin; i <= xMax; i++)
+        protected void GenerateRow(int Y, int xMin, int xMax, Tile tile)
         {
-            currentLoc = new Vector3Int(i, y, 0);
-            if (world.TryGetValue(currentLoc, out currentCell))
-                neighbors.Add(currentCell);
-        }
-    }
-    #endregion
-
-    #region Highlight Cells
-    public void HighlightGrid(IEnumerable<Cell> moveCells, IEnumerable<Cell> attackCells)
-    {
-        ClearHighlights();
-
-        foreach (Cell cell in moveCells)
-        {
-            if (attackCells.Contains<Cell>(cell))
-                highlightMap.SetTile(cell.Position, highlightTiles[2]);
-            else
-                highlightMap.SetTile(cell.Position, highlightTiles[0]);
-
-            highlightedCells.Add(cell);
+            int currentX = xMin;
+            while (currentX <= xMax)
+                GenerateCell(new Vector3Int(currentX++, Y, 0), tile);
         }
 
-        foreach (Cell cell in attackCells)
+        protected void GenerateCell(Vector3Int pos, Tile tile)
         {
-            if (!moveCells.Contains<Cell>(cell))
-                highlightMap.SetTile(cell.Position, highlightTiles[0]);
+            Cell newCell = new Cell(pos, default, tile);
 
-            highlightedCells.Add(cell);
+            world.Add(pos, newCell);
+            groundMap.SetTile(pos, tile);
         }
-    }
+        #endregion
 
-    public void ClearHighlights()
-    {
-        foreach (Cell cell in highlightedCells)
+        #region Get Neighbors
+        public IEnumerable<ICell> GetNeighborCells(Cell origin, int range = 1)
         {
-            highlightMap.SetTile(cell.Position, null);
+            return GetNeighborCells(origin.Position, range);
         }
 
-        highlightedCells.Clear();
-    }
-    #endregion
+        public IEnumerable<Cell> GetNeighborCells(Vector3Int origin, int range = 1)
+        {
+            neighbors = new List<Cell>();
 
-    #region Unit Control
-    public bool PlaceNewUnit(IUnit unit, Vector3Int position)
-    {
-        throw new System.NotImplementedException();
-    }
+            int y = origin.y;
+            int xMax = origin.x + range;
+            int xMin = origin.x - range;
 
-    public bool MoveUnit(Vector3Int unitPosition, Vector3Int destination, ITeam team)
-    {
-        throw new System.NotImplementedException();
-    }
+            GetNeighborCellRow(y, xMin, xMax);
 
-    public void DestroyUnit(Vector3Int unitPosition)
-    {
-        throw new System.NotImplementedException();
-    }
-    #endregion
+            for (int i = 1; i <= range; i++)
+            {
+                int half = i / 2;
+                int oddCorrection = i % 2;
 
-    public Vector3Int GetVectorByClick(Vector2 mouseScreenPos)
-    {
-        Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
+                if (Mathf.Abs(y) % 2 > 0)
+                {
+                    GetNeighborCellRow(y - i, xMin + half + oddCorrection, xMax - half);
+                    GetNeighborCellRow(y + i, xMin + half + oddCorrection, xMax - half);
+                }
+                else
+                {
+                    GetNeighborCellRow(y - i, xMin + half, xMax - half - oddCorrection);
+                    GetNeighborCellRow(y + i, xMin + half, xMax - half - oddCorrection);
+                }
+            }
 
-        Vector3Int mouseCellPos = mapGrid.WorldToCell(mouseWorldPos);
+            return neighbors;
+        }
 
-        return mouseCellPos;
-    }
+        protected void GetNeighborCellRow(int y, int xMin, int xMax)
+        {
+            Vector3Int currentLoc;
+            Cell currentCell;
+            for (int i = xMin; i <= xMax; i++)
+            {
+                currentLoc = new Vector3Int(i, y, 0);
+                if (world.TryGetValue(currentLoc, out currentCell))
+                    neighbors.Add(currentCell);
+            }
+        }
+        #endregion
 
-    protected void Awake()
-    {
-        mapGrid = GetComponent<Grid>();
+        #region Highlight Cells
+        public void HighlightGrid(IEnumerable<Cell> moveCells, IEnumerable<Cell> attackCells)
+        {
+            ClearHighlights();
+
+            foreach (Cell cell in moveCells)
+            {
+                if (attackCells.Contains<Cell>(cell))
+                    highlightMap.SetTile(cell.Position, highlightTiles[2]);
+                else
+                    highlightMap.SetTile(cell.Position, highlightTiles[0]);
+
+                highlightedCells.Add(cell);
+            }
+
+            foreach (Cell cell in attackCells)
+            {
+                if (!moveCells.Contains<Cell>(cell))
+                    highlightMap.SetTile(cell.Position, highlightTiles[0]);
+
+                highlightedCells.Add(cell);
+            }
+        }
+
+        public void ClearHighlights()
+        {
+            foreach (Cell cell in highlightedCells)
+            {
+                highlightMap.SetTile(cell.Position, null);
+            }
+
+            highlightedCells.Clear();
+        }
+        #endregion
+
+        #region Unit Control
+        public void PlaceNewUnit(IUnit unit, Vector3Int position)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool MoveUnit(Vector3Int unitPosition, Vector3Int destination, ITeam team)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void DestroyUnit(Vector3Int unitPosition)
+        {
+            throw new System.NotImplementedException();
+        }
+        #endregion
+
+        public Vector3Int GetVectorByClick(Vector2 mouseScreenPos)
+        {
+            Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
+
+            Vector3Int mouseCellPos = mapGrid.WorldToCell(mouseWorldPos);
+
+            return mouseCellPos;
+        }
+
+        protected void Awake()
+        {
+            mapGrid = GetComponent<Grid>();
+        }
+
+        public void DestroyUnits(Vector3Int unitPosition)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -1,34 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-
-public class AbilityList : MonoBehaviour
+namespace Old
 {
-    private static AbilityList _Instance;
-    private static AbilityList Instance
+    public class AbilityList : MonoBehaviour
     {
-        get
+        private static AbilityList _Instance;
+        private static AbilityList Instance
         {
-            if (_Instance == default)
-                _Instance = new AbilityList();
-            return _Instance;
-        }
-    }
-
-    protected void Awake()
-    {
-        // if the singleton hasn't been initialized yet
-        if (_Instance != null && _Instance != this)
-        {
-            Destroy(this);
-            return;//Avoid doing anything else
+            get
+            {
+                if (_Instance == default)
+                    _Instance = new AbilityList();
+                return _Instance;
+            }
         }
 
-        _Instance = this;
-        DontDestroyOnLoad(this.gameObject);
-        lambskin = new Move1();
-    }
+        protected void Awake()
+        {
+            // if the singleton hasn't been initialized yet
+            if (_Instance != null && _Instance != this)
+            {
+                Destroy(this);
+                return;//Avoid doing anything else
+            }
 
-    [SerializeField] protected Move1 lambskin;
-    public static Move1 MoveOne => Instance.lambskin;
+            _Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+            lambskin = new Move1();
+        }
+
+        [SerializeField] protected Move1 lambskin;
+        public static Move1 MoveOne => Instance.lambskin;
+    }
 }
