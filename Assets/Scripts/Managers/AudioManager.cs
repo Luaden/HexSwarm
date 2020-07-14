@@ -1,36 +1,39 @@
 ﻿using UnityEngine;
 
-public class AudioManager : MonoBehaviour
+namespace Old
 {
-    [SerializeField] AudioClip[] bgmSongs;
-    protected AudioSource[] audioSources;
-    protected AudioSource sfxAudioSource;
-    protected AudioSource bgmAudioSource;
-
-    public static AudioManager instance;
-
-    public float SFXVolume { get => sfxAudioSource.volume; set => sfxAudioSource.volume = value; }
-    public float BGMVolume { get => bgmAudioSource.volume; set => bgmAudioSource.volume = value; }
-
-    public void PlaySound(AudioClip clipToPlay) => sfxAudioSource.PlayOneShot(clipToPlay);
-    public void PlayMusic(AudioClip clipToPlay)
+    public class AudioManager : MonoBehaviour
     {
-        bgmAudioSource.clip = clipToPlay;
-        bgmAudioSource.Play();
-    }
+        [SerializeField] AudioClip[] bgmSongs;
+        protected AudioSource[] audioSources;
+        protected AudioSource sfxAudioSource;
+        protected AudioSource bgmAudioSource;
 
-    protected void Awake()
-    {
-        #region Singleton
-        if (instance != null)
-            Destroy(this);
+        public static AudioManager instance;
 
-        instance = this;
-        DontDestroyOnLoad(this);
-        #endregion
+        public float SFXVolume { get => sfxAudioSource.volume; set => sfxAudioSource.volume = value; }
+        public float BGMVolume { get => bgmAudioSource.volume; set => bgmAudioSource.volume = value; }
 
-        audioSources = GetComponents<AudioSource>();
-        sfxAudioSource = audioSources[0];
-        bgmAudioSource = audioSources[1];
+        public void PlaySound(AudioClip clipToPlay) => sfxAudioSource.PlayOneShot(clipToPlay);
+        public void PlayMusic(AudioClip clipToPlay)
+        {
+            bgmAudioSource.clip = clipToPlay;
+            bgmAudioSource.Play();
+        }
+
+        protected void Awake()
+        {
+            #region Singleton
+            if (instance != null)
+                Destroy(this);
+
+            instance = this;
+            DontDestroyOnLoad(this);
+            #endregion
+
+            audioSources = GetComponents<AudioSource>();
+            sfxAudioSource = audioSources[0];
+            bgmAudioSource = audioSources[1];
+        }
     }
 }
