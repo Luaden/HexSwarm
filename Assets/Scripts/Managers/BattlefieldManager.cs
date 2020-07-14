@@ -4,70 +4,73 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-[System.Serializable]
-public class BattlefieldManager : IBattlefield
+namespace Old
 {
-    //Cached references
-    protected GridManager gridManager;
-
-    //State variables
-    protected Dictionary<Vector3Int, Cell> world;
-    protected IUnit currentUnit;
-    protected Cell fromCell;
-    protected Cell toCell;
-    protected Cell tempCell;
-
-    //Properties
-    public Dictionary<Vector3Int, Cell> World { get => world; }
-    
-    public BattlefieldManager(Dictionary<Vector3Int, Cell> world, GridManager gridManager)
+    [System.Serializable]
+    public class BattlefieldManager : IBattlefield
     {
-        this.world = world;
-        this.gridManager = gridManager;
-    }
+        //Cached references
+        protected GridManager gridManager;
 
-    public void DestroyUnits(Vector3Int unitPosition)
-    {
-        Cell killbox;
-        if (world.TryGetValue(unitPosition, out killbox))
+        //State variables
+        protected Dictionary<Vector3Int, Cell> world;
+        protected IUnit currentUnit;
+        protected Cell fromCell;
+        protected Cell toCell;
+        protected Cell tempCell;
+
+        //Properties
+        public Dictionary<Vector3Int, Cell> World { get => world; }
+
+        public BattlefieldManager(Dictionary<Vector3Int, Cell> world, GridManager gridManager)
         {
-            killbox.Unit = default;
-            gridManager.PaintUnitTile(unitPosition, default);
+            this.world = world;
+            this.gridManager = gridManager;
         }
-    }
 
-    public bool MoveUnit(Vector3Int unitPosition, Vector3Int destination, ITeam team)
-    {
-        world.TryGetValue(unitPosition, out fromCell);
-        world.TryGetValue(destination, out toCell);
+        public void DestroyUnits(Vector3Int unitPosition)
+        {
+            Cell killbox;
+            if (world.TryGetValue(unitPosition, out killbox))
+            {
+                killbox.Unit = default;
+                gridManager.PaintUnitTile(unitPosition, default);
+            }
+        }
 
-        if (team != fromCell.Unit.Team)
-            return false;
+        public bool MoveUnit(Vector3Int unitPosition, Vector3Int destination, ITeam team)
+        {
+            world.TryGetValue(unitPosition, out fromCell);
+            world.TryGetValue(destination, out toCell);
 
-        if (!gridManager.CheckCanMove(toCell))
-            return false;
-        
-        toCell.Unit = fromCell.Unit;
-        (toCell.Unit as Unit).Location = destination;
-        fromCell.Unit = default;
+            if (team != fromCell.Unit.Team)
+                return false;
 
-        gridManager.PaintUnitTile(fromCell.Position, default);
-        gridManager.PaintUnitTile(toCell.Position, toCell.Unit.Tile);
+            if (!gridManager.CheckCanMove(toCell))
+                return false;
 
-        return true;
-    }
+            toCell.Unit = fromCell.Unit;
+            (toCell.Unit as Unit).Location = destination;
+            fromCell.Unit = default;
 
-    public void PlaceNewUnit(IUnit unit, Vector3Int position)
-    {
-        toCell = null;
-        world.TryGetValue(position, out toCell);
+            gridManager.PaintUnitTile(fromCell.Position, default);
+            gridManager.PaintUnitTile(toCell.Position, toCell.Unit.Tile);
 
-        if (toCell.Unit != null)
-            return;
+            return true;
+        }
 
-        toCell.Unit = unit;
-        (toCell.Unit as Unit).Location = position;
+        public void PlaceNewUnit(IUnit unit, Vector3Int position)
+        {
+            toCell = null;
+            world.TryGetValue(position, out toCell);
 
-        gridManager.PaintUnitTile(toCell.Position, toCell.Unit.Tile);
+            if (toCell.Unit != null)
+                return;
+
+            toCell.Unit = unit;
+            (toCell.Unit as Unit).Location = position;
+
+            gridManager.PaintUnitTile(toCell.Position, toCell.Unit.Tile);
+        }
     }
 }

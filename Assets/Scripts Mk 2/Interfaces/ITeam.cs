@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ITeam2 
+public interface ITeam 
 {
     string Name { get; }
     string Description { get; }
