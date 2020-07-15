@@ -2,30 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour, ICameraControls
+public class CameraController : MonoBehaviour
 {
     //Cached references
     protected Camera mainCamera;
     protected Transform cameraTransform;
+    protected ConfigManager configManager;
 
     //State variables
     protected float xMax = 4;
     protected float yMax = 2;
-    protected float cameraSensitivity = 1f;
-    protected float cameraSpeed = 1f;
+    protected float sensitivityModifier = 1f;
+    protected float speedModifier = 1f;
     protected Vector3 mousePos;
     protected Vector3 cameraPosToBe;
-    protected bool movementEnabled = false;
+    protected bool movementEnabled = true;
 
-    public float SensitivityModifier { get => cameraSensitivity; set => cameraSensitivity = value; }
-    public float SpeedModifier { get => cameraSpeed; set => cameraSpeed = value; }
+    public float SensitivityModifier { set => sensitivityModifier = value; }
+    public float SpeedModifier { set => speedModifier = value; }
 
     public void ToggleCameraControls(bool cameraControlOnOff) => movementEnabled = cameraControlOnOff;
 
     protected void Awake()
     {
+        configManager = FindObjectOfType<ConfigManager>();
         mainCamera = Camera.main;
         cameraTransform = mainCamera.transform;
+
+        SensitivityModifier = configManager.SensitivityModifier; ;
+        SpeedModifier = configManager.SpeedModifier;
     }
 
     protected void Update()
@@ -42,12 +47,12 @@ public class CameraController : MonoBehaviour, ICameraControls
         cameraPosToBe.y = mousePos.y;
         cameraPosToBe.z = mainCamera.transform.position.z;
 
-        if (mousePos.x > mainCamera.transform.position.x + xMax / SensitivityModifier ||
-            mousePos.x < mainCamera.transform.position.x - xMax / SensitivityModifier ||
-            mousePos.y > mainCamera.transform.position.y + yMax / SensitivityModifier ||
-            mousePos.y < mainCamera.transform.position.y - yMax / SensitivityModifier)
+        if (mousePos.x > mainCamera.transform.position.x + xMax / sensitivityModifier ||
+            mousePos.x < mainCamera.transform.position.x - xMax / sensitivityModifier ||
+            mousePos.y > mainCamera.transform.position.y + yMax / sensitivityModifier ||
+            mousePos.y < mainCamera.transform.position.y - yMax / sensitivityModifier)
         {
-            mainCamera.transform.position = Vector3.Lerp(transform.position, cameraPosToBe, (cameraSpeed * SpeedModifier) * Time.deltaTime);
+            mainCamera.transform.position = Vector3.Lerp(transform.position, cameraPosToBe, speedModifier * Time.deltaTime);
         }
     }
 
