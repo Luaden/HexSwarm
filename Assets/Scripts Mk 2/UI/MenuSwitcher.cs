@@ -27,28 +27,6 @@ public class MenuSwitcher : MonoBehaviour
         mainCanvas.SetActive(!optionsActive);
     }
 
-    public void SwapOptionsPanel(int x)
-    {
-        if(x == 1)
-        {
-            audioPanel.SetActive(true);
-            cameraPanel.SetActive(false);
-            gameoptionsPanel.SetActive(false);
-        }
-        if(x == 2)
-        {
-            audioPanel.SetActive(false);
-            cameraPanel.SetActive(true);
-            gameoptionsPanel.SetActive(false);
-        }
-        if(x == 3)
-        {
-            audioPanel.SetActive(false);
-            gameoptionsPanel.SetActive(false);
-            cameraPanel.SetActive(true);
-        }
-    }
-
     protected void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape))

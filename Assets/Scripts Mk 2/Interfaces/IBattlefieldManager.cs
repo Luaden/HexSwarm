@@ -5,10 +5,10 @@ using UnityEngine.Tilemaps;
 
 public enum MapShape
 {
-    Hexagon = 1,
-    Rectangle = 2,
-    Weird = 3,    
-    Random = 4
+    Hexagon = 0,
+    Rectangle = 1,
+    Weird = 2,    
+    Random = 3
 }
 
 public interface IBattlefieldManager

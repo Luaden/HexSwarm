@@ -6,7 +6,7 @@ public class AudioController : MonoBehaviour
     protected AudioSource sfxAudioSource;
     protected AudioSource bgmAudioSource;
     protected ConfigManager configManager;
-    protected float masterVolume;
+    protected float masterVolume = 1;
 
     public float MasterVolume { set => masterVolume = value; }
     public float SFXVolume { set => sfxAudioSource.volume = value * masterVolume; }
@@ -24,7 +24,9 @@ public class AudioController : MonoBehaviour
         configManager = FindObjectOfType<ConfigManager>();
         audioSources = GetComponents<AudioSource>();
         sfxAudioSource = audioSources[0];
-        bgmAudioSource = audioSources[1];        
+        bgmAudioSource = audioSources[1];
+
+        configManager.AudioController = this;
     }
 
     protected void Start()

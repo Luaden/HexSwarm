@@ -6,7 +6,7 @@ public class ConfigManager : MonoBehaviour, IConfigManager
 {
     [SerializeField] protected GameObject mainCanvas;
     [SerializeField] protected GameObject optionsCanvas;
-    [SerializeField] protected IColorConfig[] teamColors;
+    [SerializeField] protected ColorConfig[] teamColors;
 
     protected KeyCode scrollLeft = KeyCode.A;
     protected KeyCode scrollRight = KeyCode.D;
@@ -16,11 +16,13 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     protected KeyCode ability2 = KeyCode.Alpha2;
     protected KeyCode ability3 = KeyCode.Alpha3;
     protected KeyCode ability4 = KeyCode.Alpha4;
+    protected float gameDifficulty = 1f;
     protected float masterVolume = 1f;
     protected float sfxVolume = 1f;
     protected float bgmVolume = 1f;
     protected float sensitivityModifier = 1f;
     protected float speedModifier = 1f;
+    protected MapShape mapShape = MapShape.Hexagon;
 
     public static ConfigManager instance;
     public KeyCode ScrollLeft => scrollLeft;
@@ -31,11 +33,11 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     public KeyCode Ability2 => ability2;
     public KeyCode Ability3 => ability3;
     public KeyCode Ability4 => ability4;
-    public float GameDifficulty { get; set; }
-    public MapShape MapShape { get; set; }
+    public float GameDifficulty { get => gameDifficulty; set => gameDifficulty = value; }
     public IColorConfig[] TeamColors { get => teamColors; }
     public AudioController AudioController { get; set; }
     public CameraController CameraController { get; set; }
+    public MapShape MapShape { get; set; }
 
     public float MasterVolume
     {
@@ -64,6 +66,8 @@ public class ConfigManager : MonoBehaviour, IConfigManager
         set => UpdateSpeedModifier(value);
     }
 
+    
+
     //This needs to be expanded to call to the team through the game manager and update colors.
     public void ChangeTeamColor(int teamIndex, IColorConfig colors) => TeamColors[teamIndex] = colors;
     public void PlayMusic(AudioClip bgm) => AudioController.PlayMusic(bgm);
@@ -80,7 +84,10 @@ public class ConfigManager : MonoBehaviour, IConfigManager
         instance = this;
         DontDestroyOnLoad(this);
         #endregion
+        
+        InitTeamColors();
     }
+
     protected void UpdateMasterVolume(float value)
     {
         masterVolume = value;
@@ -107,5 +114,23 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     {
         speedModifier = value;
         CameraController.SpeedModifier = value;
+    }
+
+    protected void InitTeamColors()
+    {
+        teamColors = new ColorConfig[9];
+
+        for(int i = 0; i < teamColors.Length; i++)
+        {
+            ColorConfig config = new ColorConfig();
+            config.PrimaryColor = config.GetColor((Colors)i);
+            config.PrimaryColorCategory = (Colors)i;
+            config.SecondaryColor = config.GetColor((Colors)i);
+            config.SecondaryColorCategory = (Colors)i;
+
+            print(config.SecondaryColorCategory);
+
+            teamColors[i] = config;
+        }
     }
 }

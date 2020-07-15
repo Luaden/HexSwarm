@@ -25,10 +25,11 @@ public class CameraController : MonoBehaviour
 
     protected void Awake()
     {
-        configManager = FindObjectOfType<ConfigManager>();
+        configManager = FindObjectOfType<ConfigManager>();        
         mainCamera = Camera.main;
         cameraTransform = mainCamera.transform;
 
+        configManager.CameraController = this;
         SensitivityModifier = configManager.SensitivityModifier; ;
         SpeedModifier = configManager.SpeedModifier;
     }
