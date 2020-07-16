@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class AITeam : Team
@@ -65,18 +66,7 @@ public class AITeam : Team
     {
         foreach (IUnit unit in units)
         {
-            //Need difficulty modifier to be factored in
-            checkedLocations = bfm.GetNeighborCells(unit.Location, detectionRange) as List<Vector3Int>;
-
-            foreach (Vector3Int location in checkedLocations)
-            {
-                bfm.World.TryGetValue(location, out checkCell);
-
-                if (checkCell.Unit != null && checkCell.Unit.Team.TeamNumber == 0)
-                {
-                    enemiesSeen.Add(checkCell.Position);
-                }
-            }
+            CheckForEnemies(unit);
         }
     }
 
@@ -97,30 +87,41 @@ public class AITeam : Team
 
     protected void DetermineStrategy()
     {
-        while(unitsUnmoved.Count > 0) 
+        GetPossibleAttacks();
+        while (unitsUnmoved.Count > 0)
         {
-            if (enemiesSeen.Count < 0)
+            if (enemiesSeen.Count == 0)
             {
-                MoveRandomly(units[0]);                
+                MoveRandomly(units[0]);
+                GetBestAttacks();
+                continue;
+            }  
+            while (bestHits.Count > 0 && enemiesSeen.Count > 0)
+            {
+                if (ResolvedAttackDifficult())
+                {
+                    UseOffensiveStrategy();
+                    continue;
+                }
+
+                //Defensive logic goes here
             }
+            if (bestHits.Count == 0)
+                GetBestAttacks();
+        }        
+    }
+    /// <summary>
+    /// This function returns if an attack was determied
+    /// this will be based on difficulty logic and best possible moves
+    /// </summary>
+    /// <returns> false when there wan't an attack move selected</returns>
+    protected bool ResolvedAttackDifficult()
+    {
+        if (true)
+            return false;
 
-            GetPossibleAttacks();
-            GetAttackPattern();
-
-            if (selectedAttack != null)
-                UseOffensiveStrategy();
-            else
-            {
-                GetEnemyLOS();
-                GetPossibleDefense();
-                GetDefensivePattern();
-                if (selectedDefense != null)
-                    UseDefensiveStrategy();
-                else
-                    GetAlternateRoute(units[0]);
-            }                
-        }
-    }    
+        return true;
+    }
 
     protected void MoveRandomly(IUnit unit)
     {
@@ -150,55 +151,85 @@ public class AITeam : Team
             }
         }
     }
-
+    /// <summary>
+    /// The vector 3 int is the key hit point for any attack.
+    /// </summary>
+    protected Dictionary<Vector3Int, HashSet<AttackPattern>> possibleAttacks
+         = new Dictionary<Vector3Int, HashSet<AttackPattern>>();    
     protected void GetPossibleAttacks()
     {
-        foreach(IUnit unit in unitsUnmoved)
-        {
+        foreach (IUnit unit in unitsUnmoved)
             foreach (IAbility ability in unit.Abilites)
-            {
-                checkedLocations = unit.CalcuateValidNewLocation(ability) as List<Vector3Int>;
-
-                foreach (Vector3Int location in checkedLocations)
-                {
-                    hits = unit.DiscoverHits(location, ability) as List<Vector3Int>;
-
-                    if (hits.Count > 0)
-                    {
-                        AttackPattern attack = new AttackPattern(unit, ability, location, hits);
-                        attackPatterns.Add(attack);
-                    }
-                }
-            }
-        }
+                ReviewPossibleMoves(unit, ability);
     }
 
-    protected void GetAttackPattern()
+    protected void ReviewPossibleMoves(IUnit unit, IAbility ability)
     {
-        foreach (Vector3Int enemy in enemiesSeen)
+        foreach (Vector3Int location in unit.CalcuateValidNewLocation(ability))
         {
-            int mostEnemiesHit = 0;
+            IEnumerable<Vector3Int> results = unit.DiscoverHits(location, ability);
+            if (results == default)
+                continue;
+            AttackPattern attack = new AttackPattern(unit, ability, location, results);
 
-            foreach (AttackPattern attack in attackPatterns)
-            {
-                if (attack.LocationsHit.Contains(enemy) && attack.LocationsHit.Count > mostEnemiesHit)
-                {
-                    mostEnemiesHit = attack.LocationsHit.Count;
-                    selectedAttack = attack;
-                }
-            }
+            if (enemiesSeen.Intersect(results).Count() > 0)
+                HandleBestAttackCheck(attack);
+
+            foreach (Vector3Int hitLocation in results)
+                SmartAdd(possibleAttacks, hitLocation, attack);
+        }
+    }
+    Stack<AttackPattern> bestHits = new Stack<AttackPattern>();
+
+
+
+    protected void SmartAdd(Dictionary<Vector3Int, HashSet<AttackPattern>> target,
+        Vector3Int key, AttackPattern value)
+    {
+        HashSet<AttackPattern> targetPoint;
+        //if the dictionary doesn't have the HashSet<AttackPattern> add it
+        if (!target.TryGetValue(key, out targetPoint))
+        {
+            targetPoint = new HashSet<AttackPattern>();
+            target.Add(key,targetPoint);
+        }
+        //append value
+        targetPoint.Add(value);
+    }
+
+    protected void HandleBestAttackCheck(AttackPattern attackToCheck )
+    {
+        if ((bestHits.Count == 0) || (attackToCheck.HitCount > bestHits.Peek().HitCount))
+        {
+            bestHits.Clear();
+            bestHits.Push(attackToCheck);
+        }
+        else if (attackToCheck.HitCount == bestHits.Peek().HitCount)
+        {
+            bestHits.Push(attackToCheck);
         }
     }
 
+    protected void GetBestAttacks()
+    {
+        foreach (KeyValuePair<Vector3Int, HashSet<AttackPattern>> entry in possibleAttacks)
+        {
+            if (!enemiesSeen.Contains(entry.Key))
+                continue;
+
+            foreach(AttackPattern attack in entry.Value)
+                HandleBestAttackCheck(attack);
+        }
+    }
+
+    /// <summary>
+    /// Performs the attack
+    /// clears possible moves from any attack that refrences now dead unts
+    /// may need to clear best  moves and check again
+    /// </summary>
     protected void UseOffensiveStrategy()
     {
         GameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.TargetLocation);
-
-        foreach(AttackPattern attack in attackPatterns)
-        {
-            if (attack.Unit == selectedAttack.Unit)
-                attackPatterns.Remove(attack);
-        }
 
         enemiesSeen.Remove(selectedAttack.TargetLocation);
         UnitHasMoved(selectedAttack.Unit);
