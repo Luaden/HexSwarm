@@ -5,8 +5,8 @@ using UnityEngine;
 
 public interface IGameOptions
 {
-    float GameDifficulty { get; set; }
-    MapShape MapShape { get; set; }
+    float GameDifficulty { get;  }
+    MapShape MapShape { get; }
     IColorConfig[] TeamColors { get; }
 
     void ChangeTeamColor(int teamIndex, IColorConfig colors);
