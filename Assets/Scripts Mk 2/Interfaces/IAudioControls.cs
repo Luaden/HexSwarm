@@ -2,9 +2,9 @@
 
 public interface IAudioControls
 {
-    float MasterVolume { get; set; }
-    float SFXVolume { get; set; }
-    float BGMVolume { get; set; }
+    float MasterVolume { get; }
+    float SFXVolume { get; }
+    float BGMVolume { get; }
     void PlaySound(AudioClip sfx);
     void PlayMusic(AudioClip bgm);
 }

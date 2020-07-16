@@ -13,13 +13,24 @@ public abstract class Team : ITeam
     public IGameManager GameManager { get; set; }
     public IEnumerable<IUnit> Units { get => units; }
 
-    protected List<IUnit> units;
+    protected List<IUnit> units = new List<IUnit>();
+    protected List<IUnit> unitsMoved = new List<IUnit>();
+    protected List<IUnit> unitsUnmoved = new List<IUnit>();
 
-    public void StartTurn() => MyTurn = true;
+    public void StartTurn()
+    {
+        MyTurn = true;
+
+        while(MyTurn)
+        {
+            TakeTurn();
+        }
+    }
 
     public void EndTurn()
     {
         //Tell the game manager this team is done.
+        MyTurn = false;
     }
 
     public void KillUnit(IUnit unit)
@@ -27,6 +38,7 @@ public abstract class Team : ITeam
         try
         {
             units.Remove(unit);
+            //Tell the game manager to go to the BFM and remove unit.
         }
         catch
         {
@@ -40,6 +52,12 @@ public abstract class Team : ITeam
     protected void TeamEliminated()
     {
         //Tell game manager this team is eliminated.
+        EndTurn();
+    }
+
+    protected virtual void TakeTurn()
+    {
+        return;
     }
 
 }
