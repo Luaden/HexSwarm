@@ -4,18 +4,16 @@ using UnityEngine;
 
 public class DefendPattern
 {
-    IUnit unit;
-    IAbility ability;
-    Vector3Int targetLocation;
 
-    public IUnit Unit => unit;
-    public IAbility Ability => ability;
-    public Vector3Int TargetLocation => targetLocation;
+
+    public IUnit Unit { get; }
+    public IAbility Ability { get; }
+    public Vector3Int TargetLocation { get; }
 
     public DefendPattern(IUnit incUnit, IAbility incAbility, Vector3Int incTargetLocation)
     {
-        unit = incUnit;
-        ability = incAbility;
-        targetLocation = incTargetLocation;
+        Unit = incUnit;
+        Ability = incAbility;
+        TargetLocation = incTargetLocation;
     }
 }

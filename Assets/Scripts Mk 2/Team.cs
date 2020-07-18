@@ -14,7 +14,6 @@ public abstract class Team : ITeam
     public IEnumerable<IUnit> Units { get => units; }
 
     protected List<IUnit> units = new List<IUnit>();
-    protected List<IUnit> unitsMoved = new List<IUnit>();
     protected List<IUnit> unitsUnmoved = new List<IUnit>();
 
     public void StartTurn()

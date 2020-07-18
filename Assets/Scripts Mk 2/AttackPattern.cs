@@ -1,24 +1,23 @@
 ﻿using Old;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class AttackPattern
 {
-    IUnit unit;
-    IAbility ability;
-    Vector3Int targetLocation;
-    List<Vector3Int> locationsHit;
 
-    public IUnit Unit => unit;
-    public IAbility Ability => ability;
-    public Vector3Int TargetLocation => targetLocation;
-    public List<Vector3Int> LocationsHit => locationsHit;
+    public IUnit Unit { get; }
+    public IAbility Ability { get; }
+    public Vector3Int TargetLocation { get; }
+    public IEnumerable<Vector3Int> LocationsHit { get; }
+    public int HitCount { get; }
 
-    public AttackPattern(IUnit incUnit, IAbility incAbility, Vector3Int incTargetLocation, List<Vector3Int> incLocationsHit)
+    public AttackPattern(IUnit incUnit, IAbility incAbility, Vector3Int incTargetLocation, IEnumerable<Vector3Int> incLocationsHit)
     {
-        unit = incUnit;
-        ability = incAbility;
-        targetLocation = incTargetLocation;
-        locationsHit = incLocationsHit;
+        Unit = incUnit;
+        Ability = incAbility;
+        TargetLocation = incTargetLocation;
+        LocationsHit = incLocationsHit;
+        HitCount = LocationsHit.Count();
     }
 }
