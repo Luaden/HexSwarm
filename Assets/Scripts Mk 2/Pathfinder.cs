@@ -9,27 +9,27 @@ public class Pathfinder : MonoBehaviour
 
     //State variables
     protected IReadOnlyDictionary<Vector3Int, ICell> world;
-    protected List<Cell> cellsToEvaluate = new List<Cell>();
-    protected List<Cell> orderedEvaluatedCells = new List<Cell>();
-    protected List<Cell> neighborCells = new List<Cell>();
-    protected List<Cell> blockedCells = new List<Cell>();
-    protected List<Cell> currentRoute = new List<Cell>();
-    protected HashSet<Cell> newRoute;
-    protected Cell closestCell;
-    protected Cell lastClosestCell;
+    protected List<ICell> cellsToEvaluate = new List<ICell>();
+    protected List<ICell> orderedEvaluatedCells = new List<ICell>();
+    protected List<ICell> neighborCells = new List<ICell>();
+    protected List<ICell> blockedCells = new List<ICell>();
+    protected List<ICell> currentRoute = new List<ICell>();
+    protected HashSet<ICell> newRoute;
+    protected ICell closestCell;
+    protected ICell lastClosestCell;
 
 
 
     public Pathfinder(BattlefieldManager battlefieldManager) => this.battlefieldManager = battlefieldManager;
 
-    public IEnumerable<Cell> AvoidUnitsPath(Cell origin, Cell destination)
+    public IEnumerable<ICell> AvoidUnitsPath(ICell origin, ICell destination)
     {
         GetFreshWorld();
-        currentRoute = new List<Cell>();
+        currentRoute = new List<ICell>();
 
         //gets a direct path
-        cellsToEvaluate = DirectPath(origin, destination) as List<Cell>;
-        blockedCells = new List<Cell>();
+        cellsToEvaluate = DirectPath(origin, destination) as List<ICell>;
+        blockedCells = new List<ICell>();
         closestCell = origin;
 
         Debug.Log("There are :" + cellsToEvaluate.Count + " left to count.");
@@ -55,7 +55,7 @@ public class Pathfinder : MonoBehaviour
                         i--;
                     }
 
-                    cellsToEvaluate = DirectPath(cellsToEvaluate[i], destination) as List<Cell>;
+                    cellsToEvaluate = DirectPath(cellsToEvaluate[i], destination) as List<ICell>;
                 }
 
                 orderedEvaluatedCells.Add(cellsToEvaluate[i]);
@@ -66,11 +66,23 @@ public class Pathfinder : MonoBehaviour
         return orderedEvaluatedCells;
     }
 
-    private Cell FindPathAround(Cell origin, Cell destination)
+    public IEnumerable<Vector3Int> AvoidUnitsPath(Vector3Int origin, Vector3Int destination)
     {
-        neighborCells = new List<Cell>();
+        ICell originCell;
+        ICell destinationCell;
 
-        neighborCells = battlefieldManager.GetNeighborCells(origin) as List<Cell>;
+        GetFreshWorld();
+        world.TryGetValue(origin, out originCell);
+        world.TryGetValue(destination, out destinationCell);
+
+        return AvoidUnitsPath(originCell, destinationCell) as IEnumerable<Vector3Int>;
+    }
+
+    private ICell FindPathAround(ICell origin, ICell destination)
+    {
+        neighborCells = new List<ICell>();
+
+        neighborCells = battlefieldManager.GetNeighborCells(origin) as List<ICell>;
 
         for (int i = 0; i < neighborCells.Count; i++)
         {
@@ -94,19 +106,18 @@ public class Pathfinder : MonoBehaviour
         return closestCell;
     }
 
-    public IEnumerable<Cell> DirectPath(Cell origin, Cell destination)
+    public IEnumerable<ICell> DirectPath(ICell origin, ICell destination)
     {
-        Debug.Log("Got a direct path");
         GetFreshWorld();
-        currentRoute = new List<Cell>();
+        currentRoute = new List<ICell>();
 
-        cellsToEvaluate = battlefieldManager.GetNeighborCells(origin) as List<Cell>;
+        cellsToEvaluate = battlefieldManager.GetNeighborCells(origin) as List<ICell>;
         cellsToEvaluate.Remove(origin);
         closestCell = origin;
 
         while (closestCell != destination)
         {
-            cellsToEvaluate = battlefieldManager.GetNeighborCells(closestCell) as List<Cell>;
+            cellsToEvaluate = battlefieldManager.GetNeighborCells(closestCell) as List<ICell>;
 
             for (int i = 0; i < cellsToEvaluate.Count; i++)
             {
@@ -121,9 +132,21 @@ public class Pathfinder : MonoBehaviour
         return currentRoute;
     }
 
-    protected bool CellIsBlocked(Cell cell) => cell.Unit != null ? true : false;
+    public IEnumerable<Vector3Int> DirectPath(Vector3Int origin, Vector3Int destination)
+    {
+        ICell originCell;
+        ICell destinationCell;
+
+        GetFreshWorld();
+        world.TryGetValue(origin, out originCell);
+        world.TryGetValue(destination, out destinationCell);
+
+        return DirectPath(originCell, destinationCell) as IEnumerable<Vector3Int>;        
+    }
+
+    protected bool CellIsBlocked(ICell cell) => cell.Unit != null ? true : false;
 
     protected void GetFreshWorld() => world = battlefieldManager.World;
 
-    protected float EvaluateCellDistance(Cell position, Cell destination) => Vector3Int.Distance(position.Position, destination.Position);
+    protected float EvaluateCellDistance(ICell position, ICell destination) => Vector3Int.Distance(position.Position, destination.Position);
 }
