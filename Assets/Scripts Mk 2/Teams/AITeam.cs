@@ -146,7 +146,7 @@ public class AITeam : Team
     {
         foreach (Vector3Int enemyLoc in enemiesSeen)
         {
-            Queue<Vector3Int> path = pathfinder.DirectPath(spawnPoint, enemyLoc) as Queue<Vector3Int>;
+            Queue<Vector3Int> path = pathfinder.FindPath(spawnPoint, enemyLoc, false) as Queue<Vector3Int>;
 
             foreach (Vector3Int location in path)
             {
@@ -368,12 +368,12 @@ public class AITeam : Team
 
         foreach(Vector3Int location in locationsToCheck)
         {
-            if (pathfinder.AvoidUnitsPath(unit.Location, locationToGo).Count() >
-                pathfinder.AvoidUnitsPath(unit.Location, location).Count())
+            if (pathfinder.FindPath(unit.Location, locationToGo).Count() >
+                pathfinder.FindPath(unit.Location, location).Count())
                 locationToGo = location;
         }
 
-        checkLocations = pathfinder.AvoidUnitsPath(unit.Location, locationToGo) as Stack<Vector3Int>;
+        checkLocations = pathfinder.FindPath(unit.Location, locationToGo) as Stack<Vector3Int>;
 
         toTarget = unit.Location;
 
