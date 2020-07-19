@@ -1,16 +1,10 @@
-﻿using Old;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class AITeam : Team
 {
     //Need to get references from Game Manager
-    protected BattlefieldManager bfm;
     protected Pathfinder pathfinder;
 
     //Used for base data population
@@ -18,13 +12,12 @@ public class AITeam : Team
     protected int defaultDetectionRange = 3;
     protected int detectionRange;
     protected int controlledArea;
-    protected Vector3Int spawnPoint;
     protected AttackPattern selectedAttack;
     protected DefendPattern selectedDefense;
 
     //Used for determining strategy
     protected HashSet<Vector3Int> enemiesSeen = new HashSet<Vector3Int>();
-    protected Queue<Vector3Int> unguardedCells = new Queue<Vector3Int>();
+    protected HashSet<Vector3Int> unguardedCells = new HashSet<Vector3Int>();
     protected Dictionary<Vector3Int, HashSet<AttackPattern>> possibleAttacks =
                                                             new Dictionary<Vector3Int, HashSet<AttackPattern>>();
     protected Dictionary<Vector3Int, HashSet<DefendPattern>> possibleDefenses =
@@ -39,6 +32,28 @@ public class AITeam : Team
     protected Vector3Int locationToGo;
     protected Vector3Int toTarget;
 
+    public AITeam
+        (GameManager gameManager,
+        string name,
+        string description,
+        Sprite icon,
+        Color primaryColor,
+        Color secondaryColor,
+        Teams teamNumber,
+        Vector3Int origin,
+        HashSet<IUnit> newUnits)
+    {
+        this.gameManager = gameManager;
+        //battlefieldManager = gameManager.BattlefieldManager;
+        Name = name;
+        Description = description;
+        Icon = icon;
+        PrimaryColor = primaryColor;
+        SecondaryColor = secondaryColor;
+        TeamNumber = teamNumber;
+        StartPosition = origin;
+        units = newUnits;
+    }
 
     protected override void TakeTurn()
     {
@@ -52,20 +67,10 @@ public class AITeam : Team
 
     protected void TeamInit()
     {
-        if (spawnPoint == null)
-        {
-            foreach (IUnit unit in units)
-            {
-                //Need a better way to determine spawner.
-                if (unit.Name == "Spawner")
-                    spawnPoint = unit.Location;
-            }
-        }
-
         controlledArea = units.Count();
         //Need a reference for this.
         //detectionRange = Mathf.RoundToInt(defaultDetectionRange * GameManager.Difficulty);
-        teamRange = bfm.GetNeighborCells(spawnPoint, detectionRange * 2) as Stack<Vector3Int>;
+        teamRange = battlefieldManager.GetNeighborCells(StartPosition, detectionRange * 2) as Stack<Vector3Int>;
         checkLocations.Clear();
         enemiesSeen.Clear();
         unitsUnmoved = units;
@@ -86,11 +91,11 @@ public class AITeam : Team
 
     protected void CheckForEnemies(IUnit unit)
     {
-        checkLocations = bfm.GetNeighborCells(unit.Location, detectionRange) as Stack<Vector3Int>;
+        checkLocations = battlefieldManager.GetNeighborCells(unit.Location, detectionRange) as Stack<Vector3Int>;
 
         foreach (Vector3Int location in checkLocations)
         {
-            bfm.World.TryGetValue(location, out checkCell);
+            battlefieldManager.World.TryGetValue(location, out checkCell);
 
             if (checkCell.Unit != null && checkCell.Unit.Team.TeamNumber == Teams.Player)
             {
@@ -108,7 +113,7 @@ public class AITeam : Team
         {
             if (enemiesSeen.Count == 0)
             {
-                MoveRandomly(unitsUnmoved[0]);
+                MoveRandomly(unitsUnmoved.First());
                 GetBestAttacks();
                 continue;
             }
@@ -136,28 +141,26 @@ public class AITeam : Team
             if (bestBlocks.Count == 0)
                 GetBestDefense();
 
-            GetRoute(unitsUnmoved[0], unguardedCells);
-        }
-
-        EndTurn();
+            GetRoute(unitsUnmoved.First(), unguardedCells, false);
+        }        
     }
 
     protected void GetEnemyLOS()
     {
         foreach (Vector3Int enemyLoc in enemiesSeen)
         {
-            Queue<Vector3Int> path = pathfinder.FindPath(spawnPoint, enemyLoc, false) as Queue<Vector3Int>;
+            Queue<Vector3Int> path = pathfinder.FindPath(StartPosition, enemyLoc, false) as Queue<Vector3Int>;
 
             foreach (Vector3Int location in path)
             {
-                bfm.World.TryGetValue(location, out checkCell);
+                battlefieldManager.World.TryGetValue(location, out checkCell);
 
                 if (checkCell.Unit != null)
                 {
                     path.Dequeue();
                     continue;
                 }
-                unguardedCells.Enqueue(path.Dequeue());
+                unguardedCells.Add(path.Dequeue());
             }
         }
     }
@@ -309,8 +312,7 @@ public class AITeam : Team
 
     protected void UseOffensiveStrategy()
     {
-        GameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.TargetLocation);
-        possibleAttacks.Remove(selectedAttack.TargetLocation);
+        gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.TargetLocation);
 
         enemiesSeen.Remove(selectedAttack.TargetLocation);
         UnitHasMoved(selectedAttack.Unit);
@@ -334,8 +336,8 @@ public class AITeam : Team
 
     protected void UseDefensiveStrategy()
     {
-        GameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, selectedDefense.TargetLocation);
-        possibleDefenses.Remove(selectedDefense.TargetLocation);
+        gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, selectedDefense.TargetLocation);
+        unguardedCells.Remove(selectedDefense.TargetLocation);
 
         UnitHasMoved(selectedDefense.Unit);
 
@@ -362,15 +364,18 @@ public class AITeam : Team
                 }
     }        
 
-    protected void GetRoute(IUnit unit, IEnumerable<Vector3Int> locationsToCheck)
+    protected void GetRoute(IUnit unit, IEnumerable<Vector3Int> locationsToCheck, bool shortestRoute = true)
     {
         locationToGo = locationsToCheck.First();
 
         foreach(Vector3Int location in locationsToCheck)
         {
             if (pathfinder.FindPath(unit.Location, locationToGo).Count() >
-                pathfinder.FindPath(unit.Location, location).Count())
+                pathfinder.FindPath(unit.Location, location).Count() && shortestRoute)
                 locationToGo = location;
+            else if (pathfinder.FindPath(unit.Location, locationToGo).Count() < 
+                     pathfinder.FindPath(unit.Location, location).Count())
+                 locationToGo = location;
         }
 
         checkLocations = pathfinder.FindPath(unit.Location, locationToGo) as Stack<Vector3Int>;
@@ -390,7 +395,9 @@ public class AITeam : Team
                     checkLocations.Pop();
                 }
 
-        GameManager.PerformMove(unit, toUse, toTarget);
+        gameManager.PerformMove(unit, toUse, toTarget);
         UnitHasMoved(unit);
     }
+
+    public override void EndTurn() => base.EndTurn();
 }

@@ -1,20 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Team : ITeam
 {
-    public string Name { get; set; }
+    protected GameManager gameManager;
+    protected BattlefieldManager battlefieldManager;
+    protected HashSet<IUnit> units = new HashSet<IUnit>();
+    protected HashSet<IUnit> unitsUnmoved = new HashSet<IUnit>();
+
+    public string Name { get; set;  }
     public string Description { get; set; }
     public Sprite Icon { get; set; }
-    public Color Color { get; set; }
+    public Color PrimaryColor { get; set; }
+    public Color SecondaryColor { get; set; }
     public Teams TeamNumber { get; set; }
     public bool MyTurn { get; set; }
-    public IGameManager GameManager { get; set; }
     public IEnumerable<IUnit> Units { get => units; }
-
-    protected List<IUnit> units = new List<IUnit>();
-    protected List<IUnit> unitsUnmoved = new List<IUnit>();
+    public Vector3Int StartPosition { get; set; }
 
     public void StartTurn()
     {
@@ -26,10 +28,10 @@ public abstract class Team : ITeam
         }
     }
 
-    public void EndTurn()
+    public virtual void EndTurn()
     {
-        //Tell the game manager this team is done.
         MyTurn = false;
+        //Tell the game manager this team is done.
     }
 
     public void KillUnit(IUnit unit)
@@ -37,7 +39,7 @@ public abstract class Team : ITeam
         try
         {
             units.Remove(unit);
-            //Tell the game manager to go to the BFM and remove unit.
+            battlefieldManager.DestroyUnit(unit.Location);
         }
         catch
         {
@@ -51,12 +53,10 @@ public abstract class Team : ITeam
     protected void TeamEliminated()
     {
         //Tell game manager this team is eliminated.
-        EndTurn();
     }
 
     protected virtual void TakeTurn()
     {
         return;
     }
-
 }

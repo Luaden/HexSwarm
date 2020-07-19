@@ -9,19 +9,8 @@ public class Pathfinder
 {
     //Cached references
     protected BattlefieldManager battlefieldManager;
-
-    //State variables
     protected IReadOnlyDictionary<Vector3Int, ICell> world;
-    protected List<ICell> cellsToEvaluate = new List<ICell>();
-    protected List<ICell> orderedEvaluatedCells = new List<ICell>();
-    protected List<ICell> neighborCells = new List<ICell>();
-    protected List<ICell> blockedCells = new List<ICell>();
-    protected List<ICell> currentRoute = new List<ICell>();
-    protected HashSet<ICell> newRoute;
-    protected ICell closestCell;
-    protected ICell lastClosestCell;
 
-    //Test fields for test methods;
     protected Dictionary<Vector3Int, PathfindingCell> closedSet = new Dictionary<Vector3Int, PathfindingCell>();
     protected Dictionary<Vector3Int, PathfindingCell> openSet = new Dictionary<Vector3Int, PathfindingCell>();
     protected Dictionary<Vector3Int, PathfindingCell> allCells = new Dictionary<Vector3Int, PathfindingCell>();
@@ -160,11 +149,21 @@ public class Pathfinder
 
     protected void GetFreshWorld() => world = battlefieldManager.World;
 
-    protected float EvaluateCellDistance(ICell position, ICell destination) => Vector3Int.Distance(position.Position, destination.Position);
+    protected float EvaluateCellDistance(ICell origin, ICell destination) =>
+        Mathf.Abs(origin.Position.x - destination.Position.x) + Mathf.Abs(origin.Position.y - destination.Position.y);
 
-    protected float EvaluateCellDistance(PathfindingCell position, PathfindingCell destination) => 
-        Mathf.Abs(position.Location.x - destination.Location.x) + Mathf.Abs(position.Location.y - destination.Location.y);
+    protected float EvaluateCellDistance(PathfindingCell origin, PathfindingCell destination) => 
+        Mathf.Abs(origin.Location.x - destination.Location.x) + Mathf.Abs(origin.Location.y - destination.Location.y);
 
+    #region Old Pathfinder
+    //protected List<ICell> cellsToEvaluate = new List<ICell>();
+    //protected List<ICell> orderedEvaluatedCells = new List<ICell>();
+    //protected List<ICell> neighborCells = new List<ICell>();
+    //protected List<ICell> blockedCells = new List<ICell>();
+    //protected List<ICell> currentRoute = new List<ICell>();
+    //protected HashSet<ICell> newRoute;
+    //protected ICell closestCell;
+    //protected ICell lastClosestCell;
 
     //public IEnumerable<ICell> AvoidUnitsPath(ICell origin, ICell destination)
     //{
@@ -282,4 +281,5 @@ public class Pathfinder
 
     //    return DirectPath(originCell, destinationCell) as IEnumerable<Vector3Int>;
     //}
+    #endregion
 }

@@ -7,10 +7,11 @@ public interface ITeam
     string Name { get; }
     string Description { get; }
     Sprite Icon { get; }    
-    Color Color { get; }
+    Color PrimaryColor { get; }
+    Color SecondaryColor { get; }
     Teams TeamNumber { get; }
+    Vector3Int StartPosition { get; }
     bool MyTurn { get; }
-    IGameManager GameManager { get; }
     IEnumerable<IUnit> Units { get; }
 
     void StartTurn();    
