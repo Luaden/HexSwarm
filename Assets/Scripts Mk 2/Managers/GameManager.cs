@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 public class GameManager : IGameManager
 {
+    public static IBattlefieldManager Battlefield { get; private set; }
+
+
+
     protected int turnCounter;
     public int TurnCounter => turnCounter;
 
