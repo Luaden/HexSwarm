@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class ConfigManager : MonoBehaviour, IConfigManager
 {
-    [SerializeField] protected GameObject mainCanvas;
-    [SerializeField] protected GameObject optionsCanvas;
-    [SerializeField] protected ColorConfig[] teamColors;
-
+    protected ColorConfig[] teamColors;
     protected KeyCode scrollLeft = KeyCode.A;
     protected KeyCode scrollRight = KeyCode.D;
     protected KeyCode scrollUp = KeyCode.W;

@@ -13,8 +13,8 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
     protected Grid mapGrid;
     protected Dictionary<Vector3Int, ICell> world;
-    protected List<Cell> highlightedCells;
-    protected List<Cell> neighbors;
+    protected List<ICell> highlightedCells;
+    protected List<ICell> neighbors;
     protected ICell checkCell;
     protected ICell fromCell;
     protected ICell toCell;
@@ -74,7 +74,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
     public IEnumerable<ICell> GetNeighborCells(Vector3Int origin, int range = 1)
     {
-        neighbors = new List<Cell>();
+        neighbors = new List<ICell>();
 
         int y = origin.y;
         int xMax = origin.x + range;
@@ -99,6 +99,9 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
             }
         }
 
+        ICell originCell;
+        world.TryGetValue(origin, out originCell);
+        neighbors.Remove(originCell);
         return neighbors;
     }
 
@@ -120,7 +123,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     {
         ClearHighlights();
 
-        foreach (Cell cell in moveCells)
+        foreach (ICell cell in moveCells)
         {
             if (attackCells.Contains(cell))
                 highlightMap.SetTile(cell.Position, highlightTiles[2]);
@@ -130,7 +133,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
             highlightedCells.Add(cell);
         }
 
-        foreach (Cell cell in attackCells)
+        foreach (ICell cell in attackCells)
         {
             if (!moveCells.Contains(cell))
                 highlightMap.SetTile(cell.Position, highlightTiles[0]);
@@ -141,7 +144,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
     public void ClearHighlights()
     {
-        foreach (Cell cell in highlightedCells)
+        foreach (ICell cell in highlightedCells)
         {
             highlightMap.SetTile(cell.Position, null);
         }
@@ -189,6 +192,13 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         //Whatever implements the visual representation for units needs to go here.
         checkCell.Unit = null;
     }
+
+    public void DestroyUnits(IEnumerable<Vector3Int> unitPositions)
+    {
+        foreach(Vector3Int unit in unitPositions)
+            DestroyUnit(unit);
+    }
+
     #endregion
 
     public Vector3Int GetVectorByClick(Vector2 mouseScreenPos)
@@ -205,9 +215,5 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         mapGrid = GetComponent<Grid>();
     }
 
-    public void DestroyUnits(Vector3Int unitPosition)
-    {
-        throw new System.NotImplementedException();
-    }
 }
 
