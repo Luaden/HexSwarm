@@ -5,6 +5,7 @@ using System.Linq;
 
 public class Unit : IUnit
 {
+
     [SerializeField] protected string name;
     public string Name => name;
 
