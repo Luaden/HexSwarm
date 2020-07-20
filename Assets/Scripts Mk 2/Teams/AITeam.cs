@@ -33,29 +33,22 @@ public class AITeam : Team
     protected Vector3Int toTarget;
 
     public AITeam
-        (GameManager gameManager,
-        string name,
+        (string name,
         string description,
         Sprite icon,
-        Color primaryColor,
-        Color secondaryColor,
         Teams teamNumber,
-        Vector3Int origin,
-        HashSet<IUnit> newUnits)
+        Vector3Int origin)
     {
-        this.gameManager = gameManager;
+        //this.gameManager = GameManager.instance;
         //battlefieldManager = gameManager.BattlefieldManager;
         Name = name;
         Description = description;
         Icon = icon;
-        PrimaryColor = primaryColor;
-        SecondaryColor = secondaryColor;
         TeamNumber = teamNumber;
         StartPosition = origin;
-        units = newUnits;
     }
 
-    protected override void TakeTurn()
+    public override void StartTurn()
     {
         TeamInit();
 
@@ -73,7 +66,8 @@ public class AITeam : Team
         teamRange = battlefieldManager.GetNeighborCells(StartPosition, detectionRange * 2) as Stack<Vector3Int>;
         checkLocations.Clear();
         enemiesSeen.Clear();
-        unitsUnmoved = units;
+        unitsUnmoved.Clear();
+        unitsUnmoved.Union(units);
         unguardedCells.Clear();
         possibleAttacks.Clear();
         possibleDefenses.Clear();
@@ -292,7 +286,6 @@ public class AITeam : Team
     {
         CheckInTeamRange(unit);
         GetRoute(unit, teamRange);
-        UnitHasMoved(unit);
     }
 
     protected void GetBestAttacks()
@@ -312,12 +305,13 @@ public class AITeam : Team
 
     protected void UseOffensiveStrategy()
     {
-        gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.TargetLocation);
+        if(gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.TargetLocation))
+        {
+            enemiesSeen.Remove(selectedAttack.TargetLocation);
+            UnitHasMoved(selectedAttack.Unit);
 
-        enemiesSeen.Remove(selectedAttack.TargetLocation);
-        UnitHasMoved(selectedAttack.Unit);
-
-        selectedAttack = null;
+            selectedAttack = null;
+        }        
     }
 
     protected void GetBestDefense()
@@ -336,12 +330,14 @@ public class AITeam : Team
 
     protected void UseDefensiveStrategy()
     {
-        gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, selectedDefense.TargetLocation);
-        unguardedCells.Remove(selectedDefense.TargetLocation);
+        if(gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, selectedDefense.TargetLocation))
+        {
+            unguardedCells.Remove(selectedDefense.TargetLocation);
 
-        UnitHasMoved(selectedDefense.Unit);
+            UnitHasMoved(selectedDefense.Unit);
 
-        selectedDefense = null;
+            selectedDefense = null;
+        }        
     }
 
     protected void UnitHasMoved(IUnit unit)
@@ -395,8 +391,8 @@ public class AITeam : Team
                     checkLocations.Pop();
                 }
 
-        gameManager.PerformMove(unit, toUse, toTarget);
-        UnitHasMoved(unit);
+        if(gameManager.PerformMove(unit, toUse, toTarget))
+            UnitHasMoved(unit);
     }
 
     public override void EndTurn() => base.EndTurn();

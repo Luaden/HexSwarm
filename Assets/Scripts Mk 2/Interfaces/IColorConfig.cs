@@ -13,7 +13,6 @@ public enum Colors
     white = 8
 }
 
-
 public interface IColorConfig
 {
     Color PrimaryColor { get; }
