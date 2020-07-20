@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class Player : Team
 {
@@ -14,8 +13,6 @@ public class Player : Team
         string name,
         string description,
         Sprite icon,
-        Color primaryColor,
-        Color secondaryColor,
         Teams teamNumber,
         Vector3Int origin,
         HashSet<IUnit> newUnits)
@@ -25,23 +22,16 @@ public class Player : Team
         Name = name;
         Description = description;
         Icon = icon;
-        PrimaryColor = primaryColor;
-        SecondaryColor = secondaryColor;
         TeamNumber = teamNumber;
         StartPosition = origin;
         units = newUnits;
     }
+
     protected override void TakeTurn()
     {
         TeamInit();
 
         ToggleCameraControls();
-
-        while (unitsUnmoved.Count > 0)
-        {
-            GetMouseInput();
-        }
-
         EndTurn();
     }
 
@@ -53,12 +43,13 @@ public class Player : Team
 
     protected void TeamInit()
     {
-        unitsUnmoved = units;
+        unitsUnmoved.Clear();
+        unitsUnmoved.Union(units);
     }
 
     protected void ToggleCameraControls()
     {
-        throw new NotImplementedException(); //GameManager.ConfigManager.ToggleCameraControls(MyTurn);
+        gameManager.ConfigManager.ToggleCameraControls(MyTurn);
     }
 
     protected void GetMouseInput()
@@ -74,13 +65,13 @@ public class Player : Team
 
         if (Input.GetMouseButtonDown(1))
         {
-        if (selectedAbility != null)
-        {
-            selectedAbility = null;
-            return;
-        }
-        if (selectedUnit != null)
-            selectedUnit = null;
+            if (selectedAbility != null)
+            {
+                selectedAbility = null;
+                return;
+            }
+            if (selectedUnit != null)
+                selectedUnit = null;
         }
     }
 }

@@ -154,35 +154,35 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     #endregion
 
     #region Unit Control
-    public bool PlaceNewUnit(IUnit unit, Vector3Int position)
+    public bool CheckForUnit(Vector3Int location)
+    {
+        ICell cell;
+        world.TryGetValue(location, out cell);
+
+        if (cell.Unit != null)
+            return true;
+        return false;
+    }
+
+    public void PlaceNewUnit(IUnit unit, Vector3Int position)
     {
         World.TryGetValue(position, out checkCell);
 
-        if (checkCell.Unit != null)
-            return false;
-
         checkCell.Unit = unit;
+
         //Whatever implements the visual representation for units needs to go here.
-        return true;
     }
 
-    public bool MoveUnit(Vector3Int unitPosition, Vector3Int destination, ITeam team)
+    public void MoveUnit(Vector3Int unitPosition, Vector3Int destination)
     {
         World.TryGetValue(unitPosition, out fromCell);
         World.TryGetValue(destination, out toCell);
-
-        if (team.TeamNumber != fromCell.Unit.Team.TeamNumber)
-            return false;
-
-        if (toCell.Unit != null)
-            return false;
 
         toCell.Unit = fromCell.Unit;
         (toCell.Unit as Unit).Location = destination;
         fromCell.Unit = null;
 
         //Whatever implements the visual representation for units needs to go here.
-        return true;
     }
 
     public void DestroyUnit(Vector3Int unitPosition)
@@ -198,7 +198,6 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         foreach(Vector3Int unit in unitPositions)
             DestroyUnit(unit);
     }
-
     #endregion
 
     public Vector3Int GetVectorByClick(Vector2 mouseScreenPos)
@@ -210,10 +209,6 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         return mouseCellPos;
     }
 
-    protected void Awake()
-    {
-        mapGrid = GetComponent<Grid>();
-    }
-
+    protected void Awake() => mapGrid = GetComponent<Grid>();
 }
 
