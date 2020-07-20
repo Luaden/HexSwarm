@@ -38,7 +38,6 @@ public class SliderUpdater : MonoBehaviour
         bgmVolumeSlider.value = configManager.BGMVolume;
         cameraSensitivitySlider.value = configManager.SensitivityModifier;
         cameraSpeedSlider.value = configManager.SpeedModifier;
-
     }
 
     protected ColorConfig GetColors()

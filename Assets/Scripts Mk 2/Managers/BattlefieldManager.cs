@@ -12,8 +12,8 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
     protected Grid mapGrid;
     protected Dictionary<Vector3Int, ICell> world;
-    protected List<Cell> highlightedCells;
-    protected List<Cell> neighbors;
+    protected List<ICell> highlightedCells;
+    protected List<ICell> neighbors;
     protected ICell checkCell;
     protected ICell fromCell;
     protected ICell toCell;
@@ -73,7 +73,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
     public IEnumerable<ICell> GetNeighborCells(Vector3Int origin, int range = 1)
     {
-        neighbors = new List<Cell>();
+        neighbors = new List<ICell>();
 
         int y = origin.y;
         int xMax = origin.x + range;
@@ -98,6 +98,9 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
             }
         }
 
+        ICell originCell;
+        world.TryGetValue(origin, out originCell);
+        neighbors.Remove(originCell);
         return neighbors;
     }
 
@@ -119,7 +122,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     {
         ClearHighlights();
 
-        foreach (Cell cell in moveCells)
+        foreach (ICell cell in moveCells)
         {
             if (attackCells.Contains(cell))
                 highlightMap.SetTile(cell.Position, highlightTiles[2]);
@@ -129,7 +132,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
             highlightedCells.Add(cell);
         }
 
-        foreach (Cell cell in attackCells)
+        foreach (ICell cell in attackCells)
         {
             if (!moveCells.Contains(cell))
                 highlightMap.SetTile(cell.Position, highlightTiles[0]);
@@ -140,7 +143,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
     public void ClearHighlights()
     {
-        foreach (Cell cell in highlightedCells)
+        foreach (ICell cell in highlightedCells)
         {
             highlightMap.SetTile(cell.Position, null);
         }
@@ -150,35 +153,35 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     #endregion
 
     #region Unit Control
-    public bool PlaceNewUnit(IUnit unit, Vector3Int position)
+    public bool CheckForUnit(Vector3Int location)
+    {
+        ICell cell;
+        world.TryGetValue(location, out cell);
+
+        if (cell.Unit != null)
+            return true;
+        return false;
+    }
+
+    public void PlaceNewUnit(IUnit unit, Vector3Int position)
     {
         World.TryGetValue(position, out checkCell);
 
-        if (checkCell.Unit != null)
-            return false;
-
         checkCell.Unit = unit;
+
         //Whatever implements the visual representation for units needs to go here.
-        return true;
     }
 
-    public bool MoveUnit(Vector3Int unitPosition, Vector3Int destination, ITeam team)
+    public void MoveUnit(Vector3Int unitPosition, Vector3Int destination)
     {
         World.TryGetValue(unitPosition, out fromCell);
         World.TryGetValue(destination, out toCell);
-
-        if (team.TeamNumber != fromCell.Unit.Team.TeamNumber)
-            return false;
-
-        if (toCell.Unit != null)
-            return false;
 
         toCell.Unit = fromCell.Unit;
         (toCell.Unit as Unit).Location = destination;
         fromCell.Unit = null;
 
         //Whatever implements the visual representation for units needs to go here.
-        return true;
     }
 
     public void DestroyUnit(Vector3Int unitPosition)
@@ -187,6 +190,12 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
         //Whatever implements the visual representation for units needs to go here.
         checkCell.Unit = null;
+    }
+
+    public void DestroyUnits(IEnumerable<Vector3Int> unitPositions)
+    {
+        foreach(Vector3Int unit in unitPositions)
+            DestroyUnit(unit);
     }
     #endregion
 
@@ -199,14 +208,6 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         return mouseCellPos;
     }
 
-    protected void Awake()
-    {
-        mapGrid = GetComponent<Grid>();
-    }
-
-    public void DestroyUnits(Vector3Int unitPosition)
-    {
-        throw new System.NotImplementedException();
-    }
+    protected void Awake() => mapGrid = GetComponent<Grid>();
 }
 

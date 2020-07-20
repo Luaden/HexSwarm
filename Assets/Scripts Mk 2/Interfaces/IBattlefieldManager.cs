@@ -20,7 +20,7 @@ public interface IBattlefieldManager
     void GenerateGrid(int gridHeight, MapShape mapShape);
     void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<ICell> attackCells);
     void ClearHighlights();
-    bool PlaceNewUnit(IUnit unit, Vector3Int position);
-    bool MoveUnit(Vector3Int unitPosition, Vector3Int destination, ITeam team);
+    void PlaceNewUnit(IUnit unit, Vector3Int position);
+    void MoveUnit(Vector3Int unitPosition, Vector3Int destination);
     void DestroyUnit(Vector3Int unitPosition);    
 }

@@ -37,7 +37,24 @@ public class Pathfinder
         }
     }
 
-    public IEnumerable<Vector3Int> FindPath(Vector3Int originVector, Vector3Int destinationVector, bool avoidUnits = true)
+    public IEnumerable<Vector3Int> FindTraversableArea(Vector3Int originVector, int maxRange)
+    {
+        IEnumerable<Vector3Int> totalArea = battlefieldManager.GetNeighborCells(originVector, maxRange) as IEnumerable<Vector3Int>;
+        HashSet<Vector3Int> traversableArea = new HashSet<Vector3Int>();
+
+        foreach(Vector3Int destination in totalArea)
+        {
+            IEnumerable<Vector3Int> openSet = FindPath(originVector, destination, true, maxRange);
+
+            foreach (Vector3Int location in openSet)
+                if (!traversableArea.Contains(location))
+                    traversableArea.Add(location);
+        }
+
+        return traversableArea;
+    }
+
+    public IEnumerable<Vector3Int> FindPath(Vector3Int originVector, Vector3Int destinationVector, bool avoidUnits = true, int maxRange = int.MaxValue)
     {
         closedSet.Clear();
         openSet.Clear();
@@ -95,23 +112,30 @@ public class Pathfinder
             }                
         }
 
-        return CalculatePath(closedSet.Last().Value) as IEnumerable<Vector3Int>;
+        return CalculatePath(destination, maxRange) as IEnumerable<Vector3Int>;
     }
 
-    protected IEnumerable<PathfindingCell> CalculatePath(PathfindingCell endCell)
+    protected IEnumerable<PathfindingCell> CalculatePath(PathfindingCell endCell, int maxRange)
     {
-        Stack<PathfindingCell> shortestPath = new Stack<PathfindingCell>();
+        Stack<PathfindingCell> unrestrictedPath = new Stack<PathfindingCell>();
+        Queue<PathfindingCell> rangeRestrictedPath = new Queue<PathfindingCell>();
         PathfindingCell currentCell = endCell;
-        
-        shortestPath.Push(currentCell);
+
+        unrestrictedPath.Push(currentCell);
         
         while(currentCell.Parent != null)
         {
-            shortestPath.Push(currentCell.Parent);
+            unrestrictedPath.Push(currentCell.Parent);
             currentCell = currentCell.Parent;
         }
-
-        return shortestPath;
+        
+        for(int i = 0; i < unrestrictedPath.Count; i++)
+        {
+            rangeRestrictedPath.Enqueue(unrestrictedPath.Pop());
+            if (i == maxRange)
+                break;
+        }
+        return rangeRestrictedPath;
     }
 
     protected IEnumerable<PathfindingCell> GetPathFindingCells(IEnumerable<ICell> cells)
