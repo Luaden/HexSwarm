@@ -8,9 +8,9 @@ public interface IGameManager
 
     Queue<ITeam> ActiveTeams { get; }
 
-    void NewGame();
-    void StartLevel();
-    void EndTurn();
+    bool NewGame();
+    bool StartLevel();
+    bool EndTurn();
 
     IUnit DisplayedUnit { get; }
     void InspectUnitUnderMouse();

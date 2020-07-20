@@ -8,7 +8,7 @@ public abstract class Team : ITeam
     protected HashSet<IUnit> units = new HashSet<IUnit>();
     protected HashSet<IUnit> unitsUnmoved = new HashSet<IUnit>();
 
-    public string Name { get; set;  }
+    public string Name { get; set; }
     public string Description { get; set; }
     public Sprite Icon { get; set; }
     public Color PrimaryColor { get; set; }

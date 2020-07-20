@@ -31,18 +31,16 @@ public class Player : Team
         StartPosition = origin;
         units = newUnits;
     }
+
     protected override void TakeTurn()
     {
         TeamInit();
-
         ToggleCameraControls();
 
         while (unitsUnmoved.Count > 0)
         {
             GetMouseInput();
         }
-
-        EndTurn();
     }
 
     public override void EndTurn()

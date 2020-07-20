@@ -95,8 +95,8 @@ public class GameManager : MonoBehaviour, IGameManager
         selectedUnitPanel.UpdateUI(unit);
     }
 
-    //public bool PerformMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
-    //{
+    public bool PerformMove(IUnit unit, IPosAbilityDefault ablity, Vector3Int target)
+    {
     //    if (unit.Team != activeTeams.Peek())
     //        return false;
 
@@ -108,37 +108,37 @@ public class GameManager : MonoBehaviour, IGameManager
 
     //    ResolveDeaths(deaths, unit);
 
-    //    return true;
-    //}
+        return true;
+    }
 
     public void StartLevel()
     {
-        //int Gridrange = levelCounter + 10;
+            int Gridrange = levelCounter + 10;
 
-        //gridManager.GenerateGrid(Gridrange, gridManager.BasicTile);
-        //activeTeams.Clear();
+            gridManager.GenerateGrid(Gridrange, gridManager.BasicTile);
+            activeTeams.Clear();
 
 
-        //Player2 = new Player(this, "Player2", "Gooier", teamSprites[1], default);
-        //activeTeams.Enqueue(Player2);
+            Player2 = new Player(this, "Player2", "Gooier", teamSprites[1], default);
+            activeTeams.Enqueue(Player2);
 
-        //GenerateTeam(Player2,
-        //     playerTwoTemplates[0],
-        //     new Vector3Int(UnityEngine.Random.Range(-Gridrange / 4, Gridrange / 4), Gridrange / 2, 0),
-        //     Gridrange / 4);
-        //Debug.Log("second player made.");
+            GenerateTeam(Player2,
+                 playerTwoTemplates[0],
+                 new Vector3Int(UnityEngine.Random.Range(-Gridrange / 4, Gridrange / 4), Gridrange / 2, 0),
+                 Gridrange / 4);
+            Debug.Log("second player made.");
 
-        //Player1 = new Player(this, "Player1", "First Goo", teamSprites[0], default);
-        //activeTeams.Enqueue(Player1);
+            Player1 = new Player(this, "Player1", "First Goo", teamSprites[0], default);
+            activeTeams.Enqueue(Player1);
 
-        //GenerateTeam(Player1,
-        //    playerOneUnitTemplates[0],
-        //    new Vector3Int(UnityEngine.Random.Range(-Gridrange / 4, Gridrange/4 ), -Gridrange / 2, 0),
-        //    Gridrange/4);
-        //Debug.Log("First player made.");
+            GenerateTeam(Player1,
+                playerOneUnitTemplates[0],
+                new Vector3Int(UnityEngine.Random.Range(-Gridrange / 4, Gridrange / 4), -Gridrange / 2, 0),
+                Gridrange / 4);
+            Debug.Log("First player made.");
 
-        //EndTurn();
-    }
+            EndTurn();
+        }
 
     protected void Awake()
     {

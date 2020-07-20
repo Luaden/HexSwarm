@@ -1,13 +1,11 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-namespace Old
-{
 public abstract class CoreUIElement<T> : MonoBehaviour
 {
     public abstract void UpdateUI(T primaryData);
-        
+
     protected abstract bool ClearedIfEmpty(T newData);
 
 
@@ -18,5 +16,4 @@ public abstract class CoreUIElement<T> : MonoBehaviour
     protected void UpdateNumericText(Text target, string textformatting, float value) { UpdateText(target, string.Format(textformatting, value)); }
     protected void UpdateNumericText(TMP_Text target, string textformatting, float value) { UpdateText(target, string.Format(textformatting, value)); }
     protected void SetPercentage(Image target, float percent) { target.fillAmount = percent; }
-}
 }
