@@ -28,7 +28,7 @@ namespace Old
                 Destroy(this);
 
             instance = this;
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
             #endregion
 
             audioSources = GetComponents<AudioSource>();

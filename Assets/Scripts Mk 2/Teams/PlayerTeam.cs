@@ -30,7 +30,6 @@ public class Player : Team
     public override void StartTurn()
     {
         TeamInit();
-
         ToggleCameraControls();
         EndTurn();
     }

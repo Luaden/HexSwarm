@@ -12,8 +12,6 @@ namespace Old
         [SerializeField] protected TMP_Text turnCount;
         [SerializeField] protected TMP_Text levelCount;
 
-
-
         public override void UpdateUI(IGameManager gameManager)
         {
 

@@ -3,7 +3,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-
 public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 {
     [SerializeField] protected Tile[] groundTiles;
