@@ -27,7 +27,7 @@ public class Player : Team
         units = newUnits;
     }
 
-    protected override void TakeTurn()
+    public override void StartTurn()
     {
         TeamInit();
 
@@ -37,7 +37,6 @@ public class Player : Team
 
     public override void EndTurn()
     {
-        MyTurn = false;
         ToggleCameraControls();
     }
 
@@ -49,7 +48,7 @@ public class Player : Team
 
     protected void ToggleCameraControls()
     {
-        gameManager.ConfigManager.ToggleCameraControls(MyTurn);
+        //gameManager.ConfigManager.ToggleCameraControls(MyTurn);
     }
 
     protected void GetMouseInput()
