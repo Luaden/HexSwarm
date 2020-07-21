@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -18,19 +17,20 @@ public class UnitAVController : MonoBehaviour
     protected Queue<Vector3Int> currentPath = new Queue<Vector3Int>();
     protected Vector3Int currentPathIndex;
     protected ConfigManager configManager;
+    protected BattlefieldManager battlefieldManager;
 
-    public bool WarpUnit(IUnit unit)
-    {
-        GameObject visualizer;
-        if (!worldUnits.TryGetValue(unit, out visualizer))
-            return false;
-        return WarpUnit(unit,visualizer);
+    public bool WarpUnit(IUnit unit)
+    {
+        GameObject visualizer;
+        if (!worldUnits.TryGetValue(unit, out visualizer))
+            return false;
+        return WarpUnit(unit,visualizer);
     }
 
     protected bool WarpUnit(IUnit unit, GameObject unitVisualizer)
-    {
-        unitVisualizer.transform.position = GameManager.Battlefield.GetWorldLocation(unit.Location);
-        return true;
+    {
+        unitVisualizer.transform.position = GameManager.Battlefield.GetWorldLocation(unit.Location);
+        return true;
     }
 
     public void PlaceNewUnit(IUnit unit)
@@ -53,6 +53,17 @@ public class UnitAVController : MonoBehaviour
         StartCoroutine(MoveUnit(unit, unitsToKill));
     }
 
+    public void ChangeTeamColors(IEnumerable<IColorConfig> colors)
+    {
+        //
+    }
+
+    protected void Awake()
+    {
+        if (configManager == null)
+            configManager = FindObjectOfType<ConfigManager>();
+    }
+
     protected void PlayMoveSFX(IUnit unit)
     {
         //configManager.PlaySound(movementSounds[unit.ID]);
@@ -61,12 +72,6 @@ public class UnitAVController : MonoBehaviour
     protected void PlayAttackSFX(IUnit unit)
     {
         //configManager.PlaySound(attackSounds[unit.ID]);
-    }
-
-    protected void Awake()
-    {
-        if (configManager == null)
-            configManager = FindObjectOfType<ConfigManager>();
     }
 
     protected IEnumerator MoveUnit(IUnit unit, IEnumerable<IUnit> unitsToKill = null)
