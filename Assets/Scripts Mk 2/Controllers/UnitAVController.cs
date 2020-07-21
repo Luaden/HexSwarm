@@ -21,7 +21,7 @@ public class UnitAVController : MonoBehaviour
     {        
         GameObject worldUnit = Instantiate(worldUnitPrefab, this.transform);
 
-        if (!worldUnits.TryGetValue(unit, out worldUnit))
+        if (!worldUnits.ContainsKey(unit))
             worldUnits.Add(unit, worldUnit);
 
         worldUnit.GetComponent<SpriteRenderer>().sprite = unitSprites[unit.ID];

@@ -11,7 +11,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     [SerializeField] protected Tilemap highlightMap;
 
     protected Grid mapGrid;
-    protected Dictionary<Vector3Int, ICell> world;
+    protected Dictionary<Vector3Int, ICell> world = new Dictionary<Vector3Int, ICell>();
     protected List<ICell> highlightedCells;
     protected List<ICell> neighbors;
     protected ICell checkCell;
@@ -171,6 +171,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         (unit as Unit).Location = position;
 
         //Whatever implements the visual representation for units needs to go here.
+        GameManager.UnitAVController.PlaceNewUnit(unit);
     }
 
     public void MoveUnit(Vector3Int unitPosition, Vector3Int destination)

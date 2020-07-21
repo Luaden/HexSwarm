@@ -50,7 +50,7 @@ public class Player : Team
         //gameManager.ConfigManager.ToggleCameraControls(MyTurn);
     }
 
-    protected void GetMouseInput()
+    public void GetMouseInput()
     {
         if(Input.GetMouseButtonDown(0) && selectedAbility == null) 
         {
