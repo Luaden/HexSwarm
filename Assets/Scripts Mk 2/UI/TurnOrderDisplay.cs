@@ -1,13 +1,42 @@
-﻿public class TurnOrderDisplay : CoreUIElement<IGameManager>
+﻿using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class TurnOrderDisplay : CoreUIElement<IGameManager>
 {
-    public override void UpdateUI(IGameManager primaryData)
+    [SerializeField] protected Image[] turnOrderIcons;
+    [SerializeField] protected TMP_Text turnCount;
+    [SerializeField] protected TMP_Text levelCount;
+
+    public override void UpdateUI(IGameManager gameManager)
     {
-        throw new System.NotImplementedException();
+
+        Queue<ITeam> tempQueue = new Queue<ITeam>(gameManager.ActiveTeams);
+
+        if (ClearedIfEmpty(gameManager))
+            return;
+
+        for (int i = 0; i < turnOrderIcons.Length; i++)
+        {
+            turnOrderIcons[i].sprite = tempQueue.Peek().Icon;
+            tempQueue.Enqueue(tempQueue.Dequeue());
+        }
+
+        UpdateText(turnCount, "Turn Count: " + gameManager.TurnCounter.ToString());
+        UpdateText(levelCount, "Win Count: " + gameManager.LevelCounter.ToString());
     }
 
-    protected override bool ClearedIfEmpty(IGameManager newData)
+    protected override bool ClearedIfEmpty(IGameManager gameManager)
     {
-        throw new System.NotImplementedException();
+        if (gameManager.ActiveTeams.Count > 0)
+            return false;
+
+        for (int i = 0; i < turnOrderIcons.Length; i++)
+        {
+            UpdateSprite(turnOrderIcons[i], default);
+        }
+
+        return true;
     }
 }
-
