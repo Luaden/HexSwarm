@@ -17,7 +17,7 @@ public class Ability : IAbility
         if (direction != Direction.Zero)
             Debug.LogError("not yet supported");
 
-        return GameManager.Battlefield.GetNeighborCells(origin).Where(X=>X.Unit != default).Select(X=>X.Position);
+        return GameManager.Battlefield.GetNeighborCells(origin).Where(X=>X.Unit != default).Select(X=>X.GridPosition);
     }
 }
 

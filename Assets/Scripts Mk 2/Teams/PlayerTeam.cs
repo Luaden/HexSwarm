@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Player : Team
 {
+    protected Dictionary<int, int> unitIdToLastSelectedMove;
+
     protected IAbility selectedAbility;
     protected IUnit selectedUnit;
 
@@ -50,9 +52,28 @@ public class Player : Team
         //gameManager.ConfigManager.ToggleCameraControls(MyTurn);
     }
 
+    public override void RemoveUnit(IUnit unit)
+    {
+        if (selectedUnit == unit)
+            selectedUnit = default;
+    }
 
     protected void ResolveSelection()
     {
+        gameManager.InspectUnitUnderMouse();
+
+        if ((selectedUnit != default)&& (gameManager.DisplayedUnit != default))
+            
+
+
+        if (selectedUnit != gameManager.DisplayedUnit) && )
+        {
+            (gameManager.DisplayedUnit.Team == this)
+            selectedUnit = gameManager.DisplayedUnit;
+            return;
+        }
+
+
 
     }
 

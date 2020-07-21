@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using UnityEditor.Animations;
@@ -30,6 +31,7 @@ public class Pathfinder
             {
                 PathfindingCell pfCell = new PathfindingCell(entry.Key);
                 allCells.Add(entry.Key, pfCell);
+
                 continue;
             }
         }
@@ -77,12 +79,28 @@ public class Pathfinder
         allCells.TryGetValue(originVector, out origin);
         allCells.TryGetValue(destinationVector, out destination);
 
+
         origin.FCost = 0;
         openSet.Add(origin.Location, origin);
 
         while(openSet.Count > 0)
         {
-            PathfindingCell currentCell = openSet.First().Value;
+            PathfindingCell currentCell = null;
+
+            foreach(KeyValuePair<Vector3Int, PathfindingCell> entry in openSet)
+            {
+                if (currentCell == null)
+                {
+                    currentCell = entry.Value;
+                    continue;
+                }
+                
+                if(currentCell.FCost > entry.Value.FCost)
+                {
+                    currentCell = entry.Value;
+                }
+            }
+            
             closedSet.Add(currentCell.Location, currentCell);
             openSet.Remove(currentCell.Location);
 
@@ -110,6 +128,7 @@ public class Pathfinder
                     cell.HCost = EvaluateCellDistance(cell, destination);
                     cell.CalculateFCost();
                     cell.Parent = currentCell;
+                    openSet.Add(cell.Location, cell);
                 }
                 if (openSet.ContainsKey(cell.Location))
                 {
@@ -124,37 +143,39 @@ public class Pathfinder
             }                
         }
 
-        return CalculatePath(destination, maxRange) as IEnumerable<Vector3Int>;
+        return CalculatePath(destination, maxRange);
     }
 
-    protected IEnumerable<PathfindingCell> CalculatePath(PathfindingCell endCell, int maxRange)
+    protected IEnumerable<Vector3Int> CalculatePath(PathfindingCell endCell, int maxRange)
     {
         Stack<PathfindingCell> unrestrictedPath = new Stack<PathfindingCell>();
         Queue<PathfindingCell> rangeRestrictedPath = new Queue<PathfindingCell>();
         PathfindingCell currentCell = endCell;
 
         unrestrictedPath.Push(currentCell);
-        
-        while(currentCell.Parent != null)
+        while (currentCell.Parent != null)
         {
             unrestrictedPath.Push(currentCell.Parent);
             currentCell = currentCell.Parent;
         }
-        
-        for(int i = 0; i < unrestrictedPath.Count; i++)
+
+        int pathCount = unrestrictedPath.Count;
+
+        for(int i = 0; i < pathCount; i++)
         {
             rangeRestrictedPath.Enqueue(unrestrictedPath.Pop());
             if (i == maxRange)
                 break;
         }
-        return rangeRestrictedPath;
+
+        return rangeRestrictedPath.Select(x => x.Location);
     }
 
     protected IEnumerable<PathfindingCell> GetPathFindingCells(IEnumerable<ICell> cells)
     {
         pfCells.Clear();
 
-        foreach(Cell cell in cells)
+        foreach(ICell cell in cells)
         {                           
             pfCells.Add(GetPathFindingCell(cell));
         }
@@ -166,7 +187,7 @@ public class Pathfinder
     {
         PathfindingCell pfCell;
 
-        allCells.TryGetValue(cell.Position, out pfCell);
+        allCells.TryGetValue(cell.GridPosition, out pfCell);
         return pfCell;
     }
 
@@ -184,7 +205,7 @@ public class Pathfinder
     }
 
     protected float EvaluateCellDistance(ICell origin, ICell destination) =>
-        Mathf.Abs(origin.Position.x - destination.Position.x) + Mathf.Abs(origin.Position.y - destination.Position.y);
+        Mathf.Abs(origin.GridPosition.x - destination.GridPosition.x) + Mathf.Abs(origin.GridPosition.y - destination.GridPosition.y);
 
     protected float EvaluateCellDistance(PathfindingCell origin, PathfindingCell destination) => 
         Mathf.Abs(origin.Location.x - destination.Location.x) + Mathf.Abs(origin.Location.y - destination.Location.y);

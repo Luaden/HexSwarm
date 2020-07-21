@@ -50,7 +50,7 @@ public class Unit : IUnit
     public IEnumerable<Vector3Int> CalcuateValidNewLocation(IAbility move)
     {
         return GameManager.Battlefield.GetNeighborCells(Location, move.MovementRange)
-            .Select(X=>X.Position);
+            .Select(X=>X.GridPosition);
     }
 
     public IEnumerable<Vector3Int> DiscoverHits(Vector3Int location, IAbility move, Direction direction = Direction.Zero)

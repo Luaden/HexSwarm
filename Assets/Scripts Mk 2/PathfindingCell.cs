@@ -11,7 +11,7 @@ public class PathfindingCell
 
     public PathfindingCell (Vector3Int location)
     {
-        Location = Location;
+        Location = location;
     }
 
     public void CalculateFCost()
