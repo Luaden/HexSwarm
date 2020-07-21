@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-[RequireComponent(typeof(ConfigManager), typeof(Pathfinder))]
+[RequireComponent(typeof(ConfigManager))]
 public class GameManager : MonoBehaviour, IGameManager
 {
     public static IBattlefieldManager Battlefield { get; protected set; }
@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
     [SerializeField] protected string battlefieldName; 
 
-    protected readonly Team player1;
+    protected Player player1;
     public Team Player1 => player1;
 
     protected int turnCounter;
@@ -24,8 +24,7 @@ public class GameManager : MonoBehaviour, IGameManager
     protected readonly Queue<ITeam> activeTeams = new Queue<ITeam>();
     public Queue<ITeam> ActiveTeams => activeTeams;
 
-    protected Unit displayedUnit; 
-    public IUnit DisplayedUnit => displayedUnit;
+    public IUnit DisplayedUnit { get; protected set; }
 
     public bool EndTurn()
     {
@@ -55,25 +54,41 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void Awake()
     {
+
+
+
+    }
+
+    protected void Start()
+    {
         if (Battlefield == null)
             Battlefield = string.IsNullOrWhiteSpace(battlefieldName)
-                ?FindObjectOfType<BattlefieldManager>()
-                :GameObject.Find(battlefieldName).GetComponent<BattlefieldManager>();
+                ? FindObjectOfType<BattlefieldManager>()
+                : GameObject.Find(battlefieldName).GetComponent<BattlefieldManager>();
         if (TurnOrderDisplay == null)
             TurnOrderDisplay = FindObjectOfType<TurnOrderDisplay>();
 
         if (Pathing == null)
             Pathing = new Pathfinder(Battlefield as BattlefieldManager);
+
+        NewGame();
     }
 
-    protected void Start() { NewGame(); }
-
-
-
+    public Vector3Int GetMousePosition() => Battlefield.GetVectorByClick(Input.mousePosition);
 
     public void InspectUnitUnderMouse()
     {
-        throw new System.NotImplementedException();
+        ICell selectedcell;
+        if (!Battlefield.World.TryGetValue(GetMousePosition(), out selectedcell))
+            return;
+
+        if (selectedcell.Unit == default)
+            return;
+
+        if (DisplayedUnit != selectedcell.Unit)
+            SelectedUnitPanel.UpdateUI(selectedcell.Unit);
+
+        DisplayedUnit = selectedcell.Unit;
     }
 
     public bool NewGame()
@@ -90,7 +105,7 @@ public class GameManager : MonoBehaviour, IGameManager
         if (unit.Team != activeTeams.Peek())
             return false;
 
-        Battlefield.MoveUnit(unit.Location, target, default);
+        Battlefield.MoveUnit(unit.Location, target);
 
         IEnumerable<ICell> neighbors = Battlefield.GetNeighborCells(unit.Location);
         List<IUnit> deaths = neighbors.Select(X => X.Unit).Where(X=>X!=default).Where(X=>X.Team!=unit.Team).ToList();
@@ -116,43 +131,45 @@ public class GameManager : MonoBehaviour, IGameManager
         {
             ITeam oldTeam = corspe.Team;
             Vector3Int oldLocation = corspe.Location;
-            corspe.Team.KillUnit(corspe);
+            corspe.Team.RemoveUnit(corspe);
             teamsWithLosses.Add(oldTeam);
 
             if ((activeTeams.Peek().TeamNumber & Teams.Player) == 0)
                 GenerateUnitForTeam(unit.Team, unit, corspe.Location);
         }
-        //while (activeTeams.Peek() != currentTurn)
-        //{
-        //    ITeam teamToResolve = activeTeams.Dequeue();
-        //    if (teamToResolve.HasUnitsAfterLosses(deaths))
-        //        activeTeams.Enqueue(teamToResolve);
-        //}
-
-        //if ((activeTeams.Peek().Type & Teams.Player) == 0)
-        //    foreach (IUnit freshKill in deaths)
-        //        GenerateUnitForTeam(unit.Member, unit as Unit, freshKill.Location);
     }
 
     protected void GenerateUnitForTeam(ITeam team, IUnit template, Vector3Int location)
     {
-        Unit newUnit = default;//new Unit(template);
-        throw new System.NotImplementedException();
+        Unit newUnit = new Unit(template);
         Battlefield.PlaceNewUnit(newUnit, location);
-        //team.GetUnit(newUnit);
+        team.AddNewUnit(newUnit);
     }
 
     public bool StartLevel()
     {
-        //TODO: refine with difficulty/config
-        int gridRange = levelCounter + 10;
+        ////TODO: refine with difficulty/config
+        //int gridRange = levelCounter + 10;
 
-        Battlefield.GenerateGrid(gridRange, MapShape.Hexagon);
-        activeTeams.Clear();
+        //Battlefield.GenerateGrid(gridRange, MapShape.Hexagon);
+        //activeTeams.Clear();
+
+
+
+        //EndTurn();
+
 
         return true;
     }
 
+
+    protected void GenerateTeam(Player team, Unit template, Vector3Int centerPoint, int radius = 0)
+    {
+        foreach (ICell cell in Battlefield.GetNeighborCells(centerPoint, radius))
+            GenerateUnitForTeam(team,
+            template,
+            cell.Position);
+    }
 
 
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public interface IUnit
 {
+    int ID { get; }
     string Name { get; }
     string Description { get; }
     Sprite Icon { get; }

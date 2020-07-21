@@ -2,13 +2,14 @@
 using UnityEngine;
 using System.Linq;
 
-
+[System.Serializable]
 public class Ability : IAbility
 {
     [SerializeField] protected MoveHighlight defaultRanges;
     public IMoveHighlight DefaultRanges => defaultRanges;
 
-    public int movementRange { get; private set; }
+    [SerializeField] protected int movementRange;
+    public int MovementRange { get; private set; }
     public bool IsJump { get; private set; }
 
     public IEnumerable<Vector3Int> GetAttack(Direction direction, Vector3Int origin)
