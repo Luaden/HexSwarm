@@ -188,12 +188,13 @@ public class AITeam : Team
     {    
         foreach (Vector3Int location in results)
         {
+            IEnumerable<Vector3Int> path = pathfinder.FindPath(unit.Location, location);
             IEnumerable<Vector3Int> hits = unit.DiscoverHits(location, ability);
 
             if (hits == default)
                 continue;
 
-            AttackPattern attack = new AttackPattern(unit, ability, location, hits);
+            AttackPattern attack = new AttackPattern(unit, ability, location, path, hits);
 
             if (enemiesSeen.Intersect(hits).Count() > 0)
                 EvaluateBestAttacks(attack);
@@ -213,7 +214,9 @@ public class AITeam : Team
                 if (location != cell)
                     continue;
 
-                DefendPattern defense = new DefendPattern(unit, ability, location);
+                IEnumerable<Vector3Int> path = pathfinder.FindPath(unit.Location, location);
+
+                DefendPattern defense = new DefendPattern(unit, ability, path, location);
                 SaveDefensePattern(possibleDefenses, location, defense);
             }
         EvaluateBestDefenses();
@@ -305,7 +308,7 @@ public class AITeam : Team
 
     protected void UseOffensiveStrategy()
     {
-        if(gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.TargetLocation))
+        if(gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.TargetLocation, selectedAttack.Path))
         {
             enemiesSeen.Remove(selectedAttack.TargetLocation);
             UnitHasMoved(selectedAttack.Unit);
@@ -330,7 +333,7 @@ public class AITeam : Team
 
     protected void UseDefensiveStrategy()
     {
-        if(gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, selectedDefense.TargetLocation))
+        if(gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, selectedDefense.TargetLocation, selectedDefense.Path))
         {
             unguardedCells.Remove(selectedDefense.TargetLocation);
 
@@ -385,13 +388,14 @@ public class AITeam : Team
                     if (location == checkLocations.Peek())
                     {
                         toUse = ability;
-                        toTarget = location;                        
+                        toTarget = location;
                     }
 
                     checkLocations.Pop();
                 }
 
-        if(gameManager.PerformMove(unit, toUse, toTarget))
+        IEnumerable<Vector3Int> path = pathfinder.FindPath(unit.Location, toTarget);
+        if (gameManager.PerformMove(unit, toUse, toTarget, path))
             UnitHasMoved(unit);
     }
 

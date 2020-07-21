@@ -9,14 +9,16 @@ public class AttackPattern
     public IUnit Unit { get; }
     public IAbility Ability { get; }
     public Vector3Int TargetLocation { get; }
+    public IEnumerable<Vector3Int> Path { get; }
     public IEnumerable<Vector3Int> LocationsHit { get; }
     public int HitCount { get; }
 
-    public AttackPattern(IUnit incUnit, IAbility incAbility, Vector3Int incTargetLocation, IEnumerable<Vector3Int> incLocationsHit)
+    public AttackPattern(IUnit incUnit, IAbility incAbility, Vector3Int incTargetLocation, IEnumerable<Vector3Int> incPath, IEnumerable<Vector3Int> incLocationsHit)
     {
         Unit = incUnit;
         Ability = incAbility;
         TargetLocation = incTargetLocation;
+        Path = incPath;
         LocationsHit = incLocationsHit;
         HitCount = LocationsHit.Count();
     }
