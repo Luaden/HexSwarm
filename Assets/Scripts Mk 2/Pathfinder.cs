@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEditor.Animations;
 using UnityEngine;
 
@@ -9,8 +10,6 @@ public class Pathfinder
 {
     //Cached references
     protected BattlefieldManager battlefieldManager;
-    protected IReadOnlyDictionary<Vector3Int, ICell> world;
-
     protected Dictionary<Vector3Int, PathfindingCell> closedSet = new Dictionary<Vector3Int, PathfindingCell>();
     protected Dictionary<Vector3Int, PathfindingCell> openSet = new Dictionary<Vector3Int, PathfindingCell>();
     protected Dictionary<Vector3Int, PathfindingCell> allCells = new Dictionary<Vector3Int, PathfindingCell>();
@@ -19,14 +18,24 @@ public class Pathfinder
     public Pathfinder(BattlefieldManager battlefieldManager)
     {
         this.battlefieldManager = battlefieldManager;
-        //foreach(KeyValuePair<Vector3Int, ICell> entry in battlefieldManager.World)
-        //{
-        //    PathfindingCell cell = new PathfindingCell(entry.Value.Position);
-        //    allCells.Add(cell.Location, cell);
-        //}
     }
 
-    protected void ClearPathfindingCells()
+    public void InitPathfinder()
+    {
+        allCells.Clear(); 
+
+        foreach (KeyValuePair<Vector3Int, ICell> entry in battlefieldManager.World)
+        {
+            if (!allCells.ContainsKey(entry.Key))
+            {
+                PathfindingCell pfCell = new PathfindingCell(entry.Key);
+                allCells.Add(entry.Key, pfCell);
+                continue;
+            }
+        }
+    }
+
+      protected void ClearPathfindingCells()
     {
         foreach(KeyValuePair<Vector3Int, PathfindingCell> entry in allCells)
         {
@@ -39,6 +48,7 @@ public class Pathfinder
 
     public IEnumerable<Vector3Int> FindTraversableArea(Vector3Int originVector, int maxRange)
     {
+
         IEnumerable<Vector3Int> totalArea = battlefieldManager.GetNeighborCells(originVector, maxRange) as IEnumerable<Vector3Int>;
         HashSet<Vector3Int> traversableArea = new HashSet<Vector3Int>();
 
@@ -56,6 +66,8 @@ public class Pathfinder
 
     public IEnumerable<Vector3Int> FindPath(Vector3Int originVector, Vector3Int destinationVector, bool avoidUnits = true, int maxRange = int.MaxValue)
     {
+        InitPathfinder();
+
         closedSet.Clear();
         openSet.Clear();
         ClearPathfindingCells();
@@ -78,7 +90,7 @@ public class Pathfinder
                 break;
 
             ICell worldCell;
-            world.TryGetValue(currentCell.Location, out worldCell);
+            battlefieldManager.World.TryGetValue(currentCell.Location, out worldCell);
 
             foreach(PathfindingCell cell in 
                         GetPathFindingCells(battlefieldManager.GetNeighborCells(worldCell)))
@@ -163,15 +175,13 @@ public class Pathfinder
     protected bool CellIsBlocked(PathfindingCell cell)
     {
         ICell worldCell;
-        world.TryGetValue(cell.Location, out worldCell);
+        battlefieldManager.World.TryGetValue(cell.Location, out worldCell);
 
         if (worldCell.Unit != null)
             return true;
 
         return false;
     }
-
-    protected void GetFreshWorld() => world = battlefieldManager.World;
 
     protected float EvaluateCellDistance(ICell origin, ICell destination) =>
         Mathf.Abs(origin.Position.x - destination.Position.x) + Mathf.Abs(origin.Position.y - destination.Position.y);

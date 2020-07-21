@@ -121,18 +121,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &381271911 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3637105996266799108, guid: 9e3c475da90f11448a7701cec632974a,
-    type: 3}
-  m_PrefabInstance: {fileID: 3229215224172190074}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &396615090
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -271,42 +259,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3b07a4e1be0c7cb44a91bf0c11734cf9, type: 3}
---- !u!1 &547844390 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3524762748736037090, guid: 3b07a4e1be0c7cb44a91bf0c11734cf9,
-    type: 3}
-  m_PrefabInstance: {fileID: 547844389}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &547844391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 547844390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a619b0f41cf91a14288b95705db566b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  battlefieldName: 
-  Team1Icon: {fileID: 21300000, guid: 23716a8d47909fe428596134d68887d1, type: 3}
-  Team1Unit:
-    id: 0
-    icon: {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
-    name: Grey Goo
-    description: well it's not tecnically grey
-    ablities:
-    - movementRange: 3
-  Team2Icon: {fileID: 3026120706474155957, guid: 7ff6e1907a56f694281471628bc15303,
-    type: 3}
-  Team2Unit:
-    id: 1
-    icon: {fileID: 8355217360322311386, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
-    name: Tank
-    description: This will work
-    ablities:
-    - movementRange: 3
 --- !u!1 &745813212
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,30 +325,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &840827187 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8180872658388580642, guid: 9e3c475da90f11448a7701cec632974a,
-    type: 3}
-  m_PrefabInstance: {fileID: 3229215224172190074}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &888491964 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3637105995818390161, guid: 9e3c475da90f11448a7701cec632974a,
-    type: 3}
-  m_PrefabInstance: {fileID: 3229215224172190074}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &989191087
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,8 +417,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1607472740}
+  - component: {fileID: 1607472742}
+  - component: {fileID: 1607472741}
   m_Layer: 0
-  m_Name: Game
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -504,72 +434,52 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1607472739}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 592.5982, y: 158.08656, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1615154572 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3637105997592027600, guid: 9e3c475da90f11448a7701cec632974a,
-    type: 3}
-  m_PrefabInstance: {fileID: 3229215224172190074}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1615154574
+--- !u!114 &1607472741
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1615154572}
+  m_GameObject: {fileID: 1607472739}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07c08a12fb2a71c46a7bdef86e4e6f7d, type: 3}
+  m_Script: {fileID: 11500000, guid: a619b0f41cf91a14288b95705db566b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnOrderIcons:
-  - {fileID: 2021758974}
-  - {fileID: 381271911}
-  - {fileID: 888491964}
-  - {fileID: 1746487947}
-  - {fileID: 840827187}
-  turnCount: {fileID: 1873460238}
-  levelCount: {fileID: 1873460238}
---- !u!114 &1746487947 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3637105997740037250, guid: 9e3c475da90f11448a7701cec632974a,
+  battlefieldName: 
+  Team1Icon: {fileID: 21300000, guid: 23716a8d47909fe428596134d68887d1, type: 3}
+  Team1Unit:
+    id: 0
+    icon: {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
+    name: Grey Goo
+    description: well it's not tecnically grey
+    ablities:
+    - movementRange: 3
+  Team2Icon: {fileID: 3026120706474155957, guid: 7ff6e1907a56f694281471628bc15303,
     type: 3}
-  m_PrefabInstance: {fileID: 3229215224172190074}
+  Team2Unit:
+    id: 1
+    icon: {fileID: 8355217360322311386, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
+    name: Tank
+    description: This will work
+    ablities:
+    - movementRange: 3
+--- !u!114 &1607472742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1607472739}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1873460238 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3637105996331422910, guid: 9e3c475da90f11448a7701cec632974a,
-    type: 3}
-  m_PrefabInstance: {fileID: 3229215224172190074}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2021758974 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3637105997671331079, guid: 9e3c475da90f11448a7701cec632974a,
-    type: 3}
-  m_PrefabInstance: {fileID: 3229215224172190074}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: 24ec363b18b6bd84ea57a9faaf7c569b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2102556315 stripped
@@ -701,17 +611,17 @@ PrefabInstance:
     - target: {fileID: 2569526561222782270, guid: e01ce1583ed3f16428897b2b65caa1e3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.8661535
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2569526561222782270, guid: e01ce1583ed3f16428897b2b65caa1e3,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.2294782
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2569526561222782270, guid: e01ce1583ed3f16428897b2b65caa1e3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.14122531
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2569526561222782270, guid: e01ce1583ed3f16428897b2b65caa1e3,
         type: 3}
@@ -883,8 +793,27 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2102556315}
-    m_RemovedComponents:
-    - {fileID: 8180872659069328904, guid: 9e3c475da90f11448a7701cec632974a, type: 3}
+    - target: {fileID: 6919932853086074758, guid: 9e3c475da90f11448a7701cec632974a,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7269818096061917227, guid: 9e3c475da90f11448a7701cec632974a,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8180872657970189458, guid: 9e3c475da90f11448a7701cec632974a,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8180872658440262645, guid: 9e3c475da90f11448a7701cec632974a,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e3c475da90f11448a7701cec632974a, type: 3}
 --- !u!1001 &4260966484384392069
 PrefabInstance:

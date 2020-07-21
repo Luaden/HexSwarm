@@ -9,7 +9,7 @@ public class PathfindingCell
     public float HCost { get; set; }    
     public Vector3Int Location { get; }
 
-    public PathfindingCell (Vector3 location)
+    public PathfindingCell (Vector3Int location)
     {
         Location = Location;
     }

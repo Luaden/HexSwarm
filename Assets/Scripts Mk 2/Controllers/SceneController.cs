@@ -14,7 +14,7 @@ public class SceneController : MonoBehaviour
 
     public void LoadNextScene()
     {
-        SceneManager.LoadScene(currentScene++);    
+        SceneManager.LoadScene(++currentScene);    
     }
 
     public void LoadTitleScene()

@@ -125,8 +125,6 @@ public class ConfigManager : MonoBehaviour, IConfigManager
             config.SecondaryColor = config.GetColor((Colors)i);
             config.SecondaryColorCategory = (Colors)i;
 
-            print(config.SecondaryColorCategory);
-
             teamColors[i] = config;
         }
     }

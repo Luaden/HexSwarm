@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-[RequireComponent(typeof(ConfigManager))]
+//[RequireComponent(typeof(ConfigManager))]
 public class GameManager : MonoBehaviour, IGameManager
 {
     public static IBattlefieldManager Battlefield { get; protected set; }
@@ -55,17 +55,19 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void Awake()
     {
-
-
-
+        if (SelectedUnitPanel == null)
+            SelectedUnitPanel = FindObjectOfType<SelectedUnitPanel>();
     }
 
     protected void Start()
     {
+        //if (Battlefield == null)
+        //    Battlefield = string.IsNullOrWhiteSpace(battlefieldName)
+        //        ? FindObjectOfType<BattlefieldManager>()
+        //        : GameObject.Find(battlefieldName).GetComponent<BattlefieldManager>();
         if (Battlefield == null)
-            Battlefield = string.IsNullOrWhiteSpace(battlefieldName)
-                ? FindObjectOfType<BattlefieldManager>()
-                : GameObject.Find(battlefieldName).GetComponent<BattlefieldManager>();
+            Battlefield = FindObjectOfType<BattlefieldManager>();
+
         if (TurnOrderDisplay == null)
             TurnOrderDisplay = FindObjectOfType<TurnOrderDisplay>();
 
