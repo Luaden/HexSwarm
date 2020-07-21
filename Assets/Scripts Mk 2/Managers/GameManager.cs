@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour, IGameManager
     public static Pathfinder Pathing { get; protected set; }
     public static SelectedUnitPanel SelectedUnitPanel { get; protected set; }
     public static TurnOrderDisplay TurnOrderDisplay { get; protected set; }
+    public static UnitAVController UnitAVController { get; protected set; }
 
     [SerializeField] protected string battlefieldName; 
 
@@ -70,6 +71,9 @@ public class GameManager : MonoBehaviour, IGameManager
 
         if (Pathing == null)
             Pathing = new Pathfinder(Battlefield as BattlefieldManager);
+
+        if (UnitAVController == null)
+            UnitAVController = FindObjectOfType<UnitAVController>();
 
         NewGame();
     }

@@ -171,7 +171,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         checkCell.Unit = unit;
 
         //Whatever implements the visual representation for units needs to go here.
-
+        GameManager.UnitAVController.PlaceNewUnit(unit);
     }
 
     public void MoveUnit(Vector3Int unitPosition, Vector3Int destination)
