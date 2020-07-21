@@ -19,6 +19,7 @@ public interface IBattlefieldManager
     Vector3Int GetVectorByClick(Vector2 mouseScreenPos);
     void GenerateGrid(int gridHeight, MapShape mapShape);
     void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<ICell> attackCells);
+    void HighlightGrid(IEnumerable<ICell> moveCells);
     void ClearHighlights();
     void PlaceNewUnit(IUnit unit, Vector3Int position);
     void MoveUnit(Vector3Int unitPosition, Vector3Int destination);

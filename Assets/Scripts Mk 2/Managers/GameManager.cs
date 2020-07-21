@@ -184,7 +184,7 @@ public class GameManager : MonoBehaviour, IGameManager
         foreach (ICell cell in Battlefield.GetNeighborCells(centerPoint, radius))
             GenerateUnitForTeam(team,
             template,
-            cell.Position);
+            cell.GridPosition);
     }
 
 

@@ -61,8 +61,8 @@ public class TestingGameManager : GameManager
     [ContextMenu("Highlight")]
     protected void Highlight()
     {
-        Vector3Int vec = new Vector3Int(-6, 0, 0);
-        Vector3Int vec2 = new Vector3Int(6, 0, 0);
+        Vector3Int vec = new Vector3Int(0, 10, 0);
+        Vector3Int vec2 = new Vector3Int(0, -10, 0);
         IEnumerable<Vector3Int> newPath = Pathing.FindPath(vec, vec2);
         ICell cell;
         Queue<ICell> cellPath = new Queue<ICell>();
@@ -73,7 +73,7 @@ public class TestingGameManager : GameManager
             cellPath.Enqueue(cell);
         }
 
-        Battlefield.HighlightGrid(cellPath, null);
+        Battlefield.HighlightGrid(cellPath);
     }
 }
 

@@ -12,7 +12,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
     protected Grid mapGrid;
     protected Dictionary<Vector3Int, ICell> world = new Dictionary<Vector3Int, ICell>();
-    protected List<ICell> highlightedCells;
+    protected List<ICell> highlightedCells = new List<ICell>();
     protected List<ICell> neighbors;
     protected ICell checkCell;
     protected ICell fromCell;
@@ -56,19 +56,20 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
             GenerateCell(new Vector3Int(currentX++, Y, 0), tile);
     }
 
-    protected void GenerateCell(Vector3Int pos, Tile tile)
+    protected void GenerateCell(Vector3Int gridPos, Tile tile)
     {
-        Cell newCell = new Cell(pos, default, tile);
+        Vector3 worldPosition = mapGrid.CellToWorld(gridPos);
+        Cell newCell = new Cell(gridPos, worldPosition, default, tile);
 
-        world.Add(pos, newCell);
-        groundMap.SetTile(pos, tile);
+        world.Add(gridPos, newCell);
+        groundMap.SetTile(gridPos, tile);
     }
     #endregion
 
     #region Get Neighbors
     public IEnumerable<ICell> GetNeighborCells(ICell origin, int range = 1)
     {
-        return GetNeighborCells(origin.Position, range);
+        return GetNeighborCells(origin.GridPosition, range);
     }
 
     public IEnumerable<ICell> GetNeighborCells(Vector3Int origin, int range = 1)
@@ -120,23 +121,29 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     #region Highlight Cells
     public void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<ICell> attackCells)
     {
+        HighlightGrid(moveCells);
+
+        foreach (ICell cell in attackCells)
+        {
+            if (moveCells.Contains(cell))
+            {
+                highlightMap.SetTile(cell.GridPosition, highlightTiles[2]);
+                highlightedCells.Add(cell);
+                continue;
+            }
+
+            highlightMap.SetTile(cell.GridPosition, highlightTiles[1]);
+            highlightedCells.Add(cell);
+        }
+    }
+
+    public void HighlightGrid(IEnumerable<ICell> moveCells)
+    {
         ClearHighlights();
 
         foreach (ICell cell in moveCells)
         {
-            if (attackCells.Contains(cell))
-                highlightMap.SetTile(cell.Position, highlightTiles[2]);
-            else
-                highlightMap.SetTile(cell.Position, highlightTiles[0]);
-
-            highlightedCells.Add(cell);
-        }
-
-        foreach (ICell cell in attackCells)
-        {
-            if (!moveCells.Contains(cell))
-                highlightMap.SetTile(cell.Position, highlightTiles[0]);
-
+            highlightMap.SetTile(cell.GridPosition, highlightTiles[0]);
             highlightedCells.Add(cell);
         }
     }
@@ -145,7 +152,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     {
         foreach (ICell cell in highlightedCells)
         {
-            highlightMap.SetTile(cell.Position, null);
+            highlightMap.SetTile(cell.GridPosition, null);
         }
 
         highlightedCells.Clear();
