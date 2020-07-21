@@ -12,7 +12,7 @@ public class UnitAVController : MonoBehaviour
     [SerializeField] protected float moveSpeed;
     [SerializeField] protected float dieSpeed;
 
-    protected Dictionary<IUnit, GameObject> worldUnits;
+    protected Dictionary<IUnit, GameObject> worldUnits = new Dictionary<IUnit, GameObject>();
     protected GameObject currentUnit;
     protected List<GameObject> unitsToDie = new List<GameObject>();
     protected Vector3Int currentPathNode;
@@ -21,7 +21,7 @@ public class UnitAVController : MonoBehaviour
     {        
         GameObject worldUnit = Instantiate(worldUnitPrefab, this.transform);
 
-        if (!worldUnits.TryGetValue(unit, out worldUnit))
+        if (!worldUnits.ContainsKey(unit))
             worldUnits.Add(unit, worldUnit);
 
         worldUnit.GetComponent<SpriteRenderer>().sprite = unitSprites[unit.ID];

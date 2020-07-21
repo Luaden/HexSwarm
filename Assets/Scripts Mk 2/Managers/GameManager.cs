@@ -78,6 +78,14 @@ public class GameManager : MonoBehaviour, IGameManager
         NewGame();
     }
 
+    protected void Update()
+    {
+        if (activeTeams.Count == 0)
+            return;
+        Player currentPlayer = activeTeams.Peek() as Player;
+        currentPlayer?.GetMouseInput();
+    }
+
     public Vector3Int GetMousePosition() => Battlefield.GetVectorByClick(Input.mousePosition);
 
     public void InspectUnitUnderMouse()
@@ -104,7 +112,7 @@ public class GameManager : MonoBehaviour, IGameManager
         return true;
     }
 
-    public bool PerformMove(IUnit unit, IAbility ablity, Vector3Int target)
+    public bool PerformMove(IUnit unit, IAbility ablity, Vector3Int target, IEnumerable<Vector3Int> path = default)
     {
         if (unit.Team != activeTeams.Peek())
             return false;
@@ -146,8 +154,9 @@ public class GameManager : MonoBehaviour, IGameManager
     protected void GenerateUnitForTeam(ITeam team, IUnit template, Vector3Int location)
     {
         Unit newUnit = new Unit(template);
-        Battlefield.PlaceNewUnit(newUnit, location);
         team.AddNewUnit(newUnit);
+        Battlefield.PlaceNewUnit(newUnit, location);
+
     }
 
     public bool StartLevel()
@@ -169,6 +178,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void GenerateTeam(Player team, Unit template, Vector3Int centerPoint, int radius = 0)
     {
+        GenerateUnitForTeam(team, template, centerPoint);
         foreach (ICell cell in Battlefield.GetNeighborCells(centerPoint, radius))
             GenerateUnitForTeam(team,
             template,

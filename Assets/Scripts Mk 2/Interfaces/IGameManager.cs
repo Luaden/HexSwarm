@@ -14,5 +14,5 @@ public interface IGameManager
 
     IUnit DisplayedUnit { get; }
     void InspectUnitUnderMouse();
-    bool PerformMove(IUnit unit, IAbility ablity, Vector3Int target);
+    bool PerformMove(IUnit unit, IAbility ablity, Vector3Int target, IEnumerable<Vector3Int> path = default);
 }

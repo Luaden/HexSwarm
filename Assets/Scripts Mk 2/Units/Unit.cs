@@ -25,6 +25,7 @@ public class Unit : IUnit
     public Unit() { if (ID == -1) throw new System.InvalidOperationException(); }
     public Unit(IUnit unit) : this()
     {
+        id = unit.ID;
         name = unit.Name;
         description = unit.Description;
         icon = unit.Icon;
