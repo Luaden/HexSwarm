@@ -25,6 +25,7 @@ public interface IColorConfig
 [System.Serializable]
 public class ColorConfig : IColorConfig
 {
+    public Teams TeamNumber;
     public Color PrimaryColor { get; set; }
     public Color SecondaryColor { get; set; }
     public Colors PrimaryColorCategory { get; set; }
