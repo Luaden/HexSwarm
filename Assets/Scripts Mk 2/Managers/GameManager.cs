@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour, IGameManager
         if (unit.Team != activeTeams.Peek())
             return false;
 
-        Battlefield.MoveUnit(unit.Location, target, default);
+        Battlefield.MoveUnit(unit.Location, target);
 
         IEnumerable<ICell> neighbors = Battlefield.GetNeighborCells(unit.Location);
         List<IUnit> deaths = neighbors.Select(X => X.Unit).Where(X=>X!=default).Where(X=>X.Team!=unit.Team).ToList();
@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour, IGameManager
         {
             ITeam oldTeam = corspe.Team;
             Vector3Int oldLocation = corspe.Location;
-            corspe.Team.KillUnit(corspe);
+            corspe.Team.RemoveUnit(corspe);
             teamsWithLosses.Add(oldTeam);
 
             if ((activeTeams.Peek().TeamNumber & Teams.Player) == 0)
@@ -136,8 +136,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void GenerateUnitForTeam(ITeam team, IUnit template, Vector3Int location)
     {
-        Unit newUnit = default;//new Unit(template);
-        throw new System.NotImplementedException();
+        Unit newUnit = new Unit(template);
         Battlefield.PlaceNewUnit(newUnit, location);
         //team.GetUnit(newUnit);
     }

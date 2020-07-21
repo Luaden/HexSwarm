@@ -10,4 +10,7 @@ public interface ITeam
     Teams TeamNumber { get; }
     Vector3Int StartPosition { get; }
     IEnumerable<IUnit> Units { get; }
+    void StartTurn();
+    void RemoveUnit(IUnit unit);
+    void AddNewUnit(IUnit unit);
 }
