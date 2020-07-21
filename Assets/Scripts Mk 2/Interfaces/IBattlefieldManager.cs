@@ -22,5 +22,6 @@ public interface IBattlefieldManager
     void ClearHighlights();
     void PlaceNewUnit(IUnit unit, Vector3Int position);
     void MoveUnit(Vector3Int unitPosition, Vector3Int destination);
-    void DestroyUnit(Vector3Int unitPosition);    
+    void DestroyUnit(Vector3Int unitPosition);
+    Vector3 GetWorldLocation(Vector3Int location);
 }

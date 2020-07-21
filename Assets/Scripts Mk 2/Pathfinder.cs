@@ -19,11 +19,11 @@ public class Pathfinder
     public Pathfinder(BattlefieldManager battlefieldManager)
     {
         this.battlefieldManager = battlefieldManager;
-        foreach(KeyValuePair<Vector3Int, ICell> entry in battlefieldManager.World)
-        {
-            PathfindingCell cell = new PathfindingCell(entry.Value.Position);
-            allCells.Add(cell.Location, cell);
-        }
+        //foreach(KeyValuePair<Vector3Int, ICell> entry in battlefieldManager.World)
+        //{
+        //    PathfindingCell cell = new PathfindingCell(entry.Value.Position);
+        //    allCells.Add(cell.Location, cell);
+        //}
     }
 
     protected void ClearPathfindingCells()

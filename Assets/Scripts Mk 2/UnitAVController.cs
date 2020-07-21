@@ -19,13 +19,29 @@ public class UnitAVController : MonoBehaviour
     protected Vector3Int currentPathIndex;
     protected ConfigManager configManager;
 
+    public bool WarpUnit(IUnit unit)
+    {
+        GameObject visualizer;
+        if (!worldUnits.TryGetValue(unit, out visualizer))
+            return false;
+        return WarpUnit(unit,visualizer);
+    }
 
+    protected bool WarpUnit(IUnit unit, GameObject unitVisualizer)
+    {
+        unitVisualizer.transform.position = GameManager.Battlefield.GetWorldLocation(unit.Location);
+        return true;
+    }
 
     public void PlaceNewUnit(IUnit unit)
     {
-        GameObject worldunit = Instantiate(worldUnitPrefab, this.transform) as GameObject;
-        //worldunit.GetComponent<SpriteRenderer>().sprite = unitSprites[unit.ID];
-        worldunit.transform.position = unit.Location;
+        if (worldUnits.ContainsKey(unit))
+            throw new System.InvalidOperationException();
+        GameObject newVisualizer = Instantiate(worldUnitPrefab, this.transform) as GameObject;
+        worldUnits.Add(unit, newVisualizer);
+        newVisualizer.GetComponent<SpriteRenderer>().sprite = unitSprites[unit.ID];
+
+        WarpUnit(unit,newVisualizer);
     }
 
     public void MoveUnit(IUnit unit, IEnumerable<Vector3Int> path, IEnumerable<IUnit> unitsToKill = null)
