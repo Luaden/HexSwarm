@@ -11,20 +11,14 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     [SerializeField] protected Tilemap highlightMap;
 
     protected Grid mapGrid;
-    protected Dictionary<Vector3Int, ICell> world = new Dictionary<Vector3Int, ICell>();
-    protected List<ICell> highlightedCells = new List<ICell>();
-    protected List<ICell> neighbors = new List<ICell>();
+    protected Dictionary<Vector3Int, ICell> world;
+    protected List<ICell> highlightedCells;
+    protected List<ICell> neighbors;
     protected ICell checkCell;
     protected ICell fromCell;
     protected ICell toCell;
 
     public IReadOnlyDictionary<Vector3Int, ICell> World => world;
-
-    public Vector3 GetWorldLocation(Vector3Int location)
-    {
-        return mapGrid.CellToWorld(location);
-    }
-
 
     #region Map Generation
     public void GenerateGrid(int gridHeight, MapShape mapShape = MapShape.Hexagon)
@@ -91,12 +85,17 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         {
             int half = i / 2;
             int oddCorrection = i % 2;
-            bool yfactor = (y % 2 != 0);
-            int start = xMin + half + ((yfactor) ? 1 : 0);
-            int end = xMax - half + ((yfactor) ? 0 : -1);
 
-            GetNeighborCellRow(y - i, start, end);
-            GetNeighborCellRow(y + i, start, end);
+            if (Mathf.Abs(y) % 2 > 0)
+            {
+                GetNeighborCellRow(y - i, xMin + half + oddCorrection, xMax - half);
+                GetNeighborCellRow(y + i, xMin + half + oddCorrection, xMax - half);
+            }
+            else
+            {
+                GetNeighborCellRow(y - i, xMin + half, xMax - half - oddCorrection);
+                GetNeighborCellRow(y + i, xMin + half, xMax - half - oddCorrection);
+            }
         }
 
         ICell originCell;
@@ -171,7 +170,6 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         checkCell.Unit = unit;
 
         //Whatever implements the visual representation for units needs to go here.
-        GameManager.UnitAVController.PlaceNewUnit(unit);
     }
 
     public void MoveUnit(Vector3Int unitPosition, Vector3Int destination)
