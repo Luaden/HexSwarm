@@ -169,6 +169,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         World.TryGetValue(position, out checkCell);
 
         checkCell.Unit = unit;
+        (unit as Unit).Location = position;
 
         //Whatever implements the visual representation for units needs to go here.
         GameManager.UnitAVController.PlaceNewUnit(unit);

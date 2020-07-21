@@ -13,7 +13,7 @@ public class UnitAVController : MonoBehaviour
     [SerializeField] protected float moveSpeed;
     [SerializeField] protected float dieSpeed;
 
-    protected Dictionary<IUnit, GameObject> worldUnits;
+    protected Dictionary<IUnit, GameObject> worldUnits = new Dictionary<IUnit, GameObject>();
     protected GameObject currentUnit;
     protected Queue<Vector3Int> currentPath = new Queue<Vector3Int>();
     protected Vector3Int currentPathIndex;

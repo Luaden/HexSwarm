@@ -535,7 +535,8 @@ PrefabInstance:
         type: 3}
       propertyPath: worldUnitPrefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5716365289145609130, guid: 9342a9dcf7e53af448f0e1c28264a4b2,
+        type: 3}
     - target: {fileID: 97384929722761122, guid: bfa3684a3341fcf4cb652cbbe7306e3e,
         type: 3}
       propertyPath: unitSprites.Array.data[0]
@@ -7589,6 +7590,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Background
+      objectReference: {fileID: 0}
+    - target: {fileID: 5189734229878998092, guid: b6911bed71c5f5e44b6250ad352b1c9b,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 6405885874063133517, guid: b6911bed71c5f5e44b6250ad352b1c9b,
         type: 3}
