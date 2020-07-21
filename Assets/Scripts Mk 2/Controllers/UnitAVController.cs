@@ -14,11 +14,8 @@ public class UnitAVController : MonoBehaviour
 
     protected Dictionary<IUnit, GameObject> worldUnits;
     protected GameObject currentUnit;
+    protected List<GameObject> unitsToDie = new List<GameObject>();
     protected Vector3Int currentPathNode;
-    protected ConfigManager configManager;
-    protected BattlefieldManager battlefieldManager;
-
-
 
     public void PlaceNewUnit(IUnit unit)
     {        
@@ -27,34 +24,37 @@ public class UnitAVController : MonoBehaviour
         if (!worldUnits.TryGetValue(unit, out worldUnit))
             worldUnits.Add(unit, worldUnit);
 
-        //worldunit.GetComponent<SpriteRenderer>().sprite = unitSprites[unit.ID];
-        //worldUnit.transform.position = gameManager.BattlefieldManager.GetWorldLocation(unit.Location);
+        worldUnit.GetComponent<SpriteRenderer>().sprite = unitSprites[unit.ID];
+        worldUnit.transform.position = GameManager.Battlefield.GetWorldLocation(unit.Location);
     }
 
-    public void MoveUnit(IUnit unit, IEnumerable<Vector3Int> path, IEnumerable<IUnit> unitsToKill = null)
+    public void MoveUnit(IUnit unit, IEnumerable<Vector3Int> path)
     {
         worldUnits.TryGetValue(unit, out currentUnit);
 
-        Queue<Vector3Int> worldPath = new Queue<Vector3Int>();
+        Queue<Vector3> worldPath = new Queue<Vector3>();
 
         foreach(Vector3Int location in path)
         {
-            //worldPath.Enqueue(gameManager.BattlefieldManager.GetWorldLocation(location));
+           worldPath.Enqueue(GameManager.Battlefield.GetWorldLocation(location));
         }
 
         PlayMoveSFX(unit);
-        StartCoroutine(MoveUnit(unit, worldPath, unitsToKill));
+        StartCoroutine(CoroutineMoveUnit(currentUnit, worldPath));
+    }
+
+    public void KillUnit(IUnit unit)
+    {
+        GameObject deadUnit;
+        worldUnits.TryGetValue(unit, out deadUnit);
+        unitsToDie.Add(deadUnit);
+
+        worldUnits.Remove(unit);
     }
 
     public void ChangeTeamColors(IEnumerable<IColorConfig> colors)
     {
         //
-    }
-
-    protected void Awake()
-    {
-        if (configManager == null)
-            configManager = FindObjectOfType<ConfigManager>();
     }
 
     protected void PlayMoveSFX(IUnit unit)
@@ -67,48 +67,45 @@ public class UnitAVController : MonoBehaviour
         //configManager.PlaySound(attackSounds[unit.ID]);
     }
 
-    protected IEnumerator MoveUnit(IUnit unit, Queue<Vector3Int> path, IEnumerable<IUnit> unitsToKill = null)
+    protected IEnumerator CoroutineMoveUnit(GameObject worldUnit, Queue<Vector3> path)
     {        
-        Vector3Int destination = path.Last();
-        Vector3Int currentPathNode = path.Dequeue();
+        Vector3 destination = path.Last();
+        Vector3 currentPathNode = path.Dequeue();
 
-        while (currentUnit.transform.position != destination)
+        while (worldUnit.transform.position != destination)
         {
-            if (currentUnit.transform.position == currentPathNode && path.Count > 0)
+            if (worldUnit.transform.position == currentPathNode && path.Count > 0)
                 currentPathNode = path.Dequeue();
 
-            currentUnit.transform.position = Vector3.Lerp(currentUnit.transform.position, currentPathNode, moveSpeed * Time.deltaTime);
+            worldUnit.transform.position = Vector3.Lerp(worldUnit.transform.position, currentPathNode, moveSpeed * Time.deltaTime);
 
             yield return null;
         }
 
-        if (unitsToKill != null)
+        if (unitsToDie.Count > 0)
         {
-            //PlayAttackSFX(attackSounds[unit.ID]);
-            foreach (IUnit deadUnit in unitsToKill)
+            foreach(GameObject unit in unitsToDie)
             {
-                StartCoroutine(KillUnit(deadUnit));
+                StartCoroutine(CoroutineKillUnit(unit));
             }
         }
     }
 
-    protected IEnumerator KillUnit(IUnit unit)
+    protected IEnumerator CoroutineKillUnit(GameObject deadUnit)
     {
-        GameObject deadUnit;
-        worldUnits.TryGetValue(unit, out deadUnit);
         SpriteRenderer sprite = deadUnit.GetComponent<SpriteRenderer>();
         float timer = 0f;
 
         while(timer < dieSpeed)
         {
             timer += Time.deltaTime;
-
             Color targetAlpha = new Color(1, 1, 1, Mathf.Lerp(1, 0, timer / dieSpeed));
+
             sprite.color = targetAlpha;
             yield return null;
         }
 
-        worldUnits.Remove(unit);
+        unitsToDie.Remove(deadUnit);
     }
 
     #region Old Update Method Code

@@ -179,9 +179,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
         toCell.Unit = fromCell.Unit;
         (toCell.Unit as Unit).Location = destination;
-        fromCell.Unit = null;
-
-        //Whatever implements the visual representation for units needs to go here.
+        fromCell.Unit = null;        
     }
 
     public void DestroyUnit(Vector3Int unitPosition)
@@ -207,6 +205,12 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
         return mouseCellPos;
     }
+
+    public Vector3 GetWorldLocation(Vector3Int location)
+    {
+        return mapGrid.CellToWorld(location);
+    }
+
 
     protected void Awake() => mapGrid = GetComponent<Grid>();
 }
