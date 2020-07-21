@@ -52,9 +52,12 @@ public class UnitAVController : MonoBehaviour
         worldUnits.Remove(unit);
     }
 
-    public void ChangeTeamColors(IEnumerable<IColorConfig> colors)
+    public void ChangeTeamColors(IEnumerable<ColorConfig> colors)
     {
-        //
+        foreach (ColorConfig color in colors)
+            foreach (KeyValuePair<IUnit, GameObject> worldUnit in worldUnits)
+                if (color.TeamNumber == worldUnit.Key.Team.TeamNumber)
+                    worldUnit.Value.GetComponent<SpriteRenderer>().color = color.PrimaryColor;
     }
 
     protected void PlayMoveSFX(IUnit unit)

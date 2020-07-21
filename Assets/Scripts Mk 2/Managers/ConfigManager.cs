@@ -120,6 +120,7 @@ public class ConfigManager : MonoBehaviour, IConfigManager
         for(int i = 0; i < teamColors.Length; i++)
         {
             ColorConfig config = new ColorConfig();
+            config.TeamNumber = (Teams)i;
             config.PrimaryColor = config.GetColor((Colors)i);
             config.PrimaryColorCategory = (Colors)i;
             config.SecondaryColor = config.GetColor((Colors)i);

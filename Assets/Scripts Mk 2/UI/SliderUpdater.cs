@@ -12,14 +12,14 @@ public class SliderUpdater : MonoBehaviour
     [SerializeField] protected Slider cameraSpeedSlider;
     [SerializeField] protected Slider gameDifficultySlider;
     [SerializeField] protected TMP_Dropdown mapShape;
-    [SerializeField] protected TMP_Dropdown team;
+    [SerializeField] protected TMP_Dropdown teamNumber;
     [SerializeField] protected TMP_Dropdown primaryColor;
     [SerializeField] protected TMP_Dropdown secondaryColor;
     
 
     protected ConfigManager configManager;
 
-    public void UpdateTeamColors() => configManager.ChangeTeamColor(team.value, GetColors());
+    public void UpdateTeamColors() => configManager.ChangeTeamColor(teamNumber.value, GetColors());
     public void UpdateDifficulty() => configManager.GameDifficulty = masterVolumeSlider.value;
     public void UpdateMapShape() => configManager.MapShape = (MapShape)mapShape.value;
     public void UpdateMasterVolume() => configManager.MasterVolume = masterVolumeSlider.value;
@@ -54,8 +54,8 @@ public class SliderUpdater : MonoBehaviour
 
     public void GetTeamColors()
     {
-        IColorConfig config = configManager.TeamColors[team.value];
-
+        IColorConfig config = configManager.TeamColors[teamNumber.value];
+        
         primaryColor.value = (int)config.PrimaryColorCategory;
         secondaryColor.value = (int)config.SecondaryColorCategory;
 
