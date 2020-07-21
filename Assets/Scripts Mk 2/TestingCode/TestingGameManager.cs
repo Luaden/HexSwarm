@@ -44,6 +44,18 @@ public class TestingGameManager : GameManager
         EndTurn();
     }
 
+    private void Update()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            ICell cell;
+            Vector3Int mouseCell = Battlefield.GetVectorByClick(Input.mousePosition);
+
+            Battlefield.World.TryGetValue(mouseCell, out cell);
+            Debug.Log("Mouse cell is " + cell.GridPosition + "." + "World position is " + cell.WorldPosition + ".");
+        }
+    }
+
     [ContextMenu("EndPlayer1")]
     protected void EndPlayer1Turn()
     {
