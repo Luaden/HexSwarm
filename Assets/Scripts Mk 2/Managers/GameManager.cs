@@ -53,12 +53,6 @@ public class GameManager : MonoBehaviour, IGameManager
         return true;
     }
 
-    protected void Awake()
-    {
-        if (SelectedUnitPanel == null)
-            SelectedUnitPanel = FindObjectOfType<SelectedUnitPanel>();
-    }
-
     protected void Start()
     {
         //if (Battlefield == null)
@@ -76,6 +70,9 @@ public class GameManager : MonoBehaviour, IGameManager
 
         if (UnitAVController == null)
             UnitAVController = FindObjectOfType<UnitAVController>();
+
+        if (SelectedUnitPanel == null)
+            SelectedUnitPanel = FindObjectOfType<SelectedUnitPanel>();
 
         NewGame();
     }

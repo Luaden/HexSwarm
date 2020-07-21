@@ -31,7 +31,7 @@ public abstract class Team : ITeam
         unit.Team = this;
     }
 
-    public void RemoveUnit(IUnit unit)
+    public virtual void RemoveUnit(IUnit unit)
     {
         if(units.Contains(unit))
         {
