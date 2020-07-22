@@ -196,7 +196,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     {
         World.TryGetValue(unitPosition, out checkCell);
 
-        GameManager.UnitAVController.KillUnit(checkCell.Unit);
+        GameManager.UnitAVController.DestroyUnit(checkCell.Unit);
         checkCell.Unit = null;
     }
 

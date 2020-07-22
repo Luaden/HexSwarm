@@ -65,10 +65,10 @@ public class GameManager : MonoBehaviour, IGameManager
 
         Battlefield.MoveUnit(unit.Location, target, path);
 
-        Debug.Log("Death count: " + deaths.Count);
         ResolveDeaths(deaths, unit);
         return true;
     }
+
     public bool StartLevel()
     {
         GridSize = Mathf.RoundToInt((10 + levelCounter) * ConfigManager.GameDifficulty);
@@ -143,7 +143,6 @@ public class GameManager : MonoBehaviour, IGameManager
             teamsWithLosses.Add(oldTeam);
 
             Battlefield.DestroyUnit(corpse.Location);
-            Debug.Log("Killing unit");
 
             if ((activeTeams.Peek().TeamNumber & Teams.Player) == 0)
                 GenerateUnitForTeam(unit.Team, unit, corpse.Location);
