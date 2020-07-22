@@ -7,11 +7,13 @@ public class CameraController : MonoBehaviour
     //Cached references
     protected Camera mainCamera;
     protected Transform cameraTransform;
-    protected ConfigManager configManager;
+    protected GameManager gameManager;
 
     //State variables
-    protected float xMax = 4;
-    protected float yMax = 2;
+    protected float xMax = 2;
+    protected float yMax = 1;
+    protected float xBoundary;
+    protected float yBoundary;
     protected float sensitivityModifier = 1f;
     protected float speedModifier = 1f;
     protected Vector3 mousePos;
@@ -25,13 +27,16 @@ public class CameraController : MonoBehaviour
 
     protected void Awake()
     {
-        configManager = FindObjectOfType<ConfigManager>();        
         mainCamera = Camera.main;
-        cameraTransform = mainCamera.transform;
+        gameManager = FindObjectOfType<GameManager>();
+        cameraTransform = mainCamera.transform;               
+    }
 
-        configManager.CameraController = this;
-        SensitivityModifier = configManager.SensitivityModifier; ;
-        SpeedModifier = configManager.SpeedModifier;
+    protected void Start()
+    {
+        ConfigManager.instance.CameraController = this;
+        SensitivityModifier = ConfigManager.instance.SensitivityModifier;
+        SpeedModifier = ConfigManager.instance.SpeedModifier;
     }
 
     protected void Update()
@@ -44,9 +49,18 @@ public class CameraController : MonoBehaviour
     {
         mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
-        cameraPosToBe.x = mousePos.x;
-        cameraPosToBe.y = mousePos.y;
-        cameraPosToBe.z = mainCamera.transform.position.z;
+        if(gameManager != null)
+        {
+            cameraPosToBe.x = Mathf.Clamp(mousePos.x, -gameManager.GridSize, gameManager.GridSize);
+            cameraPosToBe.y = Mathf.Clamp(mousePos.y, -gameManager.GridSize, gameManager.GridSize);
+            cameraPosToBe.z = mainCamera.transform.position.z;
+        }
+        else
+        {
+            cameraPosToBe.x = mousePos.x;
+            cameraPosToBe.y = mousePos.y;
+            cameraPosToBe.z = mainCamera.transform.position.z;
+        }        
 
         if (mousePos.x > mainCamera.transform.position.x + xMax / sensitivityModifier ||
             mousePos.x < mainCamera.transform.position.x - xMax / sensitivityModifier ||

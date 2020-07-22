@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,16 +10,17 @@ public class UnitAVController : MonoBehaviour
     [SerializeField] protected Sprite[] unitSprites;
     [SerializeField] protected AudioClip[] movementSounds;
     [SerializeField] protected AudioClip[] attackSounds;
-    [SerializeField] protected float moveSpeed;
+    [SerializeField] protected float moveSpeed = 1f;
     [SerializeField] protected float dieSpeed;
 
+    protected ConfigManager configManager;
     protected Dictionary<IUnit, GameObject> worldUnits = new Dictionary<IUnit, GameObject>();
-    protected GameObject currentUnit;
-    protected List<GameObject> unitsToDie = new List<GameObject>();
-    protected Vector3Int currentPathNode;
+    protected Dictionary<Queue<Vector3>, GameObject> worldUnitPath = new Dictionary<Queue<Vector3>, GameObject>();
+    protected List<GameObject> totalUnitsToDie = new List<GameObject>();
+    protected List<GameObject> currentUnitsToDie = new List<GameObject>();
 
     public void PlaceNewUnit(IUnit unit)
-    {        
+    {
         GameObject worldUnit = Instantiate(worldUnitPrefab, this.transform);
 
         if (!worldUnits.ContainsKey(unit))
@@ -30,24 +32,27 @@ public class UnitAVController : MonoBehaviour
 
     public void MoveUnit(IUnit unit, IEnumerable<Vector3Int> path)
     {
-        worldUnits.TryGetValue(unit, out currentUnit);
+        GameObject worldUnit;
+        worldUnits.TryGetValue(unit, out worldUnit);
 
         Queue<Vector3> worldPath = new Queue<Vector3>();
 
-        foreach(Vector3Int location in path)
+        foreach (Vector3Int location in path)
         {
-           worldPath.Enqueue(GameManager.Battlefield.GetWorldLocation(location));
+            ICell cell;
+            GameManager.Battlefield.World.TryGetValue(location, out cell);
+            worldPath.Enqueue(cell.WorldPosition);
         }
+        
+        worldUnitPath.Add(worldPath, worldUnit);
 
-        PlayMoveSFX(unit);
-        StartCoroutine(CoroutineMoveUnit(currentUnit, worldPath));
     }
 
-    public void KillUnit(IUnit unit)
+    public void DestroyUnit(IUnit unit)
     {
         GameObject deadUnit;
         worldUnits.TryGetValue(unit, out deadUnit);
-        unitsToDie.Add(deadUnit);
+        totalUnitsToDie.Add(deadUnit);
 
         worldUnits.Remove(unit);
     }
@@ -60,86 +65,93 @@ public class UnitAVController : MonoBehaviour
                     worldUnit.Value.GetComponent<SpriteRenderer>().color = color.PrimaryColor;
     }
 
+    protected void Awake()
+    {
+        if (configManager == null)
+            configManager = FindObjectOfType<ConfigManager>();
+    }
+
+    protected void Update()
+    {
+        if (worldUnitPath.Count > 0)
+        {
+            GameObject worldUnit = worldUnitPath.First().Value;
+            Vector3 nextPosition = worldUnitPath.First().Key.Peek();
+            worldUnit.transform.position = Vector3.MoveTowards(
+                    worldUnit.transform.position,
+                    nextPosition,
+                    moveSpeed * Time.deltaTime);
+
+            KillCurrentUnits(worldUnit);
+
+            if (worldUnit.transform.position == nextPosition)
+                nextPosition = worldUnitPath.First().Key.Dequeue();
+            
+
+            if (worldUnitPath.First().Key.Count == 0 && worldUnit.transform.position == nextPosition)
+                worldUnitPath.Remove(worldUnitPath.First().Key);
+        }
+
+        if (worldUnitPath.Count == 0)
+            KillAllUnits();
+    }
+
+    protected void KillAllUnits()
+    {
+        if(totalUnitsToDie.Count > 0)
+            foreach(GameObject deadUnit in totalUnitsToDie)
+            {
+                SpriteRenderer sprite = deadUnit.GetComponent<SpriteRenderer>();
+
+                Color targetAlpha = new Color(1, 1, 1, sprite.color.a);
+                targetAlpha.a = Mathf.Clamp01(targetAlpha.a - (dieSpeed * Time.deltaTime));
+                sprite.color = targetAlpha; 
+
+                if(sprite.color.a == 0)
+                {
+                    Debug.Log("Killing " + deadUnit);
+                    currentUnitsToDie.Remove(deadUnit);
+                    Destroy(deadUnit);
+                }
+
+            }            
+    }
+
+    protected void KillCurrentUnits(GameObject worldUnit)
+    {
+        foreach (GameObject deadUnit in totalUnitsToDie)
+        {
+            if (worldUnit.transform.position == deadUnit.transform.position)
+            {
+                currentUnitsToDie.Add(deadUnit);
+                totalUnitsToDie.Remove(deadUnit);
+                break;
+            }
+        }
+
+        if (currentUnitsToDie.Count > 0)
+            foreach (GameObject deadUnit in currentUnitsToDie)
+            {
+                SpriteRenderer sprite = deadUnit.GetComponent<SpriteRenderer>();
+
+                Color targetAlpha = new Color(1, 1, 1, Mathf.Lerp(1, 0, dieSpeed * Time.deltaTime));
+                sprite.color = targetAlpha;
+
+                if (sprite.color.a == 0)
+                {
+                    currentUnitsToDie.Remove(deadUnit);
+                    Destroy(deadUnit);
+                }
+            }
+    }
+
     protected void PlayMoveSFX(IUnit unit)
     {
-        //configManager.PlaySound(movementSounds[unit.ID]);
+        configManager.PlaySound(movementSounds[unit.ID]);
     }
 
     protected void PlayAttackSFX(IUnit unit)
     {
-        //configManager.PlaySound(attackSounds[unit.ID]);
+        configManager.PlaySound(attackSounds[unit.ID]);
     }
-
-    protected IEnumerator CoroutineMoveUnit(GameObject worldUnit, Queue<Vector3> path)
-    {        
-        Vector3 destination = path.Last();
-        Vector3 currentPathNode = path.Dequeue();
-
-        while (worldUnit.transform.position != destination)
-        {
-            if (worldUnit.transform.position == currentPathNode && path.Count > 0)
-                currentPathNode = path.Dequeue();
-
-            worldUnit.transform.position = Vector3.Lerp(worldUnit.transform.position, currentPathNode, moveSpeed * Time.deltaTime);
-
-            yield return null;
-        }
-
-        if (unitsToDie.Count > 0)
-        {
-            foreach(GameObject unit in unitsToDie)
-            {
-                StartCoroutine(CoroutineKillUnit(unit));
-            }
-        }
-    }
-
-    protected IEnumerator CoroutineKillUnit(GameObject deadUnit)
-    {
-        SpriteRenderer sprite = deadUnit.GetComponent<SpriteRenderer>();
-        float timer = 0f;
-
-        while(timer < dieSpeed)
-        {
-            timer += Time.deltaTime;
-            Color targetAlpha = new Color(1, 1, 1, Mathf.Lerp(1, 0, timer / dieSpeed));
-
-            sprite.color = targetAlpha;
-            yield return null;
-        }
-
-        unitsToDie.Remove(deadUnit);
-    }
-
-    #region Old Update Method Code
-
-    //protected void Update()
-    //{
-    //    if (currentUnit != null && currentPath != null)
-    //        DoMove();
-    //    if (currentUnit != null && currentPath == null)
-    //        DoKill();
-    //}
-
-    //protected void DoMove()
-    //{
-    //    currentPathIndex = currentPath.Peek();
-
-    //    if (currentUnit.transform.position != currentPathIndex)
-    //        currentUnit.transform.position = Vector3.Lerp(currentUnit.transform.position, currentPathIndex, moveSpeed * Time.deltaTime);
-
-    //    if (currentUnit.transform.position == currentPathIndex && currentPath.Count > 0)
-    //    {
-    //        currentPath.Dequeue();
-    //        currentPathIndex = currentPath.Peek();
-    //    }
-
-    //    if(currentUnit.transform.position == currentPathIndex && currentPath.Count == 0)
-    //    {
-    //        currentPath = null;
-    //        currentUnit = null;
-    //    }
-    //}
-    #endregion
 }
-

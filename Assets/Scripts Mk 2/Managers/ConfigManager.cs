@@ -76,7 +76,7 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     {
         #region Singleton
         if (instance != null)
-            Destroy(this);
+            Destroy(this.gameObject);
 
         instance = this;
         DontDestroyOnLoad(this);
@@ -128,5 +128,11 @@ public class ConfigManager : MonoBehaviour, IConfigManager
 
             teamColors[i] = config;
         }
+    }
+
+    protected void OnLevelWasLoaded(int level)
+    {
+        CameraController = FindObjectOfType<CameraController>();
+        AudioController = FindObjectOfType<AudioController>();
     }
 }

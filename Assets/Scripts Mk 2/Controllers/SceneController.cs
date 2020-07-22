@@ -5,16 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
-    protected int currentScene;
+    public int CurrentScene { get; set; }
 
     protected void Awake()
     {
-        currentScene = SceneManager.GetActiveScene().buildIndex;
+        CurrentScene = SceneManager.GetActiveScene().buildIndex;
     }
 
     public void LoadNextScene()
     {
-        SceneManager.LoadScene(++currentScene);    
+        SceneManager.LoadScene(++CurrentScene);    
     }
 
     public void LoadTitleScene()
@@ -24,6 +24,6 @@ public class SceneController : MonoBehaviour
 
     public void ReloadCurrentScene()
     {
-        SceneManager.LoadScene(currentScene);
+        SceneManager.LoadScene(CurrentScene);
     }
 }

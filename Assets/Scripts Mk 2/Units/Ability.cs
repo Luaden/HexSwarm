@@ -6,6 +6,10 @@ using System;
 [System.Serializable]
 public class Ability : IAbility
 {
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public Sprite Icon { get; set; }
+    
     public static IReadOnlyDictionary<int, Quaternion> Transforms
         = new Dictionary<int, Quaternion>()
      {
@@ -32,6 +36,9 @@ public class Ability : IAbility
     [SerializeField] protected bool isJump;
     public bool IsJump => isJump;
 
+
+
+    public IEnumerable<Vector3Int> GetAttack(Direction direction, Vector3Int origin)
     public IEnumerable<ICell> GetAttack(Direction direction, Vector3Int gridOrigin)
     {
         return GameManager.Battlefield.GetValidCells(gridOrigin, RotateAbility(direction, defaultRanges.DamageRange));

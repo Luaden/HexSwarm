@@ -48,27 +48,37 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>
         UpdateText(unitName, unit.Name);
         UpdateText(unitDescription, unit.Description);
 
-        //UpdateSprite(ability1Image, unit.Abilites[0].DamageGrid);
-        //UpdateText(ability1Name, unit.Abilites[0].Name);
-        //UpdateText(ability1Description, unit.Abilites[0].Description);
+        UpdateSprite(ability1Image, unit.Abilites[0].Icon);
+        UpdateText(ability1Name, unit.Abilites[0].Name);
+        UpdateText(ability1Description, unit.Abilites[0].Description);
 
-        //UpdateSprite(ability2Image, unit.Abilites[1].DamageGrid);
-        //UpdateText(ability2Name, unit.Abilites[1].Name);
-        //UpdateText(ability2Description, unit.Abilites[1].Description);
+        UpdateSprite(ability2Image, unit.Abilites[1].Icon);
+        UpdateText(ability2Name, unit.Abilites[1].Name);
+        UpdateText(ability2Description, unit.Abilites[1].Description);
 
-        //if (unit.Abilites.Count >= 3)
-        //{
-        //    UpdateSprite(ability3Image, unit.Abilites[1].DamageGrid);
-        //    UpdateText(ability3Name, unit.Abilites[1].Name);
-        //    UpdateText(ability3Description, unit.Abilites[1].Description);
-        //}
+        if (unit.Abilites.Count < 3)
+        {
+            ability3Button.gameObject.SetActive(false);
+            ability4Button.gameObject.SetActive(false);
+        }
 
-        //if (unit.Abilites.Count == 4)
-        //{
-        //    UpdateSprite(ability4Image, unit.Abilites[1].DamageGrid);
-        //    UpdateText(ability4Name, unit.Abilites[1].Name);
-        //    UpdateText(ability4Description, unit.Abilites[1].Description);
-        //}
+        if (unit.Abilites.Count >= 3)
+        {
+            ability3Button.gameObject.SetActive(true);
+
+            UpdateSprite(ability3Image, unit.Abilites[1].Icon);
+            UpdateText(ability3Name, unit.Abilites[1].Name);
+            UpdateText(ability3Description, unit.Abilites[1].Description);
+        }
+
+        if (unit.Abilites.Count == 4)
+        {
+            ability4Button.gameObject.SetActive(true);
+
+            UpdateSprite(ability4Image, unit.Abilites[1].Icon);
+            UpdateText(ability4Name, unit.Abilites[1].Name);
+            UpdateText(ability4Description, unit.Abilites[1].Description);
+        }
 
     }
 
@@ -113,6 +123,11 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>
 
         ability1ImageBackground.color = firstIsSelected ? Color.white : Color.grey;
         ability2ImageBackground.color = firstIsSelected ? Color.grey : Color.white;
+    }
+
+    public void UpdateSelectedAbility(int x)
+    {
+        gameManager.SelectedAbility = gameManager.DisplayedUnit.Abilites[x];
     }
 }
 

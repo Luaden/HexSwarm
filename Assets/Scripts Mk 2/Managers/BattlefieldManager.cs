@@ -184,25 +184,26 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         checkCell.Unit = unit;
         (unit as Unit).Location = position;
 
-        //Whatever implements the visual representation for units needs to go here.
         GameManager.UnitAVController.PlaceNewUnit(unit);
     }
 
-    public void MoveUnit(Vector3Int unitPosition, Vector3Int destination)
+    public void MoveUnit(Vector3Int unitPosition, Vector3Int destination, IEnumerable<Vector3Int> path)
     {
         World.TryGetValue(unitPosition, out fromCell);
         World.TryGetValue(destination, out toCell);
 
         toCell.Unit = fromCell.Unit;
         (toCell.Unit as Unit).Location = destination;
-        fromCell.Unit = null;        
+        fromCell.Unit = null;
+
+        GameManager.UnitAVController.MoveUnit(toCell.Unit, path);
     }
 
     public void DestroyUnit(Vector3Int unitPosition)
     {
         World.TryGetValue(unitPosition, out checkCell);
 
-        //Whatever implements the visual representation for units needs to go here.
+        GameManager.UnitAVController.DestroyUnit(checkCell.Unit);
         checkCell.Unit = null;
     }
 
