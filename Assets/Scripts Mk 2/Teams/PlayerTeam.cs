@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Player : Team
+public class PlayerTeam : Team
 {
     protected Dictionary<int, int> unitIdToLastSelectedMove;
     protected bool camControls = false;
 
-    public Player
+    public PlayerTeam
         (GameManager gameManager,
         string name,
         string description,

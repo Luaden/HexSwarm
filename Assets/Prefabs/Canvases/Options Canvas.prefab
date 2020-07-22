@@ -197,7 +197,7 @@ MonoBehaviour:
   cameraSpeedSlider: {fileID: 8033759613988254719}
   gameDifficultySlider: {fileID: 7977905345035555581}
   mapShape: {fileID: 7977905343676875702}
-  team: {fileID: 7977905343981930862}
+  teamNumber: {fileID: 7977905343981930862}
   primaryColor: {fileID: 7977905344854905543}
   secondaryColor: {fileID: 7977905344790568372}
 --- !u!1 &892531568669219692
@@ -1326,9 +1326,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: set_SFXVolume
-        m_Mode: 0
+      - m_Target: {fileID: 1060399241671574095}
+        m_MethodName: UpdateSFXVolume
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1463,9 +1463,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: set_BGMVolume
-        m_Mode: 4
+      - m_Target: {fileID: 1060399241671574095}
+        m_MethodName: UpdateBGMVolume
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2124,9 +2124,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: set_SpeedModifier
-        m_Mode: 0
+      - m_Target: {fileID: 1060399241671574095}
+        m_MethodName: UpdateSpeed
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -9665,9 +9665,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: set_SensitivityModifier
-        m_Mode: 0
+      - m_Target: {fileID: 1060399241671574095}
+        m_MethodName: UpdateSensitivity
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

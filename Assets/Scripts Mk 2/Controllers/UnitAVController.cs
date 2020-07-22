@@ -109,9 +109,9 @@ public class UnitAVController : MonoBehaviour
 
                 if(sprite.color.a == 0)
                 {
-                    Debug.Log("Killing " + deadUnit);
-                    currentUnitsToDie.Remove(deadUnit);
+                    totalUnitsToDie.Remove(deadUnit);
                     Destroy(deadUnit);
+                    break;
                 }
 
             }            

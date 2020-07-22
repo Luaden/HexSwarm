@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour, IGameManager
     public static UnitAVController UnitAVController { get; protected set; }
     
     protected readonly Queue<ITeam> activeTeams = new Queue<ITeam>();
-    protected Player player1;
+    protected PlayerTeam player1;
     protected int turnCounter;
     protected int levelCounter;
     protected IAbility selectedAbility;
@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour, IGameManager
     {
         if (activeTeams.Count == 0)
             return;
-        Player currentPlayer = activeTeams.Peek() as Player;
+        PlayerTeam currentPlayer = activeTeams.Peek() as PlayerTeam;
         currentPlayer?.GetMouseInput();
     }
 
@@ -170,7 +170,7 @@ public class GameManager : MonoBehaviour, IGameManager
         return true;
     }
 
-    protected void GenerateTeam(Player team, Unit template, Vector3Int centerPoint, int radius = 0)
+    protected void GenerateTeam(Team team, Unit template, Vector3Int centerPoint, int radius = 0)
     {
         GenerateUnitForTeam(team, template, centerPoint);
         foreach (ICell cell in Battlefield.GetNeighborCells(centerPoint, radius))

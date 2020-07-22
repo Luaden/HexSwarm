@@ -26,19 +26,21 @@ public class AITeam : Team
     protected Stack<Vector3Int> teamRange = new Stack<Vector3Int>();
 
     public AITeam
-        (string name,
+        (GameManager gameManager,
+        string name,
         string description,
         Sprite icon,
         Teams teamNumber,
-        Vector3Int origin)
+        Vector3Int origin,
+        HashSet<IUnit> units)
     {
-        //this.gameManager = GameManager.instance;
-        //battlefieldManager = gameManager.BattlefieldManager;
+        this.gameManager = gameManager;
         Name = name;
         Description = description;
         Icon = icon;
         TeamNumber = teamNumber;
         StartPosition = origin;
+        this.units = units;
     }
 
     public override void StartTurn()
