@@ -9,10 +9,10 @@ public class Ability : IAbility
     public static IReadOnlyDictionary<Direction, Func<Vector3Int, Vector3Int>> Transforms
         = new Dictionary<Direction, Func<Vector3Int, Vector3Int>>()
      {
-            {Direction.Sixty,       (Vector3Int s)=>{ return new Vector3Int(s.z,s.y,s.x); }  },
-            {Direction.One20,       (Vector3Int s)=>{ return new Vector3Int(s.y,s.z,s.x); }  },
-            {Direction.One80,       (Vector3Int s)=>{ return new Vector3Int(s.y,s.x,s.z); }  },
-            {Direction.Two40,       (Vector3Int s)=>{ return new Vector3Int(s.z,s.x,s.y); }  },
+            {Direction.Sixty,       (Vector3Int s)=>{ return new Vector3Int(s.y,s.x,s.z); }  },
+            {Direction.One20,       (Vector3Int s)=>{ return new Vector3Int(s.z,s.x,s.y); }  },
+            {Direction.One80,       (Vector3Int s)=>{ return new Vector3Int(s.z,s.y,s.x); }  },
+            {Direction.Two40,       (Vector3Int s)=>{ return new Vector3Int(s.y,s.z,s.x); }  },
             {Direction.Threehundred,(Vector3Int s)=>{ return new Vector3Int(s.x,s.z,s.y); }  },
      };
 
@@ -31,9 +31,9 @@ public class Ability : IAbility
     [SerializeField] protected bool isJump;
     public bool IsJump => isJump;
 
-    public IEnumerable<Vector3Int> GetAttack(Direction direction, Vector3Int gridOrigin)
+    public IEnumerable<ICell> GetAttack(Direction direction, Vector3Int gridOrigin)
     {
-        throw new System.NotImplementedException();
+        return GameManager.Battlefield.GetValidCells(gridOrigin, RotateAbility(direction, defaultRanges.DamageRange));
     }
 }
 

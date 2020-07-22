@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[SerializeField]
+[System.Serializable]
 public class MoveHighlight : IMoveHighlight
 {
     [SerializeField] protected List<Vector3Int> movementRange;

@@ -59,7 +59,11 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
     protected void GenerateCell(Vector3Int gridPos, Tile tile)
     {
-        Vector3Int worldPosition = new Vector3Int(gridPos.x - gridPos.y / 2, gridPos.y, -(gridPos.x + gridPos.y/2));
+        int newX = gridPos.x - gridPos.y / 2;
+        if (gridPos.y % 2 == -1)
+            newX++;
+        int newZ = -(newX + gridPos.y);
+        Vector3Int worldPosition = new Vector3Int(newX, gridPos.y, newZ);
         Cell newCell = new Cell(gridPos, worldPosition, default, tile);
 
         gridLookup.Add(gridPos, newCell);
@@ -228,11 +232,19 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
     protected void Awake() => mapGrid = GetComponent<Grid>();
 
+
+    public ICell GetValidCell(Vector3Int worldLocation)
+    {
+        ICell location;
+        gridLookup.TryGetValue(worldLocation, out location);
+        return location;
+    }
+
     public IEnumerable<ICell> GetValidCells(Vector3Int gridOrigin, IEnumerable<Vector3Int> worldOffsets)
     {
         List<ICell> foundcells = new List<ICell>();
         ICell origin;
-        if (gridLookup.TryGetValue(gridOrigin, out origin))
+        if (!gridLookup.TryGetValue(gridOrigin, out origin))
             return System.Array.Empty<ICell>();
 
         foreach(Vector3Int worldOffset in worldOffsets)

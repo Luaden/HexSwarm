@@ -53,7 +53,7 @@ public class Unit : IUnit
             .Select(X=>X.GridPosition);
     }
 
-    public IEnumerable<Vector3Int> DiscoverHits(Vector3Int location, IAbility move, Direction direction = Direction.Zero)
+    public IEnumerable<ICell> DiscoverHits(Vector3Int location, IAbility move, Direction direction = Direction.Zero)
     {
         return move.GetAttack(Direction.Zero, location);
     }
