@@ -8,82 +8,26 @@ public class GameManager : MonoBehaviour, IGameManager
 {
     public static IBattlefieldManager Battlefield { get; protected set; }
     public static Pathfinder Pathing { get; protected set; }
+    public static ConfigManager ConfigManager { get; protected set; }
     public static SelectedUnitPanel SelectedUnitPanel { get; protected set; }
     public static TurnOrderDisplay TurnOrderDisplay { get; protected set; }
     public static UnitAVController UnitAVController { get; protected set; }
-
-    [SerializeField] protected string battlefieldName; 
-
-    protected Player player1;
-    public Team Player1 => player1;
-
-    protected int turnCounter;
-    public int TurnCounter => turnCounter;
-    protected int levelCounter;
-    public int LevelCounter => levelCounter;
-
+    
     protected readonly Queue<ITeam> activeTeams = new Queue<ITeam>();
+    protected Player player1;
+    protected int turnCounter;
+    protected int levelCounter;
+    protected IAbility selectedAbility;
+
+    public int TurnCounter => turnCounter;
+    public int LevelCounter => levelCounter;
+    public Team Player1 => player1;
     public Queue<ITeam> ActiveTeams => activeTeams;
+    public int GridSize { get; set; }
 
     public IUnit DisplayedUnit { get; protected set; }
+    public IAbility SelectedAbility { get => selectedAbility; set => selectedAbility = value; }
 
-    public bool EndTurn()
-    {
-        if (activeTeams.Peek() == Player1)
-            turnCounter++;
-
-        activeTeams.Enqueue(activeTeams.Dequeue());
-        activeTeams.Peek().StartTurn();
-        TurnOrderDisplay.UpdateUI(this);
-
-        return true;
-    }
-
-    private bool Win()
-    {
-        this.levelCounter++;
-        StartLevel();
-        return true;
-    }
-
-    private bool Loss()
-    {
-        this.levelCounter--;
-        StartLevel();
-        return true;
-    }
-
-    protected void Start()
-    {
-        //if (Battlefield == null)
-        //    Battlefield = string.IsNullOrWhiteSpace(battlefieldName)
-        //        ? FindObjectOfType<BattlefieldManager>()
-        //        : GameObject.Find(battlefieldName).GetComponent<BattlefieldManager>();
-        if (Battlefield == null)
-            Battlefield = FindObjectOfType<BattlefieldManager>();
-
-        if (TurnOrderDisplay == null)
-            TurnOrderDisplay = FindObjectOfType<TurnOrderDisplay>();
-
-        if (Pathing == null)
-            Pathing = new Pathfinder(Battlefield as BattlefieldManager);
-
-        if (UnitAVController == null)
-            UnitAVController = FindObjectOfType<UnitAVController>();
-
-        if (SelectedUnitPanel == null)
-            SelectedUnitPanel = FindObjectOfType<SelectedUnitPanel>();
-
-        NewGame();
-    }
-
-    protected void Update()
-    {
-        if (activeTeams.Count == 0)
-            return;
-        Player currentPlayer = activeTeams.Peek() as Player;
-        currentPlayer?.GetMouseInput();
-    }
 
     public Vector3Int GetMousePosition() => Battlefield.GetVectorByClick(Input.mousePosition);
 
@@ -111,18 +55,71 @@ public class GameManager : MonoBehaviour, IGameManager
         return true;
     }
 
-    public bool PerformMove(IUnit unit, IAbility ablity, Vector3Int target, IEnumerable<Vector3Int> path = default)
+    public bool PerformMove(IUnit unit, IAbility ablity, Vector3Int target, IEnumerable<Vector3Int> path)
     {
         if (unit.Team != activeTeams.Peek())
             return false;
 
-        Battlefield.MoveUnit(unit.Location, target);
+        IEnumerable<ICell> neighbors = Battlefield.GetNeighborCells(target);
+        List<IUnit> deaths = neighbors.Select(X => X.Unit).Where(X => X != default).Where(X => X.Team != unit.Team).ToList();
 
-        IEnumerable<ICell> neighbors = Battlefield.GetNeighborCells(unit.Location);
-        List<IUnit> deaths = neighbors.Select(X => X.Unit).Where(X=>X!=default).Where(X=>X.Team!=unit.Team).ToList();
+        Battlefield.MoveUnit(unit.Location, target, path);
 
-         ResolveDeaths(deaths, unit);
+        Debug.Log("Death count: " + deaths.Count);
+        ResolveDeaths(deaths, unit);
         return true;
+    }
+    public bool StartLevel()
+    {
+        GridSize = Mathf.RoundToInt((10 + levelCounter) * ConfigManager.GameDifficulty);
+        Battlefield.GenerateGrid(GridSize, ConfigManager.MapShape);
+
+        activeTeams.Clear();
+
+        EndTurn();
+        return true;
+    }
+
+    public bool EndTurn()
+    {
+        if (activeTeams.Peek() == Player1)
+            turnCounter++;
+
+        activeTeams.Enqueue(activeTeams.Dequeue());
+        activeTeams.Peek().StartTurn();
+        TurnOrderDisplay.UpdateUI(this);
+
+        return true;
+    }
+
+    protected void Awake()
+    {
+        if (Battlefield == null)
+            Battlefield = FindObjectOfType<BattlefieldManager>();
+
+        if (TurnOrderDisplay == null)
+            TurnOrderDisplay = FindObjectOfType<TurnOrderDisplay>();
+
+        if (Pathing == null)
+            Pathing = new Pathfinder(Battlefield as BattlefieldManager);
+
+        if (UnitAVController == null)
+            UnitAVController = FindObjectOfType<UnitAVController>();
+
+        if (SelectedUnitPanel == null)
+            SelectedUnitPanel = FindObjectOfType<SelectedUnitPanel>();
+
+        if (ConfigManager == null)
+            ConfigManager = ConfigManager.instance;
+    }
+    protected void Start() => NewGame();
+
+    protected void Update()
+    {
+        if (activeTeams.Count == 0)
+            return;
+        Player currentPlayer = activeTeams.Peek() as Player;
+        currentPlayer?.GetMouseInput();
     }
 
     protected void RemoveTeam(ITeam team)
@@ -138,15 +135,18 @@ public class GameManager : MonoBehaviour, IGameManager
     {
         HashSet<ITeam> teamsWithLosses = new HashSet<ITeam>();
 
-        foreach (IUnit corspe in deaths)
+        foreach (IUnit corpse in deaths)
         {
-            ITeam oldTeam = corspe.Team;
-            Vector3Int oldLocation = corspe.Location;
-            corspe.Team.RemoveUnit(corspe);
+            ITeam oldTeam = corpse.Team;
+            Vector3Int oldLocation = corpse.Location;
+            corpse.Team.RemoveUnit(corpse);
             teamsWithLosses.Add(oldTeam);
 
+            Battlefield.DestroyUnit(corpse.Location);
+            Debug.Log("Killing unit");
+
             if ((activeTeams.Peek().TeamNumber & Teams.Player) == 0)
-                GenerateUnitForTeam(unit.Team, unit, corspe.Location);
+                GenerateUnitForTeam(unit.Team, unit, corpse.Location);
         }
     }
 
@@ -155,25 +155,21 @@ public class GameManager : MonoBehaviour, IGameManager
         Unit newUnit = new Unit(template);
         team.AddNewUnit(newUnit);
         Battlefield.PlaceNewUnit(newUnit, location);
-
     }
 
-    public bool StartLevel()
+    private bool Win()
     {
-        ////TODO: refine with difficulty/config
-        //int gridRange = levelCounter + 10;
-
-        //Battlefield.GenerateGrid(gridRange, MapShape.Hexagon);
-        //activeTeams.Clear();
-
-
-
-        //EndTurn();
-
-
+        this.levelCounter++;
+        StartLevel();
         return true;
     }
 
+    private bool Loss()
+    {
+        this.levelCounter--;
+        StartLevel();
+        return true;
+    }
 
     protected void GenerateTeam(Player team, Unit template, Vector3Int centerPoint, int radius = 0)
     {
@@ -184,5 +180,5 @@ public class GameManager : MonoBehaviour, IGameManager
             cell.GridPosition);
     }
 
-
+    protected void GetUnitAbility(int abilityIndex) => selectedAbility = DisplayedUnit.Abilites[abilityIndex];
 }

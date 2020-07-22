@@ -8,19 +8,22 @@ public class TestingGameManager : GameManager
     [SerializeField] protected Unit Team1Unit;
     [SerializeField] protected Sprite Team2Icon;
     [SerializeField] protected Unit Team2Unit;
+    [SerializeField] protected Sprite ability1Icon;
+    [SerializeField] protected Sprite ability2Icon;
+    [SerializeField] protected Sprite ability3Icon;
+    [SerializeField] protected Sprite ability4Icon;
 
 
     [ContextMenu("lets see it")]
     protected new void StartLevel()
-    {
+    {        
         int gridRange = levelCounter + 10;
 
         Battlefield.GenerateGrid(gridRange, MapShape.Hexagon);
         activeTeams.Clear();
 
-
-        Player player2 = new Player(this, "Player2", "Gooier", Team2Icon, Teams.Player,
-            new Vector3Int(UnityEngine.Random.Range(-gridRange / 4, gridRange / 4), gridRange / 2, 0),
+        Player player2 = new Player(this, "Player2", "Gooier", Team2Icon, Teams.AI1,
+            new Vector3Int(Random.Range(-gridRange / 4, gridRange / 4), gridRange / 2, 0),
             new HashSet<IUnit>());
         activeTeams.Enqueue(player2);
 
@@ -31,29 +34,25 @@ public class TestingGameManager : GameManager
         Debug.Log("second player made.");
 
         player1 = new Player(this, "Player1", "First Goo", Team1Icon, Teams.Player,
-        new Vector3Int(UnityEngine.Random.Range(-gridRange / 4, gridRange / 4), -gridRange / 2, 0),
+        new Vector3Int(Random.Range(-gridRange / 4, gridRange / 4), -gridRange / 2, 0),
         new HashSet<IUnit>());
        activeTeams.Enqueue(player1);
 
         GenerateTeam(player1,
             Team1Unit,
-            new Vector3Int(UnityEngine.Random.Range(-gridRange / 4, gridRange / 4), -gridRange / 2, 0),
+            new Vector3Int(Random.Range(-gridRange / 4, gridRange / 4), -gridRange / 2, 0),
             gridRange / 4);
         Debug.Log("First player made.");
 
         EndTurn();
     }
 
-    private void Update()
+    protected new void Update()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            ICell cell;
-            Vector3Int mouseCell = Battlefield.GetVectorByClick(Input.mousePosition);
-
-            Battlefield.World.TryGetValue(mouseCell, out cell);
-            Debug.Log("Mouse cell is " + cell.GridPosition + "." + "World position is " + cell.WorldPosition + ".");
-        }
+        if (activeTeams.Count == 0)
+            return;
+        Player currentPlayer = activeTeams.Peek() as Player;
+        currentPlayer?.GetMouseInput();
     }
 
     [ContextMenu("EndPlayer1")]

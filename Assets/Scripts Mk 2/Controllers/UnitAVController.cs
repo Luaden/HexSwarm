@@ -9,9 +9,10 @@ public class UnitAVController : MonoBehaviour
     [SerializeField] protected Sprite[] unitSprites;
     [SerializeField] protected AudioClip[] movementSounds;
     [SerializeField] protected AudioClip[] attackSounds;
-    [SerializeField] protected float moveSpeed;
+    [SerializeField] protected float moveSpeed = 1f;
     [SerializeField] protected float dieSpeed;
 
+    protected ConfigManager configManager;
     protected Dictionary<IUnit, GameObject> worldUnits = new Dictionary<IUnit, GameObject>();
     protected GameObject currentUnit;
     protected List<GameObject> unitsToDie = new List<GameObject>();
@@ -36,10 +37,12 @@ public class UnitAVController : MonoBehaviour
 
         foreach(Vector3Int location in path)
         {
-           worldPath.Enqueue(GameManager.Battlefield.GetWorldLocation(location));
+            ICell cell;
+            GameManager.Battlefield.World.TryGetValue(location, out cell);
+            worldPath.Enqueue(cell.WorldPosition);
         }
 
-        PlayMoveSFX(unit);
+        //PlayMoveSFX(unit);
         StartCoroutine(CoroutineMoveUnit(currentUnit, worldPath));
     }
 
@@ -60,29 +63,35 @@ public class UnitAVController : MonoBehaviour
                     worldUnit.Value.GetComponent<SpriteRenderer>().color = color.PrimaryColor;
     }
 
+    protected void Awake()
+    {
+        if(configManager == null)
+            configManager = FindObjectOfType<ConfigManager>();
+    }
+
     protected void PlayMoveSFX(IUnit unit)
     {
-        //configManager.PlaySound(movementSounds[unit.ID]);
+        configManager.PlaySound(movementSounds[unit.ID]);
     }
 
     protected void PlayAttackSFX(IUnit unit)
     {
-        //configManager.PlaySound(attackSounds[unit.ID]);
+        configManager.PlaySound(attackSounds[unit.ID]);
     }
 
     protected IEnumerator CoroutineMoveUnit(GameObject worldUnit, Queue<Vector3> path)
-    {        
+    {
         Vector3 destination = path.Last();
-        Vector3 currentPathNode = path.Dequeue();
+        Vector3 currentPathNode = path.Peek();
 
         while (worldUnit.transform.position != destination)
         {
             if (worldUnit.transform.position == currentPathNode && path.Count > 0)
                 currentPathNode = path.Dequeue();
 
-            worldUnit.transform.position = Vector3.Lerp(worldUnit.transform.position, currentPathNode, moveSpeed * Time.deltaTime);
+            worldUnit.transform.position = Vector3.MoveTowards(worldUnit.transform.position, currentPathNode, moveSpeed * Time.deltaTime);            
 
-            yield return null;
+            yield return null;            
         }
 
         if (unitsToDie.Count > 0)

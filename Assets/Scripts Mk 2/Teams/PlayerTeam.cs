@@ -6,9 +6,7 @@ using UnityEngine;
 public class Player : Team
 {
     protected Dictionary<int, int> unitIdToLastSelectedMove;
-
-    protected IAbility selectedAbility;
-    protected IUnit selectedUnit;
+    protected bool camControls = false;
 
     public Player
         (GameManager gameManager,
@@ -20,7 +18,6 @@ public class Player : Team
         HashSet<IUnit> newUnits)
     {
         this.gameManager = gameManager;
-        //battlefieldManager = gameManager.BattlefieldManager;
         Name = name;
         Description = description;
         Icon = icon;
@@ -49,54 +46,39 @@ public class Player : Team
 
     protected void ToggleCameraControls()
     {
-        //gameManager.ConfigManager.ToggleCameraControls(MyTurn);
+        camControls = !camControls;
+        ConfigManager.instance.ToggleCameraControls(camControls);
     }
 
-    public override void RemoveUnit(IUnit unit)
-    {
-        if (selectedUnit == unit)
-            selectedUnit = default;
-    }
-
-    protected void ResolveSelection()
-    {
-        gameManager.InspectUnitUnderMouse();
-
-        if ((selectedUnit != default)&& (gameManager.DisplayedUnit != default))
-            
-
-
-        if (selectedUnit != gameManager.DisplayedUnit) && )
-        {
-            (gameManager.DisplayedUnit.Team == this)
-            selectedUnit = gameManager.DisplayedUnit;
-            return;
-        }
-
-
-
-    }
 
     public void GetMouseInput()
     {
-        if(Input.GetMouseButtonDown(0) && selectedAbility == null) 
+        if(Input.GetMouseButtonDown(0) && gameManager.SelectedAbility == null) 
         {
             gameManager.InspectUnitUnderMouse();
             return;
         }
 
-        if (Input.GetMouseButtonDown(0) && selectedUnit != null && selectedAbility != null)
-            gameManager.PerformMove(selectedUnit, selectedAbility, battlefieldManager.GetVectorByClick(Input.mousePosition));
+        if (Input.GetMouseButtonDown(0) && gameManager.DisplayedUnit != null && gameManager.SelectedAbility != null)
+        {
+            Vector3Int mousePos = gameManager.GetMousePosition();
+            IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(gameManager.DisplayedUnit.Location, mousePos); 
+            gameManager.PerformMove(gameManager.DisplayedUnit, gameManager.SelectedAbility, mousePos, path);
+        }            
 
         if (Input.GetMouseButtonDown(1))
         {
-            if (selectedAbility != null)
+            if (gameManager.DisplayedUnit != null)
             {
-                selectedAbility = null;
-                return;
+                Vector3Int mousePos = gameManager.GetMousePosition();
+                IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(gameManager.DisplayedUnit.Location, mousePos);
+
+                gameManager.PerformMove(
+                    gameManager.DisplayedUnit, 
+                    gameManager.SelectedAbility,
+                    mousePos, 
+                    path);
             }
-            if (selectedUnit != null)
-                selectedUnit = null;
         }
     }
 }

@@ -22,7 +22,7 @@ public interface IBattlefieldManager
     void HighlightGrid(IEnumerable<ICell> moveCells);
     void ClearHighlights();
     void PlaceNewUnit(IUnit unit, Vector3Int position);
-    void MoveUnit(Vector3Int unitPosition, Vector3Int destination);
+    void MoveUnit(Vector3Int unitPosition, Vector3Int destination, IEnumerable<Vector3Int> path = null);
     void DestroyUnit(Vector3Int unitPosition);
     Vector3 GetWorldLocation(Vector3Int location);
 }

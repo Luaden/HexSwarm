@@ -15,6 +15,7 @@ public class MenuSwitcher : MonoBehaviour
         
         optionsCanvas.SetActive(optionsActive);
         mainCanvas.SetActive(!optionsActive);
+        ConfigManager.instance.ToggleCameraControls(optionsActive);
     }
 
     protected void Update()

@@ -5,12 +5,18 @@ using System.Linq;
 [System.Serializable]
 public class Ability : IAbility
 {
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public Sprite Icon { get; set; }
+    
     [SerializeField] protected MoveHighlight defaultRanges;
     public IMoveHighlight DefaultRanges => defaultRanges;
 
     [SerializeField] protected int movementRange;
     public int MovementRange { get; private set; }
     public bool IsJump { get; private set; }
+
+
 
     public IEnumerable<Vector3Int> GetAttack(Direction direction, Vector3Int origin)
     {
