@@ -13,6 +13,10 @@ public class TestingGameManager : GameManager
     [SerializeField] protected Sprite ability3Icon;
     [SerializeField] protected Sprite ability4Icon;
 
+    protected new void Start()
+    {
+        base.Start();
+    }
 
     [ContextMenu("lets see it")]
     protected new void StartLevel()

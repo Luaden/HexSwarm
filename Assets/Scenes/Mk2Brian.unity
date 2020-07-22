@@ -460,7 +460,11 @@ MonoBehaviour:
     name: Grey Goo
     description: well it's not tecnically grey
     ablities:
-    - movementRange: 3
+    - defaultRanges:
+        movementRange: []
+        damageRange: []
+      movementRange: 3
+      isJump: 0
   Team2Icon: {fileID: 3026120706474155957, guid: 7ff6e1907a56f694281471628bc15303,
     type: 3}
   Team2Unit:
@@ -469,7 +473,11 @@ MonoBehaviour:
     name: Tank
     description: This will work
     ablities:
-    - movementRange: 3
+    - defaultRanges:
+        movementRange: []
+        damageRange: []
+      movementRange: 3
+      isJump: 0
 --- !u!114 &1607472742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,6 +490,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ec363b18b6bd84ea57a9faaf7c569b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1759513602
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1759513604}
+  - component: {fileID: 1759513603}
+  m_Layer: 0
+  m_Name: BrianTesting
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1759513603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759513602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6cd6d98a1dc8d84dabd7a0e40d2b9c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TestingAblity:
+    defaultRanges:
+      movementRange: []
+      damageRange:
+      - {x: 1, y: 0, z: -1}
+    movementRange: 0
+    isJump: 0
+  worldOrigin: {x: 0, y: 0, z: 0}
+  direction: 0
+  worldDestination: {x: 0, y: 0, z: 0}
+  worldAngle: {x: 0, y: 0, z: 0, w: 0}
+  worldDelta: {x: 0, y: 0, z: 0}
+  gridOrigin: {x: 0, y: 0, z: 0}
+  gridDestination: {x: 0, y: 0, z: 0}
+  gridAngle: {x: 0, y: 0, z: 0, w: 0}
+  gridDelta: {x: 0, y: 0, z: 0}
+--- !u!4 &1759513604
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759513602}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 592.5982, y: 158.08656, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2102556315 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2569526561222782265, guid: e01ce1583ed3f16428897b2b65caa1e3,
@@ -830,7 +897,12 @@ PrefabInstance:
     - target: {fileID: 440930460580824998, guid: a8f692468cea80740a36ed2c42a9092b,
         type: 3}
       propertyPath: m_ChunkCullingBounds.y
-      value: 0.1769231
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 440930460580824998, guid: a8f692468cea80740a36ed2c42a9092b,
+        type: 3}
+      propertyPath: m_Mode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4303917015947332041, guid: a8f692468cea80740a36ed2c42a9092b,
         type: 3}
@@ -1462,27 +1534,27 @@ PrefabInstance:
     - target: {fileID: 9172483065449588445, guid: a8f692468cea80740a36ed2c42a9092b,
         type: 3}
       propertyPath: m_Tiles.Array.size
-      value: 331
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9172483065449588445, guid: a8f692468cea80740a36ed2c42a9092b,
         type: 3}
       propertyPath: m_TileAssetArray.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9172483065449588445, guid: a8f692468cea80740a36ed2c42a9092b,
         type: 3}
       propertyPath: m_TileSpriteArray.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9172483065449588445, guid: a8f692468cea80740a36ed2c42a9092b,
         type: 3}
       propertyPath: m_TileMatrixArray.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9172483065449588445, guid: a8f692468cea80740a36ed2c42a9092b,
         type: 3}
       propertyPath: m_TileColorArray.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9172483065449588445, guid: a8f692468cea80740a36ed2c42a9092b,
         type: 3}
@@ -7969,22 +8041,32 @@ PrefabInstance:
     - target: {fileID: 9172483065449588445, guid: a8f692468cea80740a36ed2c42a9092b,
         type: 3}
       propertyPath: m_Origin.x
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9172483065449588445, guid: a8f692468cea80740a36ed2c42a9092b,
         type: 3}
       propertyPath: m_Origin.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9172483065449588445, guid: a8f692468cea80740a36ed2c42a9092b,
         type: 3}
       propertyPath: m_Size.x
-      value: 21
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9172483065449588445, guid: a8f692468cea80740a36ed2c42a9092b,
         type: 3}
       propertyPath: m_Size.y
-      value: 21
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9172483065449588445, guid: a8f692468cea80740a36ed2c42a9092b,
+        type: 3}
+      propertyPath: m_TileAnchor.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9172483065449588445, guid: a8f692468cea80740a36ed2c42a9092b,
+        type: 3}
+      propertyPath: m_TileAnchor.y
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8f692468cea80740a36ed2c42a9092b, type: 3}

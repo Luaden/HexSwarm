@@ -12,6 +12,6 @@ public interface IUnit
 
     IReadOnlyList<IAbility> Abilites { get; }
     IEnumerable<Vector3Int> CalcuateValidNewLocation(IAbility move);
-    IEnumerable<Vector3Int> DiscoverHits(Vector3Int location, IAbility move, Direction refernce = Direction.Zero);
+    IEnumerable<ICell> DiscoverHits(Vector3Int location, IAbility move, Direction refernce = Direction.Zero);
 }
 

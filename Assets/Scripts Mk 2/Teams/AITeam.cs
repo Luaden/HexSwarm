@@ -185,7 +185,7 @@ public class AITeam : Team
         foreach (Vector3Int location in results)
         {
             IEnumerable<Vector3Int> path = pathfinder.FindPath(unit.Location, location);
-            IEnumerable<Vector3Int> hits = unit.DiscoverHits(location, ability);
+            IEnumerable<Vector3Int> hits = unit.DiscoverHits(location, ability).Select(X=>X.GridPosition);
 
             if (hits == default)
                 continue;

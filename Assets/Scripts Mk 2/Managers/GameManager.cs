@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-//[RequireComponent(typeof(ConfigManager))]
+
 public class GameManager : MonoBehaviour, IGameManager
 {
     public static IBattlefieldManager Battlefield { get; protected set; }
