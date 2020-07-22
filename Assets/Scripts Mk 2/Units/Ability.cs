@@ -6,21 +6,22 @@ using System;
 [System.Serializable]
 public class Ability : IAbility
 {
-    public static IReadOnlyDictionary<Direction, Func<Vector3Int, Vector3Int>> Transforms
-        = new Dictionary<Direction, Func<Vector3Int, Vector3Int>>()
+    public static IReadOnlyDictionary<int, Quaternion> Transforms
+        = new Dictionary<int, Quaternion>()
      {
-            {Direction.Sixty,       (Vector3Int s)=>{ return new Vector3Int(s.y,s.x,s.z); }  },
-            {Direction.One20,       (Vector3Int s)=>{ return new Vector3Int(s.z,s.x,s.y); }  },
-            {Direction.One80,       (Vector3Int s)=>{ return new Vector3Int(s.z,s.y,s.x); }  },
-            {Direction.Two40,       (Vector3Int s)=>{ return new Vector3Int(s.y,s.z,s.x); }  },
-            {Direction.Threehundred,(Vector3Int s)=>{ return new Vector3Int(s.x,s.z,s.y); }  },
+            {(int)Direction.Sixty,       Quaternion.AngleAxis(60,new Vector3(0.6f,0.6f,0.6f))},
+            {(int)Direction.One20,       Quaternion.AngleAxis(120,new Vector3(0.6f,0.6f,0.6f))},
+            {(int)Direction.One80,       Quaternion.AngleAxis(180,new Vector3(0.6f,0.6f,0.6f))},
+            {(int)Direction.Two40,       Quaternion.AngleAxis(240,new Vector3(0.6f,0.6f,0.6f))},
+            {(int)Direction.Threehundred,Quaternion.AngleAxis(300,new Vector3(0.6f,0.6f,0.6f))},
      };
+
 
     public static IEnumerable<Vector3Int> RotateAbility(Direction direction, IEnumerable<Vector3Int> ability)
     {
-        Func<Vector3Int, Vector3Int> transform;
-        if (Transforms.TryGetValue(direction, out transform))
-            return ability.Select(X => transform(X));
+        Quaternion transform;
+        if (Transforms.TryGetValue((int)direction, out transform))
+            return ability.Select(X => Vector3Int.RoundToInt(transform * X));
         return ability;
     }
 

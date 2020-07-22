@@ -9,6 +9,10 @@ public class TestingGameManager : GameManager
     [SerializeField] protected Sprite Team2Icon;
     [SerializeField] protected Unit Team2Unit;
 
+    protected new void Start()
+    {
+        base.Start();
+    }
 
     [ContextMenu("lets see it")]
     protected new void StartLevel()
@@ -44,8 +48,9 @@ public class TestingGameManager : GameManager
         EndTurn();
     }
 
-    private void Update()
+    private new void Update()
     {
+        base.Update();
         if(Input.GetMouseButtonDown(0))
         {
             ICell cell;

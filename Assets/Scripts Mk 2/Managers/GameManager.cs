@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-//[RequireComponent(typeof(ConfigManager))]
+
 public class GameManager : MonoBehaviour, IGameManager
 {
     public static IBattlefieldManager Battlefield { get; protected set; }
@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour, IGameManager
     public static UnitAVController UnitAVController { get; protected set; }
 
     [SerializeField] protected string battlefieldName; 
+
 
     protected Player player1;
     public Team Player1 => player1;

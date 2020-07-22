@@ -236,7 +236,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     public ICell GetValidCell(Vector3Int worldLocation)
     {
         ICell location;
-        gridLookup.TryGetValue(worldLocation, out location);
+        worldLookup.TryGetValue(worldLocation, out location);
         return location;
     }
 

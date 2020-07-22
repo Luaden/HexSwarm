@@ -19,6 +19,19 @@ public class TestingAbilityDisplay : MonoBehaviour
     [SerializeField] protected Quaternion gridAngle;
     [SerializeField] protected Vector3Int gridDelta;
 
+    [ContextMenu("BlurtOptions")]
+    public void Blurt()
+    {
+        foreach(var quartPair in Ability.Transforms)
+        {
+            Debug.Log(quartPair.Value.eulerAngles);
+            float angle;
+            Vector3 axis;
+            quartPair.Value.ToAngleAxis(out angle, out axis);
+            Debug.Log(string.Format("angle :{0}, axis {1}", angle, axis));
+
+        }
+    }
 
 
     [ContextMenu("CheckAngles")]
@@ -30,10 +43,18 @@ public class TestingAbilityDisplay : MonoBehaviour
         ICell thing2 = GameManager.Battlefield.GetValidCell(worldDestination);
         if (thing2 == default)
             return;
+         
 
-        worldDelta = (worldOrigin - worldDestination);
-        worldAngle = Quaternion.FromToRotation(worldOrigin, worldDestination);
+        worldDelta.x = worldOrigin.x - worldDestination.x;
+        worldDelta.y = worldOrigin.y - worldDestination.y;
+        worldDelta.z = worldOrigin.z - worldDestination.z;
 
+
+        Quaternion resultAngle = Quaternion.FromToRotation(worldOrigin, worldDestination);
+        worldAngle.x = resultAngle.x;
+        worldAngle.y = resultAngle.y;
+        worldAngle.z = resultAngle.z;
+        worldAngle.w = resultAngle.w;
         gridOrigin = thing.GridPosition;
         gridDestination = thing2.GridPosition;
         gridDelta = gridOrigin - gridDestination;
