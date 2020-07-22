@@ -25,4 +25,5 @@ public interface IBattlefieldManager
     void MoveUnit(Vector3Int unitPosition, Vector3Int destination);
     void DestroyUnit(Vector3Int unitPosition);
     Vector3 GetWorldLocation(Vector3Int location);
+    IEnumerable<ICell> GetValidCells(Vector3Int gridOrigin, IEnumerable<Vector3Int> worldOffsets);
 }

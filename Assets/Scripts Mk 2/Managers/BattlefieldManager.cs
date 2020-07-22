@@ -11,14 +11,15 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     [SerializeField] protected Tilemap highlightMap;
 
     protected Grid mapGrid;
-    protected Dictionary<Vector3Int, ICell> world = new Dictionary<Vector3Int, ICell>();
+    protected Dictionary<Vector3Int, ICell> gridLookup = new Dictionary<Vector3Int, ICell>();
+    protected Dictionary<Vector3Int, ICell> worldLookup = new Dictionary<Vector3Int, ICell>();
     protected List<ICell> highlightedCells = new List<ICell>();
     protected List<ICell> neighbors;
     protected ICell checkCell;
     protected ICell fromCell;
     protected ICell toCell;
 
-    public IReadOnlyDictionary<Vector3Int, ICell> World => world;
+    public IReadOnlyDictionary<Vector3Int, ICell> World => gridLookup;
 
     #region Map Generation
     public void GenerateGrid(int gridHeight, MapShape mapShape = MapShape.Hexagon)
@@ -32,7 +33,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     {
         groundMap.ClearAllTiles();
         highlightMap.ClearAllTiles();
-        world.Clear();
+        gridLookup.Clear();
     }
 
     protected void GenerateHexagon(int radius)
@@ -58,10 +59,12 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
     protected void GenerateCell(Vector3Int gridPos, Tile tile)
     {
-        Vector3 worldPosition = mapGrid.CellToWorld(gridPos);
+        Vector3Int worldPosition = new Vector3Int(gridPos.x - gridPos.y / 2, gridPos.y, -(gridPos.x + gridPos.y/2));
         Cell newCell = new Cell(gridPos, worldPosition, default, tile);
 
-        world.Add(gridPos, newCell);
+        gridLookup.Add(gridPos, newCell);
+        worldLookup.Add(worldPosition, newCell);
+
         groundMap.SetTile(gridPos, tile);
     }
     #endregion
@@ -100,7 +103,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         }
 
         ICell originCell;
-        world.TryGetValue(origin, out originCell);
+        gridLookup.TryGetValue(origin, out originCell);
         neighbors.Remove(originCell);
         return neighbors;
     }
@@ -112,7 +115,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         for (int i = xMin; i <= xMax; i++)
         {
             currentLoc = new Vector3Int(i, y, 0);
-            if (world.TryGetValue(currentLoc, out currentCell))
+            if (gridLookup.TryGetValue(currentLoc, out currentCell))
                 neighbors.Add(currentCell as Cell);
         }
     }
@@ -163,7 +166,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     public bool CheckForUnit(Vector3Int location)
     {
         ICell cell;
-        world.TryGetValue(location, out cell);
+        gridLookup.TryGetValue(location, out cell);
 
         if (cell.Unit != null)
             return true;
@@ -221,6 +224,24 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     }
 
 
+
+
     protected void Awake() => mapGrid = GetComponent<Grid>();
+
+    public IEnumerable<ICell> GetValidCells(Vector3Int gridOrigin, IEnumerable<Vector3Int> worldOffsets)
+    {
+        List<ICell> foundcells = new List<ICell>();
+        ICell origin;
+        if (gridLookup.TryGetValue(gridOrigin, out origin))
+            return System.Array.Empty<ICell>();
+
+        foreach(Vector3Int worldOffset in worldOffsets)
+        {
+            ICell target;
+            if (worldLookup.TryGetValue(origin.WorldPosition + worldOffset, out target))
+                foundcells.Add(target);
+        }
+        return foundcells;
+    }
 }
 
