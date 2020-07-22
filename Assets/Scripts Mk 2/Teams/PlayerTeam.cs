@@ -62,19 +62,6 @@ public class Player : Team
     {
         gameManager.InspectUnitUnderMouse();
 
-        if ((selectedUnit != default)&& (gameManager.DisplayedUnit != default))
-            
-
-
-        if (selectedUnit != gameManager.DisplayedUnit) && )
-        {
-            (gameManager.DisplayedUnit.Team == this)
-            selectedUnit = gameManager.DisplayedUnit;
-            return;
-        }
-
-
-
     }
 
     public void GetMouseInput()
