@@ -12,7 +12,11 @@ public class GameManager : MonoBehaviour, IGameManager
     public static SelectedUnitPanel SelectedUnitPanel { get; protected set; }
     public static TurnOrderDisplay TurnOrderDisplay { get; protected set; }
     public static UnitAVController UnitAVController { get; protected set; }
-    
+
+    [SerializeField] protected UnitManager unitManager = new UnitManager();
+    public UnitManager UnitManager => unitManager;
+
+
     protected readonly Queue<ITeam> activeTeams = new Queue<ITeam>();
     protected Player player1;
     protected int turnCounter;
@@ -179,5 +183,5 @@ public class GameManager : MonoBehaviour, IGameManager
             cell.GridPosition);
     }
 
-    protected void GetUnitAbility(int abilityIndex) => selectedAbility = DisplayedUnit.Abilites[abilityIndex];
+    protected void GetUnitAbility(int abilityIndex) => selectedAbility = DisplayedUnit.Abilites.ElementAt(abilityIndex);
 }

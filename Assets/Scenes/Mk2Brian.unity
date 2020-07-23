@@ -452,7 +452,119 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a619b0f41cf91a14288b95705db566b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  battlefieldName: 
+  abilityManager:
+    EditorList:
+    - Id: 129
+      name: Spawn
+      description: Spawns unit to the right
+      icon: {fileID: 0}
+      defaultRanges:
+        movementRange:
+        - {x: 1, y: 0, z: 0}
+        damageRange:
+        - {x: 1, y: 0, z: -1}
+      movementRange: 0
+      isJump: 0
+    - Id: 136
+      name: Spray and Prey
+      description: massive sprayDamage
+      icon: {fileID: 0}
+      defaultRanges:
+        movementRange:
+        - {x: 1, y: 0, z: 0}
+        damageRange:
+        - {x: 0, y: 1, z: -1}
+        - {x: 1, y: 1, z: -2}
+        - {x: 1, y: 0, z: -1}
+        - {x: 2, y: 0, z: -1}
+        - {x: 1, y: -1, z: -1}
+        - {x: 2, y: -1, z: -1}
+      movementRange: 1
+      isJump: 0
+    - Id: 264
+      name: Uhh they don't have eyes
+      description: fires at range
+      icon: {fileID: 0}
+      defaultRanges:
+        movementRange:
+        - {x: 1, y: 0, z: 0}
+        damageRange:
+        - {x: 2, y: 0, z: -2}
+        - {x: 3, y: 0, z: -3}
+      movementRange: 2
+      isJump: 0
+    - Id: 132
+      name: Quick burst
+      description: small movement medum damage
+      icon: {fileID: 0}
+      defaultRanges:
+        movementRange:
+        - {x: 1, y: 0, z: 0}
+        damageRange:
+        - {x: 1, y: 1, z: -2}
+        - {x: 1, y: 0, z: -1}
+        - {x: 2, y: 0, z: -2}
+        - {x: 2, y: -1, z: -1}
+      movementRange: 2
+      isJump: 0
+    - Id: 260
+      name: 
+      description: small movement medum damage
+      icon: {fileID: 0}
+      defaultRanges:
+        movementRange:
+        - {x: 1, y: 0, z: 0}
+        damageRange:
+        - {x: 1, y: 1, z: -2}
+        - {x: 1, y: 0, z: -1}
+        - {x: 2, y: 0, z: -2}
+        - {x: 2, y: -1, z: -1}
+      movementRange: 5
+      isJump: 0
+    - Id: 144
+      name: Clone
+      description: I heard you like nanos
+      icon: {fileID: 0}
+      defaultRanges:
+        movementRange:
+        - {x: 1, y: 0, z: 0}
+        damageRange:
+        - {x: 1, y: 0, z: -1}
+      movementRange: 0
+      isJump: 0
+    - Id: 272
+      name: Hexxagon? never heard of it
+      description: aoe short leap attack
+      icon: {fileID: 0}
+      defaultRanges:
+        movementRange:
+        - {x: 1, y: 0, z: 0}
+        damageRange:
+        - {x: -1, y: 1, z: 0}
+        - {x: 0, y: 1, z: -1}
+        - {x: -1, y: 0, z: 1}
+        - {x: 1, y: 0, z: -1}
+        - {x: 0, y: -1, z: 1}
+        - {x: 1, y: -1, z: 0}
+      movementRange: 0
+      isJump: 1
+    - Id: 528
+      name: I have a plan attack
+      description: absorb all enimies units in a line
+      icon: {fileID: 0}
+      defaultRanges:
+        movementRange:
+        - {x: 1, y: 0, z: -1}
+        - {x: 2, y: 0, z: -2}
+        - {x: 3, y: 0, z: -3}
+        damageRange:
+        - {x: 1, y: 0, z: -1}
+        - {x: 2, y: 0, z: -2}
+        - {x: 3, y: 0, z: -3}
+      movementRange: 3
+      isJump: 1
+  unitManager:
+    EditorList: []
   Team1Icon: {fileID: 21300000, guid: 23716a8d47909fe428596134d68887d1, type: 3}
   Team1Unit:
     id: 0
@@ -460,7 +572,11 @@ MonoBehaviour:
     name: Grey Goo
     description: well it's not tecnically grey
     ablities:
-    - defaultRanges:
+    - Id: 0
+      name: 
+      description: 
+      icon: {fileID: 0}
+      defaultRanges:
         movementRange: []
         damageRange: []
       movementRange: 3
@@ -473,11 +589,19 @@ MonoBehaviour:
     name: Tank
     description: This will work
     ablities:
-    - defaultRanges:
+    - Id: 0
+      name: 
+      description: 
+      icon: {fileID: 0}
+      defaultRanges:
         movementRange: []
         damageRange: []
       movementRange: 3
       isJump: 0
+  ability1Icon: {fileID: 0}
+  ability2Icon: {fileID: 0}
+  ability3Icon: {fileID: 0}
+  ability4Icon: {fileID: 0}
 --- !u!114 &1607472742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,7 +623,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1759513604}
-  - component: {fileID: 1759513603}
   m_Layer: 0
   m_Name: BrianTesting
   m_TagString: Untagged
@@ -507,34 +630,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1759513603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1759513602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6cd6d98a1dc8d84dabd7a0e40d2b9c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TestingAblity:
-    defaultRanges:
-      movementRange: []
-      damageRange:
-      - {x: 1, y: 0, z: -1}
-    movementRange: 0
-    isJump: 0
-  worldOrigin: {x: 0, y: 0, z: 0}
-  direction: 0
-  worldDestination: {x: 0, y: 0, z: 0}
-  worldAngle: {x: 0, y: 0, z: 0, w: 0}
-  worldDelta: {x: 0, y: 0, z: 0}
-  gridOrigin: {x: 0, y: 0, z: 0}
-  gridDestination: {x: 0, y: 0, z: 0}
-  gridAngle: {x: 0, y: 0, z: 0, w: 0}
-  gridDelta: {x: 0, y: 0, z: 0}
 --- !u!4 &1759513604
 Transform:
   m_ObjectHideFlags: 0
@@ -548,6 +643,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2038135314
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2038135315}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2038135315
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038135314}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 592.5982, y: 158.08656, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2102556315 stripped
 MonoBehaviour:

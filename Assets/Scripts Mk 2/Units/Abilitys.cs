@@ -9,6 +9,13 @@ public enum Abilitys
     Heli = 1 << 2,
     Infantry = 1 << 3,
     Nanos = 1 << 4,
-    UberNano = 1 << 5,
-    UberTank = 1 << 6,
+    UberNano= 1 << 5,
+    UberTank= 1 << 6,
+    Opt1    = 1 << 7,
+    Opt2    = 1 << 8,
+    Opt3    = 1 << 9,
+    Opt4    = 1 << 10,
+    Opt5    = 1 << 11,
+    Opt6    = 1 << 12,
+
 }

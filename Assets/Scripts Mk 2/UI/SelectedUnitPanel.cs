@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class SelectedUnitPanel : CoreUIElement<IUnit>
 {
@@ -48,37 +49,37 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>
         UpdateText(unitName, unit.Name);
         UpdateText(unitDescription, unit.Description);
 
-        UpdateSprite(ability1Image, unit.Abilites[0].Icon);
-        UpdateText(ability1Name, unit.Abilites[0].Name);
-        UpdateText(ability1Description, unit.Abilites[0].Description);
+        UpdateSprite(ability1Image, unit.Abilites.ElementAt(0).Icon);
+        UpdateText(ability1Name, unit.Abilites.ElementAt(0).Name);
+        UpdateText(ability1Description, unit.Abilites.ElementAt(0).Description);
 
-        UpdateSprite(ability2Image, unit.Abilites[1].Icon);
-        UpdateText(ability2Name, unit.Abilites[1].Name);
-        UpdateText(ability2Description, unit.Abilites[1].Description);
+        //UpdateSprite(ability2Image, unit.Abilites[1].Icon);
+        //UpdateText(ability2Name, unit.Abilites[1].Name);
+        //UpdateText(ability2Description, unit.Abilites[1].Description);
 
-        if (unit.Abilites.Count < 3)
-        {
-            ability3Button.gameObject.SetActive(false);
-            ability4Button.gameObject.SetActive(false);
-        }
+        //if (unit.Abilites.Count < 3)
+        //{
+        //    ability3Button.gameObject.SetActive(false);
+        //    ability4Button.gameObject.SetActive(false);
+        //}
 
-        if (unit.Abilites.Count >= 3)
-        {
-            ability3Button.gameObject.SetActive(true);
+        //if (unit.Abilites.Count >= 3)
+        //{
+        //    ability3Button.gameObject.SetActive(true);
 
-            UpdateSprite(ability3Image, unit.Abilites[1].Icon);
-            UpdateText(ability3Name, unit.Abilites[1].Name);
-            UpdateText(ability3Description, unit.Abilites[1].Description);
-        }
+        //    UpdateSprite(ability3Image, unit.Abilites[1].Icon);
+        //    UpdateText(ability3Name, unit.Abilites[1].Name);
+        //    UpdateText(ability3Description, unit.Abilites[1].Description);
+        //}
 
-        if (unit.Abilites.Count == 4)
-        {
-            ability4Button.gameObject.SetActive(true);
+        //if (unit.Abilites.Count == 4)
+        //{
+        //    ability4Button.gameObject.SetActive(true);
 
-            UpdateSprite(ability4Image, unit.Abilites[1].Icon);
-            UpdateText(ability4Name, unit.Abilites[1].Name);
-            UpdateText(ability4Description, unit.Abilites[1].Description);
-        }
+        //    UpdateSprite(ability4Image, unit.Abilites[1].Icon);
+        //    UpdateText(ability4Name, unit.Abilites[1].Name);
+        //    UpdateText(ability4Description, unit.Abilites[1].Description);
+        //}
 
     }
 
@@ -127,7 +128,7 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>
 
     public void UpdateSelectedAbility(int x)
     {
-        gameManager.SelectedAbility = gameManager.DisplayedUnit.Abilites[x];
+        gameManager.SelectedAbility = gameManager.DisplayedUnit.Abilites.ElementAt(x);
     }
 }
 

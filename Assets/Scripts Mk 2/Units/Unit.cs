@@ -6,15 +6,18 @@ using System.Linq;
 [System.Serializable]
 public class Unit : IUnit
 {
-    public static int UnitIDAssigner = -1;
+    public static int UnitIDAssigner = 1;
     
-    [SerializeField]protected int id = -1;
-    public int ID
+    [SerializeField]protected Units id = Units.empty;
+    public Units ID
     {
         get
         {
-            if (id == -1)
-                id = ++UnitIDAssigner;
+            if (id == Units.empty)
+            {
+                id = (Units)UnitIDAssigner;
+                UnitIDAssigner <<= 1;
+            }
             return id;
         }
     }
@@ -22,14 +25,14 @@ public class Unit : IUnit
     [SerializeField] protected Sprite icon;
     public Sprite Icon { get => icon; set => icon = value; }
 
-    public Unit() { if (ID == -1) throw new System.InvalidOperationException(); }
+    public Unit() { if (ID == Units.empty) throw new System.InvalidOperationException(); }
     public Unit(IUnit unit) : this()
     {
         id = unit.ID;
         name = unit.Name;
         description = unit.Description;
         icon = unit.Icon;
-        ablities.AddRange(unit.Abilites.Select(X=>X as Ability));
+        ablities.AddRange(((Unit)unit).ablities);
     }
 
     [SerializeField] protected string name;
@@ -42,8 +45,8 @@ public class Unit : IUnit
 
     public Vector3Int Location { get; set; }
 
-    [SerializeField] protected List<Ability> ablities = new List<Ability>(); 
-    public IReadOnlyList<IAbility> Abilites => ablities;
+    [SerializeField] protected List<SOAbility> ablities = new List<SOAbility>(); 
+    public IEnumerable<IAbility> Abilites => ablities.Select(X=>((IAbility)(Ability)X));
 
 
 
