@@ -54,7 +54,13 @@ public class GameManager : MonoBehaviour, IGameManager
     public void ResolveHighlight(Vector3Int mousePos)
     {
         Stack<Vector3Int> pathEnds = new Stack<Vector3Int>();
-        IEnumerable<Vector3Int> path = Pathing.FindPath(DisplayedUnit.Location, mousePos);
+        
+        IEnumerable<Vector3Int> path = Pathing.FindPath(
+            DisplayedUnit.Location,
+            mousePos,
+            !selectedAbility.IsJump,
+            selectedAbility.MovementRange);
+
         foreach (Vector3Int location in path)
             pathEnds.Push(location);
 
