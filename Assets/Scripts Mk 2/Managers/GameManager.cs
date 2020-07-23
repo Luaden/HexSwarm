@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour, IGameManager
     protected int turnCounter;
     protected int levelCounter;
     protected IAbility selectedAbility;
+    protected Vector3Int end;
+    protected Vector3Int secondEnd;
 
     public int TurnCounter => turnCounter;
     public int LevelCounter => levelCounter;
@@ -37,7 +39,6 @@ public class GameManager : MonoBehaviour, IGameManager
 
     public void InspectUnitUnderMouse()
     {
-        Debug.Log("Checking for unit");
         ICell selectedcell;
         if (!Battlefield.World.TryGetValue(GetMousePosition(), out selectedcell))
             return;
@@ -54,18 +55,36 @@ public class GameManager : MonoBehaviour, IGameManager
     public void ResolveHighlight(Vector3Int mousePos)
     {
         Stack<Vector3Int> pathEnds = new Stack<Vector3Int>();
-        
+                
         IEnumerable<Vector3Int> path = Pathing.FindPath(
             DisplayedUnit.Location,
             mousePos,
             !selectedAbility.IsJump,
             selectedAbility.MovementRange);
+        if (path == null)
+            return;
 
-        foreach (Vector3Int location in path)
-            pathEnds.Push(location);
+        if(path.Count() > 1)
+        {
+            foreach (Vector3Int location in path)
+                pathEnds.Push(location);
 
-        Vector3Int end = pathEnds.Pop();
-        Vector3Int secondEnd = pathEnds.Pop();
+            end = pathEnds.Pop();
+            secondEnd = pathEnds.Pop();
+        }
+
+        if(path.Count() == 1)
+        {
+            foreach (Vector3Int location in path)
+                pathEnds.Push(location);
+
+            end = DisplayedUnit.Location;
+            secondEnd = pathEnds.Pop();
+        }
+
+        if (path.Count() == 0)
+            return;
+        
         Direction angleOfAttack = GetDirection(secondEnd, end);
 
         Queue<ICell> moveCells = new Queue<ICell>();
@@ -96,13 +115,33 @@ public class GameManager : MonoBehaviour, IGameManager
     {
         if (unit.Team != activeTeams.Peek())
             return false;
+        if (path == null)
+            return false;
 
         List<IUnit> deaths = new List<IUnit>();
         Stack<Vector3Int> pathEnds = new Stack<Vector3Int>();
-        pathEnds.Union(path);
 
-        Vector3Int end = pathEnds.Pop();
-        Vector3Int secondEnd = pathEnds.Pop();
+        if (path.Count() > 1)
+        {
+            foreach (Vector3Int location in path)
+                pathEnds.Push(location);
+
+            end = pathEnds.Pop();
+            secondEnd = pathEnds.Pop();
+        }
+
+        if (path.Count() == 1)
+        {
+            foreach (Vector3Int location in path)
+                pathEnds.Push(location);
+
+            end = DisplayedUnit.Location;
+            secondEnd = pathEnds.Pop();
+        }
+
+        if (path.Count() == 0)
+            return false;
+
         Direction angleOfAttack = GetDirection(secondEnd, end);
 
         IEnumerable<ICell> attackLocations = ability.GetAttack(angleOfAttack, end);

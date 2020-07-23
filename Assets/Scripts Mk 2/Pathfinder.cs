@@ -67,8 +67,8 @@ public class Pathfinder
     }
 
     public IEnumerable<Vector3Int> FindPath(Vector3Int originVector, Vector3Int destinationVector, bool avoidUnits = true, int maxRange = int.MaxValue)
-    {
-        InitPathfinder();
+    {        
+        InitPathfinder();  
 
         closedSet.Clear();
         openSet.Clear();
@@ -77,8 +77,11 @@ public class Pathfinder
         PathfindingCell origin;
         PathfindingCell destination;
         allCells.TryGetValue(originVector, out origin);
-        allCells.TryGetValue(destinationVector, out destination);
 
+        if (!allCells.TryGetValue(destinationVector, out destination))
+            return null;
+
+        
 
         origin.FCost = 0;
         openSet.Add(origin.Location, origin);
