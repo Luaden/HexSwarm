@@ -30,8 +30,7 @@ public class GameManager : MonoBehaviour, IGameManager
     public int GridSize { get; set; }
 
     public IUnit DisplayedUnit { get; protected set; }
-    public IAbility SelectedAbility { get => selectedAbility; set => selectedAbility = value; }
-
+    public IAbility SelectedAbility => DisplayedUnit?.Abilites.ElementAtOrDefault(SelectedUnitPanel.LastSelected); 
 
     public Vector3Int GetMousePosition() => Battlefield.GetVectorByClick(Input.mousePosition);
 
@@ -44,10 +43,11 @@ public class GameManager : MonoBehaviour, IGameManager
         if (selectedcell.Unit == default)
             return;
 
-        if (DisplayedUnit != selectedcell.Unit)
-            SelectedUnitPanel.UpdateUI(selectedcell.Unit);
+        if (DisplayedUnit == selectedcell.Unit)
+            return;
 
         DisplayedUnit = selectedcell.Unit;
+        SelectedUnitPanel.UpdateUI(DisplayedUnit);
     }
 
     public bool NewGame()

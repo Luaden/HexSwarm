@@ -9,23 +9,12 @@ public class Unit : IUnit
     public static int UnitIDAssigner = 1;
     
     [SerializeField]protected Units id = Units.empty;
-    public Units ID
-    {
-        get
-        {
-            if (id == Units.empty)
-            {
-                id = (Units)UnitIDAssigner;
-                UnitIDAssigner <<= 1;
-            }
-            return id;
-        }
-    }
+    public Units ID => id;
 
     [SerializeField] protected Sprite icon;
     public Sprite Icon { get => icon; set => icon = value; }
 
-    public Unit() { if (ID == Units.empty) throw new System.InvalidOperationException(); }
+    public Unit() { }
     public Unit(IUnit unit) : this()
     {
         id = unit.ID;

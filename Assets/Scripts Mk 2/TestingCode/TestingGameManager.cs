@@ -5,17 +5,11 @@ using System.Collections.Generic;
 public class TestingGameManager : GameManager
 {
     [SerializeField] protected Sprite Team1Icon;
-    [SerializeField] protected Unit Team1Unit;
     [SerializeField] protected Sprite Team2Icon;
-    [SerializeField] protected Unit Team2Unit;
-    [SerializeField] protected Sprite ability1Icon;
-    [SerializeField] protected Sprite ability2Icon;
-    [SerializeField] protected Sprite ability3Icon;
-    [SerializeField] protected Sprite ability4Icon;
 
     protected new void Start()
     {
-        base.Start();
+        StartLevel();
     }
 
     [ContextMenu("lets see it")]
@@ -25,6 +19,8 @@ public class TestingGameManager : GameManager
 
         Battlefield.GenerateGrid(gridRange, MapShape.Hexagon);
         activeTeams.Clear();
+        DisplayedUnit = default;
+        SelectedUnitPanel.UpdateUI(DisplayedUnit);
 
         Player player2 = new Player(this, "Player2", "Gooier", Team2Icon, Teams.AI1,
             new Vector3Int(Random.Range(-gridRange / 4, gridRange / 4), gridRange / 2, 0),
@@ -32,7 +28,7 @@ public class TestingGameManager : GameManager
         activeTeams.Enqueue(player2);
 
         GenerateTeam(player2,
-             Team2Unit,
+             UnitManager[Units.Infantry],
              player2.StartPosition,
              gridRange / 4);
         Debug.Log("second player made.");
@@ -43,7 +39,7 @@ public class TestingGameManager : GameManager
        activeTeams.Enqueue(player1);
 
         GenerateTeam(player1,
-            Team1Unit,
+            UnitManager[Units.Nanos],
             new Vector3Int(Random.Range(-gridRange / 4, gridRange / 4), -gridRange / 2, 0),
             gridRange / 4);
         Debug.Log("First player made.");

@@ -34,6 +34,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         groundMap.ClearAllTiles();
         highlightMap.ClearAllTiles();
         gridLookup.Clear();
+        worldLookup.Clear();
     }
 
     protected void GenerateHexagon(int radius)

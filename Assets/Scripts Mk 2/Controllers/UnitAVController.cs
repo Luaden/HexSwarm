@@ -26,7 +26,7 @@ public class UnitAVController : MonoBehaviour
         if (!worldUnits.ContainsKey(unit))
             worldUnits.Add(unit, worldUnit);
 
-        worldUnit.GetComponent<SpriteRenderer>().sprite = unitSprites[(int)unit.ID];
+        worldUnit.GetComponent<SpriteRenderer>().sprite =unit.Icon;
         worldUnit.transform.position = GameManager.Battlefield.GetWorldLocation(unit.Location);
     }
 
