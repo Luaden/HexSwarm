@@ -7,6 +7,7 @@ public class PlayerTeam : Team
 {
     protected Dictionary<int, int> unitIdToLastSelectedMove;
     protected bool camControls = false;
+    protected Vector3Int mousePosHighlight;
 
     public PlayerTeam
         (GameManager gameManager,
@@ -53,6 +54,24 @@ public class PlayerTeam : Team
 
     public void GetMouseInput()
     {
+        if(gameManager.SelectedAbility != null && gameManager.DisplayedUnit != null)
+        {
+            if(mousePosHighlight != gameManager.GetMousePosition())
+            {
+                mousePosHighlight = gameManager.GetMousePosition();
+
+                IEnumerable<Vector3Int> moveHighlightGrid = GameManager.Pathing.FindPath(
+                    gameManager.DisplayedUnit.Location,
+                    mousePosHighlight,
+                    !gameManager.SelectedAbility.IsJump,
+                    gameManager.SelectedAbility.MovementRange);
+
+                //IEnumerable<Vector3Int> attackHighlightGrid = 
+
+                //GameManager.Battlefield.HighlightGrid(moveHighlightGrid, )
+            }            
+        }
+
         if(Input.GetMouseButtonDown(0) && gameManager.SelectedAbility == null) 
         {
             gameManager.InspectUnitUnderMouse();
