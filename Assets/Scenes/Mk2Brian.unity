@@ -453,8 +453,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitManager:
     EditorList:
-    - {fileID: 11400000, guid: 5287f4df1be53c54a8d99dc9356b3ca4, type: 2}
     - {fileID: 11400000, guid: 01b85b05480e0e14daccdfc19833a17c, type: 2}
+    - {fileID: 11400000, guid: 5287f4df1be53c54a8d99dc9356b3ca4, type: 2}
     - {fileID: 11400000, guid: 1b33e950f2729694badf61b2fa96ce00, type: 2}
     - {fileID: 0}
   Team1Icon: {fileID: 21300000, guid: 23716a8d47909fe428596134d68887d1, type: 3}

@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class UnitManager : ISerializationCallbackReceiver
 {
-    [SerializeField] protected List<SOUnit> EditorList;
+    [SerializeField] protected List<SOUnit> EditorList = new List<SOUnit>();
     protected Dictionary<Units, SOUnit> createUnits = new Dictionary<Units, SOUnit>();
 
     public Unit this[Units key]

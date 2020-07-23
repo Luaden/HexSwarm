@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour, IGameManager
     public static TurnOrderDisplay TurnOrderDisplay { get; protected set; }
     public static UnitAVController UnitAVController { get; protected set; }
 
-    [SerializeField] protected UnitManager unitManager = new UnitManager();
+    [SerializeField] protected UnitManager unitManager;
     public UnitManager UnitManager => unitManager;
 
 
