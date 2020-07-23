@@ -43,8 +43,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a5f3f7f30d9c0f4084fb733d389b33b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldUnitPrefab: {fileID: 0}
-  unitSprites: []
+  worldUnitPrefab: {fileID: 5716365289145609130, guid: 9342a9dcf7e53af448f0e1c28264a4b2,
+    type: 3}
+  unitSprites:
+  - {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
+  - {fileID: 3026120706474155957, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
+  - {fileID: 3026120706474155957, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
+  - {fileID: -7377170927877912761, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
+  - {fileID: 8355217360322311386, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
   movementSounds: []
   attackSounds: []
   moveSpeed: 1

@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Linq;
-using System.Collections.Generic;
-
+using System.Linq;
+using System.Collections.Generic;
+
 public class SelectedUnitPanel : CoreUIElement<IUnit>, IButtonIndexer
 {
     [SerializeField] protected Image unitImage;
@@ -14,10 +14,10 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>, IButtonIndexer
     [SerializeField] protected List<AbilityDisplay> Abilites;
     [SerializeField] protected int lastSelected;
     public int LastSelected => lastSelected;
-    public void Start()
-    {
-        for (int i = 0; i < Abilites.Count; i++)
-            Abilites[i].Init(false, i, this);
+    public void Start()
+    {
+        for (int i = 0; i < Abilites.Count; i++)
+            Abilites[i].Init(false, i, this);
     }
 
     public override void UpdateUI(IUnit unit)
@@ -27,12 +27,12 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>, IButtonIndexer
 
         UpdateSprite(unitImage, unit.Icon);
         UpdateText(unitName, unit.Name);
-        UpdateText(unitDescription, unit.Description);
-
+        UpdateText(unitDescription, unit.Description);
+
         foreach (AbilityDisplay ablitydisplay in Abilites)
-            ablitydisplay.UpdateUI(unit.Abilites.ElementAtOrDefault(ablitydisplay.Index));
-
-        Buttonclicked(0);
+            ablitydisplay.UpdateUI(unit.Abilites.ElementAtOrDefault(ablitydisplay.Index));
+
+        Buttonclicked(0);
     }
 
     protected override bool ClearedIfEmpty(IUnit unit)
@@ -55,8 +55,8 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>, IButtonIndexer
         Abilites[lastSelected].IsSelected = false;
         lastSelected = x;
         Abilites[lastSelected].IsSelected = true;
-    }
-
-    public void Buttonclicked(int index) => UpdateSelectedAbility(index);
+    }
+
+    public void Buttonclicked(int index) => UpdateSelectedAbility(index);
 }
 

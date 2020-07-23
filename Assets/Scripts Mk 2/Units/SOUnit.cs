@@ -7,5 +7,5 @@ public class SOUnit: ScriptableObject
 {
     [SerializeField] protected Unit myUnit;
 
-    public static implicit operator Unit(SOUnit unit) => (unit == default)? default: unit.myUnit;
+    public static implicit operator Unit(SOUnit unit) => (unit == default) ? default : unit.myUnit;
 }

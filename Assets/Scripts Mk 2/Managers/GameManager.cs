@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
 
     protected readonly Queue<ITeam> activeTeams = new Queue<ITeam>();
-    protected Player player1;
+    protected PlayerTeam player1;
     protected int turnCounter;
     protected int levelCounter;
     protected IAbility selectedAbility;
@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
     public void InspectUnitUnderMouse()
     {
+        Debug.Log("Checking for unit");
         ICell selectedcell;
         if (!Battlefield.World.TryGetValue(GetMousePosition(), out selectedcell))
             return;
@@ -50,6 +51,38 @@ public class GameManager : MonoBehaviour, IGameManager
         SelectedUnitPanel.UpdateUI(DisplayedUnit);
     }
 
+    public void ResolveHighlight(Vector3Int mousePos)
+    {
+        Stack<Vector3Int> pathEnds = new Stack<Vector3Int>();
+        
+        IEnumerable<Vector3Int> path = Pathing.FindPath(
+            DisplayedUnit.Location,
+            mousePos,
+            !selectedAbility.IsJump,
+            selectedAbility.MovementRange);
+
+        foreach (Vector3Int location in path)
+            pathEnds.Push(location);
+
+        Vector3Int end = pathEnds.Pop();
+        Vector3Int secondEnd = pathEnds.Pop();
+        Direction angleOfAttack = GetDirection(secondEnd, end);
+
+        Queue<ICell> moveCells = new Queue<ICell>();
+        ICell cell;
+
+        foreach (Vector3Int location in path)
+        {
+            Battlefield.World.TryGetValue(location, out cell);
+            moveCells.Enqueue(cell);
+        }            
+        
+        IEnumerable<ICell> attackCells = selectedAbility.GetAttack(angleOfAttack, end);
+
+        Battlefield.HighlightGrid(moveCells, attackCells);
+
+    }
+
     public bool NewGame()
     {
         levelCounter = 0;
@@ -59,17 +92,29 @@ public class GameManager : MonoBehaviour, IGameManager
         return true;
     }
 
-    public bool PerformMove(IUnit unit, IAbility ablity, Vector3Int target, IEnumerable<Vector3Int> path)
+    public bool PerformMove(IUnit unit, IAbility ability, Vector3Int target, IEnumerable<Vector3Int> path)
     {
         if (unit.Team != activeTeams.Peek())
             return false;
 
-        IEnumerable<ICell> neighbors = Battlefield.GetNeighborCells(target);
-        List<IUnit> deaths = neighbors.Select(X => X.Unit).Where(X => X != default).Where(X => X.Team != unit.Team).ToList();
+        List<IUnit> deaths = new List<IUnit>();
+        Stack<Vector3Int> pathEnds = new Stack<Vector3Int>();
+        pathEnds.Union(path);
+
+        Vector3Int end = pathEnds.Pop();
+        Vector3Int secondEnd = pathEnds.Pop();
+        Direction angleOfAttack = GetDirection(secondEnd, end);
+
+        IEnumerable<ICell> attackLocations = ability.GetAttack(angleOfAttack, end);
+
+        foreach (ICell cell in attackLocations)
+            if (cell.Unit != null && cell.Unit.Team.TeamNumber == Teams.Player)
+                deaths.Add(cell.Unit);
 
         Battlefield.MoveUnit(unit.Location, target, path);
 
         ResolveDeaths(deaths, unit);
+        Battlefield.ClearHighlights();
         return true;
     }
 
@@ -96,6 +141,15 @@ public class GameManager : MonoBehaviour, IGameManager
         return true;
     }
 
+    public void ClearActiveUnit()
+    {
+        selectedAbility = null;
+        DisplayedUnit = null;
+
+        Battlefield.ClearHighlights();
+        SelectedUnitPanel.UpdateUI(null);
+    }
+
     protected void Awake()
     {
         if (Battlefield == null)
@@ -120,10 +174,25 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void Update()
     {
-        if (activeTeams.Count == 0)
-            return;
-        Player currentPlayer = activeTeams.Peek() as Player;
-        currentPlayer?.GetMouseInput();
+        //if (activeTeams.Count == 0)
+        //    return;
+        //PlayerTeam currentPlayer = activeTeams.Peek() as PlayerTeam;
+        //currentPlayer?.GetMouseInput();
+    }
+
+    public Direction GetDirection(Vector3Int secondTolast, Vector3Int lastPostion)
+    {                    
+        if (secondTolast.x < lastPostion.x && secondTolast.y > lastPostion.y)
+            return Direction.Sixty;
+        if (secondTolast.x == lastPostion.x && secondTolast.y > lastPostion.y)
+            return Direction.One20;
+        if (secondTolast.x < lastPostion.x && secondTolast.y == lastPostion.y)
+            return Direction.One80;
+        if (secondTolast.x > lastPostion.x && secondTolast.y < lastPostion.y)
+            return Direction.Two40;
+        if (secondTolast.x == lastPostion.x && secondTolast.y < lastPostion.y)
+            return Direction.Threehundred;
+        return Direction.Zero;
     }
 
     protected void RemoveTeam(ITeam team)
@@ -174,7 +243,7 @@ public class GameManager : MonoBehaviour, IGameManager
         return true;
     }
 
-    protected void GenerateTeam(Player team, Unit template, Vector3Int centerPoint, int radius = 0)
+    protected void GenerateTeam(Team team, Unit template, Vector3Int centerPoint, int radius = 0)
     {
         GenerateUnitForTeam(team, template, centerPoint);
         foreach (ICell cell in Battlefield.GetNeighborCells(centerPoint, radius))
@@ -182,6 +251,4 @@ public class GameManager : MonoBehaviour, IGameManager
             template,
             cell.GridPosition);
     }
-
-    protected void GetUnitAbility(int abilityIndex) => selectedAbility = DisplayedUnit.Abilites.ElementAt(abilityIndex);
 }

@@ -7,12 +7,12 @@ using UnityEngine;
 public class UnitAVController : MonoBehaviour
 {
     [SerializeField] protected GameObject worldUnitPrefab;
-    [SerializeField] protected Sprite[] unitSprites;
     [SerializeField] protected AudioClip[] movementSounds;
     [SerializeField] protected AudioClip[] attackSounds;
     [SerializeField] protected float moveSpeed = 1f;
     [SerializeField] protected float dieSpeed;
 
+    protected GameManager gameManager;
     protected ConfigManager configManager;
     protected Dictionary<IUnit, GameObject> worldUnits = new Dictionary<IUnit, GameObject>();
     protected Dictionary<Queue<Vector3>, GameObject> worldUnitPath = new Dictionary<Queue<Vector3>, GameObject>();
@@ -26,7 +26,7 @@ public class UnitAVController : MonoBehaviour
         if (!worldUnits.ContainsKey(unit))
             worldUnits.Add(unit, worldUnit);
 
-        worldUnit.GetComponent<SpriteRenderer>().sprite =unit.Icon;
+        worldUnit.GetComponent<SpriteRenderer>().sprite = unit.Icon;
         worldUnit.transform.position = GameManager.Battlefield.GetWorldLocation(unit.Location);
     }
 
@@ -69,6 +69,8 @@ public class UnitAVController : MonoBehaviour
     {
         if (configManager == null)
             configManager = FindObjectOfType<ConfigManager>();
+        if (gameManager == null)
+            gameManager = FindObjectOfType<GameManager>();
     }
 
     protected void Update()
@@ -109,9 +111,9 @@ public class UnitAVController : MonoBehaviour
 
                 if(sprite.color.a == 0)
                 {
-                    Debug.Log("Killing " + deadUnit);
-                    currentUnitsToDie.Remove(deadUnit);
+                    totalUnitsToDie.Remove(deadUnit);
                     Destroy(deadUnit);
+                    break;
                 }
 
             }            

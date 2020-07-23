@@ -12,7 +12,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
     protected Grid mapGrid;
     protected Dictionary<Vector3Int, ICell> gridLookup = new Dictionary<Vector3Int, ICell>();
-    protected Dictionary<Vector3Int, ICell> worldLookup = new Dictionary<Vector3Int, ICell>();
+    protected Dictionary<Vector3Int, ICell> threeAxisLookup = new Dictionary<Vector3Int, ICell>();
     protected List<ICell> highlightedCells = new List<ICell>();
     protected List<ICell> neighbors;
     protected ICell checkCell;
@@ -34,7 +34,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         groundMap.ClearAllTiles();
         highlightMap.ClearAllTiles();
         gridLookup.Clear();
-        worldLookup.Clear();
+        threeAxisLookup.Clear();
     }
 
     protected void GenerateHexagon(int radius)
@@ -64,11 +64,11 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         if (gridPos.y % 2 == -1)
             newX++;
         int newZ = -(newX + gridPos.y);
-        Vector3Int worldPosition = new Vector3Int(newX, gridPos.y, newZ);
-        Cell newCell = new Cell(gridPos, worldPosition, default, tile);
+        Vector3Int threeAxisPosition = new Vector3Int(newX, gridPos.y, newZ);
+        Cell newCell = new Cell(gridPos, threeAxisPosition, GetWorldLocation(gridPos), default, tile);
 
         gridLookup.Add(gridPos, newCell);
-        worldLookup.Add(worldPosition, newCell);
+        threeAxisLookup.Add(threeAxisPosition, newCell);
 
         groundMap.SetTile(gridPos, tile);
     }
@@ -230,15 +230,12 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     }
 
 
-
-
     protected void Awake() => mapGrid = GetComponent<Grid>();
-
 
     public ICell GetValidCell(Vector3Int worldLocation)
     {
         ICell location;
-        worldLookup.TryGetValue(worldLocation, out location);
+        threeAxisLookup.TryGetValue(worldLocation, out location);
         return location;
     }
 
@@ -252,7 +249,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         foreach(Vector3Int worldOffset in worldOffsets)
         {
             ICell target;
-            if (worldLookup.TryGetValue(origin.WorldPosition + worldOffset, out target))
+            if (threeAxisLookup.TryGetValue(origin.ThreeAxisPosition + worldOffset, out target))
                 foundcells.Add(target);
         }
         return foundcells;

@@ -22,7 +22,7 @@ public class TestingGameManager : GameManager
         DisplayedUnit = default;
         SelectedUnitPanel.UpdateUI(DisplayedUnit);
 
-        Player player2 = new Player(this, "Player2", "Gooier", Team2Icon, Teams.AI1,
+        PlayerTeam player2 = new PlayerTeam(this, "Player2", "Gooier", Team2Icon, Teams.AI1,
             new Vector3Int(Random.Range(-gridRange / 4, gridRange / 4), gridRange / 2, 0),
             new HashSet<IUnit>());
         activeTeams.Enqueue(player2);
@@ -33,7 +33,7 @@ public class TestingGameManager : GameManager
              gridRange / 4);
         Debug.Log("second player made.");
 
-        player1 = new Player(this, "Player1", "First Goo", Team1Icon, Teams.Player,
+        player1 = new PlayerTeam(this, "Player1", "First Goo", Team1Icon, Teams.Player,
         new Vector3Int(Random.Range(-gridRange / 4, gridRange / 4), -gridRange / 2, 0),
         new HashSet<IUnit>());
        activeTeams.Enqueue(player1);
@@ -51,7 +51,7 @@ public class TestingGameManager : GameManager
     {
         if (activeTeams.Count == 0)
             return;
-        Player currentPlayer = activeTeams.Peek() as Player;
+        PlayerTeam currentPlayer = activeTeams.Peek() as PlayerTeam;
         currentPlayer?.GetMouseInput();
     }
 

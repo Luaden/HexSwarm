@@ -26,19 +26,21 @@ public class AITeam : Team
     protected Stack<Vector3Int> teamRange = new Stack<Vector3Int>();
 
     public AITeam
-        (string name,
+        (GameManager gameManager,
+        string name,
         string description,
         Sprite icon,
         Teams teamNumber,
-        Vector3Int origin)
+        Vector3Int origin,
+        HashSet<IUnit> units)
     {
-        //this.gameManager = GameManager.instance;
-        //battlefieldManager = gameManager.BattlefieldManager;
+        this.gameManager = gameManager;
         Name = name;
         Description = description;
         Icon = icon;
         TeamNumber = teamNumber;
         StartPosition = origin;
+        this.units = units;
     }
 
     public override void StartTurn()
@@ -53,9 +55,8 @@ public class AITeam : Team
 
     protected void TeamInit()
     {
-        controlledArea = units.Count();
-        //Need a reference for this.
-        //detectionRange = Mathf.RoundToInt(defaultDetectionRange * GameManager.Difficulty);
+        controlledArea = units.Count();        
+        detectionRange = Mathf.RoundToInt(defaultDetectionRange * ConfigManager.instance.GameDifficulty);
         teamRange = battlefieldManager.GetNeighborCells(StartPosition, detectionRange * 2) as Stack<Vector3Int>;
         enemiesSeen.Clear();
         unitsUnmoved.Clear();
@@ -270,11 +271,10 @@ public class AITeam : Team
 
     protected bool ResolvedAttackDifficult()
     {
-        int i = UnityEngine.Random.Range(1, 11); // * GameManager;
-        //Need a reference here
-        //i *= GameManager.Difficulty;
+        int i = Random.Range(1, 11);
+        float j = i * ConfigManager.instance.GameDifficulty;
 
-        if (i <= 5)
+        if (j <= 5)
             return false;
         return true;
     }

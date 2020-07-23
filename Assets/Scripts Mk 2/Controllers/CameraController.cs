@@ -10,8 +10,8 @@ public class CameraController : MonoBehaviour
     protected GameManager gameManager;
 
     //State variables
-    protected float xMax = 2;
-    protected float yMax = 1;
+    protected float xMax = 8.5f;
+    protected float yMax = 4.5f;
     protected float xBoundary;
     protected float yBoundary;
     protected float sensitivityModifier = 1f;
