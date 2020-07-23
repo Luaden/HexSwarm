@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerTeam : Team
 {
@@ -54,28 +55,21 @@ public class PlayerTeam : Team
 
     public void GetMouseInput()
     {
-        if(gameManager.SelectedAbility != null && gameManager.DisplayedUnit != null)
+        if (gameManager.SelectedAbility != null && gameManager.DisplayedUnit != null)
         {
             if(mousePosHighlight != gameManager.GetMousePosition())
             {
                 mousePosHighlight = gameManager.GetMousePosition();
-
-                IEnumerable<Vector3Int> moveHighlightGrid = GameManager.Pathing.FindPath(
-                    gameManager.DisplayedUnit.Location,
-                    mousePosHighlight,
-                    !gameManager.SelectedAbility.IsJump,
-                    gameManager.SelectedAbility.MovementRange);
-
-                //IEnumerable<Vector3Int> attackHighlightGrid = 
-
-                //GameManager.Battlefield.HighlightGrid(moveHighlightGrid, )
+                gameManager.ResolveHighlight(mousePosHighlight);                
             }            
         }
 
         if(Input.GetMouseButtonDown(0) && gameManager.SelectedAbility == null) 
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
+            
             gameManager.InspectUnitUnderMouse();
-            return;
         }
 
         if (Input.GetMouseButtonDown(0) && gameManager.DisplayedUnit != null && gameManager.SelectedAbility != null)
@@ -86,18 +80,6 @@ public class PlayerTeam : Team
         }            
 
         if (Input.GetMouseButtonDown(1))
-        {
-            if (gameManager.DisplayedUnit != null)
-            {
-                Vector3Int mousePos = gameManager.GetMousePosition();
-                IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(gameManager.DisplayedUnit.Location, mousePos);
-
-                gameManager.PerformMove(
-                    gameManager.DisplayedUnit, 
-                    gameManager.SelectedAbility,
-                    mousePos, 
-                    path);
-            }
-        }
+            gameManager.ClearActiveUnit();
     }
 }

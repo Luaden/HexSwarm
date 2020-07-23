@@ -55,9 +55,8 @@ public class AITeam : Team
 
     protected void TeamInit()
     {
-        controlledArea = units.Count();
-        //Need a reference for this.
-        //detectionRange = Mathf.RoundToInt(defaultDetectionRange * GameManager.Difficulty);
+        controlledArea = units.Count();        
+        detectionRange = Mathf.RoundToInt(defaultDetectionRange * ConfigManager.instance.GameDifficulty);
         teamRange = battlefieldManager.GetNeighborCells(StartPosition, detectionRange * 2) as Stack<Vector3Int>;
         enemiesSeen.Clear();
         unitsUnmoved.Clear();
@@ -272,11 +271,10 @@ public class AITeam : Team
 
     protected bool ResolvedAttackDifficult()
     {
-        int i = UnityEngine.Random.Range(1, 11); // * GameManager;
-        //Need a reference here
-        //i *= GameManager.Difficulty;
+        int i = Random.Range(1, 11);
+        float j = i * ConfigManager.instance.GameDifficulty;
 
-        if (i <= 5)
+        if (j <= 5)
             return false;
         return true;
     }

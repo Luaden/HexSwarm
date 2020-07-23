@@ -128,7 +128,18 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>
 
     public void UpdateSelectedAbility(int x)
     {
-        gameManager.SelectedAbility = gameManager.DisplayedUnit.Abilites.ElementAt(x);
+        if (gameManager == null)
+            gameManager = FindObjectOfType<AITesting>();
+
+        int i = 0;
+
+        foreach (IAbility ability in gameManager.DisplayedUnit.Abilites)
+        {
+            ++i;
+            if (i == x)
+                gameManager.SelectedAbility = ability;
+            break;
+        }            
     }
 }
 
