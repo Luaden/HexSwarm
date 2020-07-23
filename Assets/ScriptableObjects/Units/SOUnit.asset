@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845f1d78a090766459836192a8b90060, type: 3}
+  m_Name: SOUnit
+  m_EditorClassIdentifier: 
+  myUnit:
+    id: 8
+    icon: {fileID: 0}
+    name: Brother is in the foot clan
+    description: Expendable and tasty!
+    ablities:
+    - {fileID: 11400000, guid: 11d0a9f96c0589740a229c8044ea4871, type: 2}
+    - {fileID: 11400000, guid: fa0f64add3e701f45bac2737d9163870, type: 2}

@@ -1,14 +1,20 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using System;
 
 [System.Serializable]
 public class Ability : IAbility
 {
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public Sprite Icon { get; set; }
+    [SerializeField] protected Abilitys Id;
+    public Abilitys ID => Id;
+    [SerializeField] protected bool isSpawn;
+    public bool IsSpawn => isSpawn;
+    [SerializeField] protected string name;
+    public string Name { get => name; set => name = value;}
+    [SerializeField] protected string description;
+    public string Description { get => description; set => description = value; }
+    [SerializeField] protected Sprite icon;
+    public Sprite Icon { get => icon; set => icon = value; }
     
     public static IReadOnlyDictionary<int, Quaternion> Transforms
         = new Dictionary<int, Quaternion>()

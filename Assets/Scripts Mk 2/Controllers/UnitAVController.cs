@@ -26,7 +26,7 @@ public class UnitAVController : MonoBehaviour
         if (!worldUnits.ContainsKey(unit))
             worldUnits.Add(unit, worldUnit);
 
-        worldUnit.GetComponent<SpriteRenderer>().sprite = unitSprites[unit.ID];
+        worldUnit.GetComponent<SpriteRenderer>().sprite = unitSprites[(int)unit.ID];
         worldUnit.transform.position = GameManager.Battlefield.GetWorldLocation(unit.Location);
     }
 
@@ -147,11 +147,11 @@ public class UnitAVController : MonoBehaviour
 
     protected void PlayMoveSFX(IUnit unit)
     {
-        configManager.PlaySound(movementSounds[unit.ID]);
+        configManager.PlaySound(movementSounds[(int)unit.ID]);
     }
 
     protected void PlayAttackSFX(IUnit unit)
     {
-        configManager.PlaySound(attackSounds[unit.ID]);
+        configManager.PlaySound(attackSounds[(int)unit.ID]);
     }
 }
