@@ -14,7 +14,7 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>, IButtonIndexer
     [SerializeField] protected List<AbilityDisplay> Abilites;
     [SerializeField] protected int lastSelected;
     public int LastSelected => lastSelected;
-    public void Start()
+    public void Start()
     {
         for (int i = 0; i < Abilites.Count; i++)
             Abilites[i].Init(false, i, this);
@@ -32,7 +32,7 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>, IButtonIndexer
         foreach (AbilityDisplay ablitydisplay in Abilites)
             ablitydisplay.UpdateUI(unit.Abilites.ElementAtOrDefault(ablitydisplay.Index));
 
-        Buttonclicked(0);
+        Buttonclicked(-1);
     }
 
     protected override bool ClearedIfEmpty(IUnit unit)
@@ -52,11 +52,12 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>, IButtonIndexer
 
     public void UpdateSelectedAbility(int x)
     {
-        Abilites[lastSelected].IsSelected = false;
+        if (lastSelected > -1)
+            Abilites[lastSelected].IsSelected = false;
         lastSelected = x;
-        Abilites[lastSelected].IsSelected = true;
+        if (lastSelected > -1)
+            Abilites[lastSelected].IsSelected = true;
     }
-
     public void Buttonclicked(int index) => UpdateSelectedAbility(index);
 }
 

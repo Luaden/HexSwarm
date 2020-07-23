@@ -70,7 +70,7 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     public void PlayMusic(AudioClip bgm) => AudioController.PlayMusic(bgm);
     public void PlaySound(AudioClip sfx) => AudioController.PlaySound(sfx);
     public void RepositionCamera(Vector3Int cameraPosition) => CameraController.RepositionCamera(cameraPosition);
-    public void ToggleCameraControls(bool cameraControlOnOff) { }//CameraController.ToggleCameraControls(cameraControlOnOff);
+    public void ToggleCameraControls(bool cameraControlOnOff) => CameraController.ToggleCameraControls(cameraControlOnOff);
 
     protected void Awake()
     {
