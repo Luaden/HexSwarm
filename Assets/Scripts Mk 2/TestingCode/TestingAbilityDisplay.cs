@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestingAbilityDisplay : MonoBehaviour
+public class TestingAblityDisplay : MonoBehaviour
 {
     [SerializeField] protected Ability TestingAblity = new Ability();
     [SerializeField] protected Vector3Int worldOrigin = new Vector3Int();
