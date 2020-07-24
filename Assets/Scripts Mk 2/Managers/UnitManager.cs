@@ -31,6 +31,8 @@ public class UnitManager : ISerializationCallbackReceiver
 
     public void OnBeforeSerialize()
     {
+        if (createUnits.Count == 0)
+            return;
         EditorList.Clear();
         EditorList.AddRange(createUnits.Values);
         EditorList.Add(default);

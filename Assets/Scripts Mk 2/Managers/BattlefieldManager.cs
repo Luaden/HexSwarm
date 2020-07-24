@@ -6,9 +6,10 @@ using UnityEngine.Tilemaps;
 public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 {
     [SerializeField] protected Tile[] groundTiles;
-    [SerializeField] protected Tile[] highlightTiles;
+    [SerializeField] protected Tile highlightTile;
     [SerializeField] protected Tilemap groundMap;
-    [SerializeField] protected Tilemap highlightMap;
+    [SerializeField] protected Tilemap moveHighlightMap;
+    [SerializeField] protected Tilemap attackHighlightMap;
 
     protected Grid mapGrid;
     protected Dictionary<Vector3Int, ICell> gridLookup = new Dictionary<Vector3Int, ICell>();
@@ -32,7 +33,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     public void Clear()
     {
         groundMap.ClearAllTiles();
-        highlightMap.ClearAllTiles();
+        moveHighlightMap.ClearAllTiles();
         gridLookup.Clear();
         threeAxisLookup.Clear();
     }
@@ -129,29 +130,21 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     #region Highlight Cells
     public void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<ICell> attackCells)
     {
+        ClearHighlights();
         HighlightGrid(moveCells);
 
         foreach (ICell cell in attackCells)
         {
-            if (moveCells.Contains(cell))
-            {
-                highlightMap.SetTile(cell.GridPosition, highlightTiles[0]);
-                highlightedCells.Add(cell);
-                continue;
-            }
-
-            highlightMap.SetTile(cell.GridPosition, highlightTiles[0]);
+            attackHighlightMap.SetTile(cell.GridPosition, highlightTile);
             highlightedCells.Add(cell);
         }
     }
 
     public void HighlightGrid(IEnumerable<ICell> moveCells)
     {
-        ClearHighlights();
-
         foreach (ICell cell in moveCells)
         {
-            highlightMap.SetTile(cell.GridPosition, highlightTiles[0]);
+            moveHighlightMap.SetTile(cell.GridPosition, highlightTile);
             highlightedCells.Add(cell);
         }
     }
@@ -160,7 +153,8 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     {
         foreach (ICell cell in highlightedCells)
         {
-            highlightMap.SetTile(cell.GridPosition, null);
+            moveHighlightMap.SetTile(cell.GridPosition, null);
+            attackHighlightMap.SetTile(cell.GridPosition, null);
         }
 
         highlightedCells.Clear();

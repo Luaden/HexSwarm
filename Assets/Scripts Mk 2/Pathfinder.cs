@@ -79,7 +79,7 @@ public class Pathfinder
         allCells.TryGetValue(originVector, out origin);
 
         if (!allCells.TryGetValue(destinationVector, out destination))
-            return null;
+            return System.Array.Empty<Vector3Int>();
 
         
 
@@ -208,10 +208,10 @@ public class Pathfinder
     }
 
     protected float EvaluateCellDistance(ICell origin, ICell destination) =>
-        Mathf.Abs(origin.GridPosition.x - destination.GridPosition.x) + Mathf.Abs(origin.GridPosition.y - destination.GridPosition.y);
+        Vector3.Distance(origin.GridPosition, destination.GridPosition);
 
     protected float EvaluateCellDistance(PathfindingCell origin, PathfindingCell destination) => 
-        Mathf.Abs(origin.Location.x - destination.Location.x) + Mathf.Abs(origin.Location.y - destination.Location.y);
+        Vector3.Distance(origin.Location, destination.Location);
 
     #region Old Pathfinder
     //protected List<ICell> cellsToEvaluate = new List<ICell>();
