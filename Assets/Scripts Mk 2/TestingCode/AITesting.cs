@@ -1,17 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System;
-using UnityEngine.XR.WSA.Input;
 using System.Linq;
 
 public class AITesting : GameManager
 {
     [SerializeField] protected Sprite Player1Icon;
     [SerializeField] protected Sprite AIIcon;
-    [SerializeField] protected Unit queuedUnit = null;
     protected bool gameIsStarted = false;
     protected PlayerTeam player1;
-
+    protected AITeam ai1;
+    protected bool canAddAI = false;
+    protected bool canAddPlayer = false;
     public PlayerTeam Player { get => player1;}
 
     protected new void Start()
@@ -21,6 +20,10 @@ public class AITesting : GameManager
 
     protected new void Update()
     {
+        if (Input.GetMouseButtonDown(0) && canAddAI)
+            GenerateUnitForTeam(ai1, UnitManager[Units.Infantry], GetMousePosition());
+        if (Input.GetMouseButtonDown(0) && canAddPlayer)
+            GenerateUnitForTeam(player1, UnitManager[Units.Nanos], GetMousePosition());
         if (activeTeams.Count == 0)
             return;
         if (activeTeams.Peek() == player1)
@@ -35,15 +38,12 @@ public class AITesting : GameManager
 
         activeTeams.Clear();        
 
-        AITeam AI1 = new AITeam(this, "AI1", "Tank wielding maniac.", AIIcon, Teams.AI1,
+        ai1 = new AITeam(this, "AI1", "Tank wielding maniac.", AIIcon, Teams.AI1,
             new Vector3Int(UnityEngine.Random.Range(-GridSize / 4, GridSize / 4), GridSize / 2, 0),
             new HashSet<IUnit>());
-        activeTeams.Enqueue(AI1);
+        activeTeams.Enqueue(ai1);
 
-        GenerateUnitForTeam(AI1, UnitManager[Units.Spawner], AI1.StartPosition);
-        IEnumerable<ICell> unitStartNeighbors = Battlefield.GetNeighborCells(AI1.StartPosition);
-        Vector3Int unitStartPos = unitStartNeighbors.First().GridPosition;
-        GenerateUnitForTeam(AI1, UnitManager[Units.Infantry], unitStartPos);
+        GenerateUnitForTeam(ai1, UnitManager[Units.Spawner], ai1.StartPosition);
 
 
         player1 = new PlayerTeam(this, "Player1", "Grey Goo", Player1Icon, Teams.Player,
@@ -54,22 +54,26 @@ public class AITesting : GameManager
         GenerateUnitForTeam(player1, UnitManager[Units.Nanos], player1.StartPosition);
     }
 
-    protected void ClickToDropUnit()
+    [ContextMenu("Click to Add AI Unit")]
+    protected void ClickToAddAIUnit()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            GenerateUnitForTeam(queuedUnit.Team, queuedUnit, GetMousePosition());
-            queuedUnit = null;
-        }
+        canAddAI = true;
+        canAddPlayer = false;
+    }
+    [ContextMenu("Click to Add Player Unit")]
+    protected void ClickToAddPlayerUnit()
+    {
+        canAddAI = false;
+        canAddPlayer = true;
     }
 
     [ContextMenu("Begin Turn")]
     protected void EndPCurrentTurn()
     {
-        queuedUnit = null;
-        gameIsStarted = true;
+        canAddAI = false;
+        canAddPlayer = false;
+
         EndTurn();
-        activeTeams.Peek().StartTurn();
     }
 
     protected new void GenerateTeam(Team team, Unit template, Vector3Int centerPoint, int radius = 0)

@@ -35,6 +35,7 @@ public class AITeam : Team
         HashSet<IUnit> units)
     {
         this.gameManager = gameManager;
+        battlefieldManager = GameManager.Battlefield as BattlefieldManager;
         Name = name;
         Description = description;
         Icon = icon;
@@ -60,16 +61,19 @@ public class AITeam : Team
         teamRange = battlefieldManager.GetNeighborCells(StartPosition, detectionRange * 2) as Stack<Vector3Int>;
         enemiesSeen.Clear();
         unitsUnmoved.Clear();
-        unitsUnmoved.Union(units);
+        unitsUnmoved.UnionWith(units);
         unguardedCells.Clear();
         possibleAttacks.Clear();
         possibleDefenses.Clear();
         bestHits.Clear();
         bestBlocks.Clear();
+
+        Debug.Log("Initialization complete.");
     }
 
     protected void CheckForEnemies()
     {
+        Debug.Log("Checking for enemies.");
         foreach (IUnit unit in units)
         {
             CheckForEnemies(unit);
@@ -94,6 +98,7 @@ public class AITeam : Team
 
     protected void DetermineStrategy()
     {
+        Debug.Log("Determining strategy.");
         GetEnemyLOS();
         GetPossibleMoves();        
 
@@ -135,6 +140,7 @@ public class AITeam : Team
 
     protected void GetEnemyLOS()
     {
+        Debug.Log("Getting line of sight.");
         foreach (Vector3Int enemyLoc in enemiesSeen)
         {
             Queue<Vector3Int> path = pathfinder.FindPath(StartPosition, enemyLoc, false) as Queue<Vector3Int>;
@@ -156,11 +162,14 @@ public class AITeam : Team
 
     protected void GetPossibleMoves()
     {
+        Debug.Log("Getting possible moves.");
+        Debug.Log("I have " + unitsUnmoved.Count + " unmoved units out of " + units.Count + " total units.");
         foreach (IUnit unit in unitsUnmoved)
             foreach (IAbility ability in unit.Abilites)
             {
                 if(CheckInTeamRange(unit))
                 {
+                    Debug.Log("This unit is in team range!");
                     IEnumerable<Vector3Int> results = unit.CalcuateValidNewLocation(ability);
                     EvaluatePossibleAttacks(unit, ability, results);
                     EvaluatePossibleDefense(unit, ability, results);
@@ -180,7 +189,8 @@ public class AITeam : Team
     }
 
     protected void EvaluatePossibleAttacks(IUnit unit, IAbility ability, IEnumerable<Vector3Int> results)
-    {    
+    {
+        Debug.Log("Evaluating possible attacks.");
         foreach (Vector3Int location in results)
         {
             IEnumerable<Vector3Int> path = pathfinder.FindPath(unit.Location, location);
@@ -203,6 +213,7 @@ public class AITeam : Team
 
     private void EvaluatePossibleDefense(IUnit unit, IAbility ability, IEnumerable<Vector3Int> results)
     {
+        Debug.Log("Evaluating possible defenses.");
         foreach (Vector3Int location in results)
             foreach (Vector3Int cell in unguardedCells)
             {
@@ -254,6 +265,7 @@ public class AITeam : Team
         }
 
         targetPoint.Add(value);
+        Debug.Log("I have " + possibleAttacks.Count + " attack patterns.");
     }
 
     protected void SaveDefensePattern(Dictionary<Vector3Int, HashSet<DefendPattern>> target, Vector3Int key, DefendPattern value)
@@ -267,6 +279,7 @@ public class AITeam : Team
         }
 
         targetPoint.Add(value);
+        Debug.Log("I have " + possibleDefenses.Count + " defense patterns.");
     }
 
     protected bool ResolvedAttackDifficult()
@@ -281,12 +294,14 @@ public class AITeam : Team
 
     protected void MoveRandomly(IUnit unit)
     {
+        Debug.Log("Decided to move randomly.");
         CheckInTeamRange(unit);
         GetRoute(unit, teamRange);
     }
 
     protected void GetBestAttacks()
     {
+        Debug.Log("Decided to use get best attack.");
         foreach (KeyValuePair<Vector3Int, HashSet<AttackPattern>> entry in possibleAttacks)
         {
             if (!enemiesSeen.Contains(entry.Key))
@@ -302,7 +317,8 @@ public class AITeam : Team
 
     protected void UseOffensiveStrategy()
     {
-        if(gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.TargetLocation, selectedAttack.Path))
+        Debug.Log("Using best attack.");
+        if (gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.TargetLocation, selectedAttack.Path))
         {
             enemiesSeen.Remove(selectedAttack.TargetLocation);
             UnitHasMoved(selectedAttack.Unit);
@@ -313,6 +329,7 @@ public class AITeam : Team
 
     protected void GetBestDefense()
     {
+        Debug.Log("Decided to use best defense.");
         foreach (KeyValuePair<Vector3Int, HashSet<AttackPattern>> entry in possibleAttacks)
         {
             if (!enemiesSeen.Contains(entry.Key))
@@ -327,7 +344,9 @@ public class AITeam : Team
 
     protected void UseDefensiveStrategy()
     {
-        if(gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, selectedDefense.TargetLocation, selectedDefense.Path))
+        Debug.Log("Using best defense.");
+
+        if (gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, selectedDefense.TargetLocation, selectedDefense.Path))
         {
             unguardedCells.Remove(selectedDefense.TargetLocation);
 
@@ -362,6 +381,8 @@ public class AITeam : Team
     protected IAbility toUse;
     protected void GetRoute(IUnit unit, IEnumerable<Vector3Int> locationsToCheck, bool shortestRoute = true)
     {
+        Debug.Log("Getting a new route, nonattack, nondefense.");
+
         Vector3Int locationToGo = locationsToCheck.First();
 
         foreach(Vector3Int location in locationsToCheck)

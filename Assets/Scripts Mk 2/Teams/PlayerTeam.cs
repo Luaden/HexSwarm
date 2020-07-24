@@ -74,12 +74,20 @@ public class PlayerTeam : Team
 
         if (Input.GetMouseButtonDown(0) && gameManager.DisplayedUnit != null && gameManager.SelectedAbility != null)
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
+
             Vector3Int mousePos = gameManager.GetMousePosition();
             IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(gameManager.DisplayedUnit.Location, mousePos); 
             gameManager.PerformMove(gameManager.DisplayedUnit, gameManager.SelectedAbility, mousePos, path);
         }            
 
         if (Input.GetMouseButtonDown(1))
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
             gameManager.ClearActiveUnit();
+        }
+            
     }
 }

@@ -135,12 +135,12 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         {
             if (moveCells.Contains(cell))
             {
-                highlightMap.SetTile(cell.GridPosition, highlightTiles[2]);
+                highlightMap.SetTile(cell.GridPosition, highlightTiles[0]);
                 highlightedCells.Add(cell);
                 continue;
             }
 
-            highlightMap.SetTile(cell.GridPosition, highlightTiles[1]);
+            highlightMap.SetTile(cell.GridPosition, highlightTiles[0]);
             highlightedCells.Add(cell);
         }
     }
@@ -254,5 +254,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         }
         return foundcells;
     }
+
+
 }
 
