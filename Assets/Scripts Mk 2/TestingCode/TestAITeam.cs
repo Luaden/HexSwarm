@@ -99,7 +99,8 @@ public class TestAITeam : Team
     {
         Debug.Log("Determining strategy.");
         GetEnemyLOS();
-        Debug.Log("Team range is: " + detectionRange);
+        Debug.Log("Team range is: " + detectionRange * 2);
+        Debug.Log("Team range count: " + teamRange.Count);
         GetPossibleMoves();
         //if (bestHits.Count() > 0)
         //    UseOffensiveStrategy();
@@ -132,20 +133,25 @@ public class TestAITeam : Team
 
     protected void GetPossibleMoves()
     {
-        foreach (IUnit unit in unitsUnmoved)
-            if (CheckInTeamRange(unit))            
+        foreach (IUnit unit in units)
+        {
+            if (!unitsUnmoved.Contains(unit))
+                continue;
+
+            if (CheckInTeamRange(unit))
                 foreach (IAbility ability in unit.Abilites)
-                { 
+                {
                     IEnumerable<Vector3Int> results = unit.CalcuateValidNewLocation(ability);
                     //EvaluatePossibleAttacks(unit, ability, results);
                     //EvaluatePossibleDefense(unit, ability, results);
-                
+                    GetRoute(unit, false);
                 }
             else
-            {
-                Debug.Log("Unit out of team range."); 
-                //GetRoute(unit, teamRange);
-            }
+                {
+                    Debug.Log("Unit out of team range.");
+                    GetRoute(unit, true);
+                }
+        }
     }
 
     private bool CheckInTeamRange(IUnit unit)
@@ -368,31 +374,55 @@ public class TestAITeam : Team
 
     protected Vector3Int toTarget;
     protected IAbility toUse;
-    protected void GetRoute(IUnit unit, IEnumerable<ICell> locationsToCheck, bool shortestRoute = true)
+    protected void GetRoute(IUnit unit, bool shortestRoute = true)
     {
-        Debug.Log("Getting a new route, nonattack, nondefense.");
-
-        Vector3Int locationToGo = locationsToCheck.First().GridPosition;
-
-        foreach (Vector3Int location in locationsToCheck.Select(x => x.GridPosition))
+        if (!shortestRoute)
         {
-            if (GameManager.Pathing.FindPath(unit.Location, locationToGo).Count() >
-                GameManager.Pathing.FindPath(unit.Location, location).Count() && shortestRoute)
-                locationToGo = location;
-            //else if (GameManager.Pathing.FindPath(unit.Location, locationToGo).Count() <
-            //         GameManager.Pathing.FindPath(unit.Location, location).Count() && !shortestRoute)
-            //    locationToGo = location;
+            IEnumerable<ICell> avoidRange = battlefieldManager.GetNeighborCells(StartPosition, detectionRange);
+            HashSet<ICell> tempRange = new HashSet<ICell>();
+            tempRange.UnionWith(teamRange);
+            tempRange.ExceptWith(avoidRange);
+
+            TakeRoute(unit, tempRange, shortestRoute);            
         }
-        Debug.Log("Got destination at :" + locationToGo);
+        else
+        {
+            TakeRoute(unit, teamRange, shortestRoute);
+        }            
+    }
 
-        IEnumerable<Vector3Int> checkLocations = GameManager.Pathing.FindPath(unit.Location, locationToGo);
+    protected void TakeRoute(IUnit unit, HashSet<ICell> cellRange, bool shortestRoute)
+    {
+        Vector3Int destination = cellRange.First().GridPosition;
+        IEnumerable<Vector3Int> currentRoute = GameManager.Pathing.FindPath(unit.Location, destination);
 
-        Vector3Int toTarget = unit.Location;
+
+        foreach (ICell location in cellRange)
+        {
+            if (location.Unit != null)
+                continue;
+
+            IEnumerable<Vector3Int> checkPath = GameManager.Pathing.FindPath(unit.Location, location.GridPosition);
+
+            if (!shortestRoute && currentRoute.Count() < checkPath.Count())
+            {
+                destination = location.GridPosition;
+                currentRoute = checkPath;
+            }            
+
+            if (shortestRoute && currentRoute.Count() > checkPath.Count())
+            {
+                destination = location.GridPosition;
+                currentRoute = checkPath;
+            }
+        }
+
+        toTarget = unit.Location;
 
         while (toTarget == unit.Location)
             foreach (IAbility ability in unit.Abilites)
                 foreach (Vector3Int location in unit.CalcuateValidNewLocation(ability))
-                    foreach (Vector3Int pathLocation in checkLocations)
+                    foreach (Vector3Int pathLocation in currentRoute)
                         if (location == pathLocation)
                         {
                             toUse = ability;
