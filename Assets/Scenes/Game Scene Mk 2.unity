@@ -121,6 +121,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1839735485 &173360585 stripped
+Tilemap:
+  m_CorrespondingSourceObject: {fileID: 8437128120866082831, guid: a8f692468cea80740a36ed2c42a9092b,
+    type: 3}
+  m_PrefabInstance: {fileID: 4260966484384392069}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &396615090
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -190,6 +196,123 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5bfeb4d5a0ba99941a8610e8d4126f30, type: 3}
+--- !u!1 &523263080
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 523263083}
+  - component: {fileID: 523263081}
+  - component: {fileID: 523263082}
+  m_Layer: 0
+  m_Name: Attack Highlight Tiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1839735485 &523263081
+Tilemap:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523263080}
+  m_Enabled: 1
+  m_Tiles: {}
+  m_AnimatedTiles: {}
+  m_TileAssetArray: []
+  m_TileSpriteArray: []
+  m_TileMatrixArray: []
+  m_TileColorArray: []
+  m_TileObjectToInstantiateArray: []
+  m_AnimationFrameRate: 1
+  m_Color: {r: 1, g: 0, b: 0.028639793, a: 0.6627451}
+  m_Origin: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0, y: 0, z: 1}
+  m_TileAnchor: {x: 0, y: 0, z: 0}
+  m_TileOrientation: 0
+  m_TileOrientationMatrix:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+--- !u!483693784 &523263082
+TilemapRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523263080}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
+  m_ChunkSize: {x: 32, y: 32, z: 32}
+  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
+  m_MaxChunkCount: 16
+  m_MaxFrameAge: 16
+  m_SortOrder: 0
+  m_Mode: 1
+  m_DetectChunkCullingBounds: 0
+  m_MaskInteraction: 0
+--- !u!4 &523263083
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523263080}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1316090164}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &547844389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -344,6 +467,55 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1918.5884, y: 165.22119, z: 1}
   m_Center: {x: -0.25952148, y: -1.1245117, z: 0}
+--- !u!4 &1316090164 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4303917015947332046, guid: a8f692468cea80740a36ed2c42a9092b,
+    type: 3}
+  m_PrefabInstance: {fileID: 4260966484384392069}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1381726172
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1381726174}
+  - component: {fileID: 1381726173}
+  m_Layer: 0
+  m_Name: Highlight Object
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1381726173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381726172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c92acc8ba4906204e8a184c92af3c961, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1381726174
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381726172}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1576566966 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6339621299134571379, guid: bb7ed41ce2aa0eb47bb7ee2c34983834,
@@ -366,7 +538,6 @@ MonoBehaviour:
     EditorList:
     - {fileID: 11400000, guid: 01b85b05480e0e14daccdfc19833a17c, type: 2}
     - {fileID: 11400000, guid: 5287f4df1be53c54a8d99dc9356b3ca4, type: 2}
-    - {fileID: 11400000, guid: 1b33e950f2729694badf61b2fa96ce00, type: 2}
     - {fileID: 0}
   Player1Icon: {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303,
     type: 3}
@@ -711,6 +882,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3975540152056036656, guid: a8f692468cea80740a36ed2c42a9092b,
+        type: 3}
+      propertyPath: m_Name
+      value: Move Highlight Tiles
+      objectReference: {fileID: 0}
     - target: {fileID: 4303917015947332041, guid: a8f692468cea80740a36ed2c42a9092b,
         type: 3}
       propertyPath: m_Name
@@ -770,6 +946,37 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4637243059203673892, guid: a8f692468cea80740a36ed2c42a9092b,
+        type: 3}
+      propertyPath: moveHighlightMap
+      value: 
+      objectReference: {fileID: 173360585}
+    - target: {fileID: 4637243059203673892, guid: a8f692468cea80740a36ed2c42a9092b,
+        type: 3}
+      propertyPath: attackHighlightMap
+      value: 
+      objectReference: {fileID: 523263081}
+    - target: {fileID: 4637243059203673892, guid: a8f692468cea80740a36ed2c42a9092b,
+        type: 3}
+      propertyPath: highlightTile
+      value: 
+      objectReference: {fileID: 11400000, guid: 55eca38f9372ff248b07aa8a36cd057a,
+        type: 2}
+    - target: {fileID: 8437128120866082831, guid: a8f692468cea80740a36ed2c42a9092b,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.2264151
+      objectReference: {fileID: 0}
+    - target: {fileID: 8437128120866082831, guid: a8f692468cea80740a36ed2c42a9092b,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.2264151
+      objectReference: {fileID: 0}
+    - target: {fileID: 8437128120866082831, guid: a8f692468cea80740a36ed2c42a9092b,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.2264151
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8f692468cea80740a36ed2c42a9092b, type: 3}

@@ -7,8 +7,8 @@ using UnityEngine;
 public class UnitAVController : MonoBehaviour
 {
     [SerializeField] protected GameObject worldUnitPrefab;
-    [SerializeField] protected AudioClip[] movementSounds;
-    [SerializeField] protected AudioClip[] attackSounds;
+    [SerializeField] protected AudioClip[] initMoveSFX;
+    [SerializeField] protected AudioClip[] initAttackSFX;
     [SerializeField] protected float moveSpeed = 1f;
     [SerializeField] protected float dieSpeed;
 
@@ -16,6 +16,8 @@ public class UnitAVController : MonoBehaviour
     protected ConfigManager configManager;
     protected Dictionary<IUnit, GameObject> worldUnits = new Dictionary<IUnit, GameObject>();
     protected Dictionary<Queue<Vector3>, GameObject> worldUnitPath = new Dictionary<Queue<Vector3>, GameObject>();
+    protected Dictionary<Units, AudioClip> movementSounds = new Dictionary<Units, AudioClip>();
+    protected Dictionary<Units, AudioClip> attackSounds = new Dictionary<Units, AudioClip>();
     protected List<GameObject> totalUnitsToDie = new List<GameObject>();
     protected List<GameObject> currentUnitsToDie = new List<GameObject>();
 
@@ -115,8 +117,7 @@ public class UnitAVController : MonoBehaviour
                     Destroy(deadUnit);
                     break;
                 }
-
-            }            
+            }
     }
 
     protected void KillCurrentUnits(GameObject worldUnit)
@@ -149,11 +150,17 @@ public class UnitAVController : MonoBehaviour
 
     protected void PlayMoveSFX(IUnit unit)
     {
-        configManager.PlaySound(movementSounds[(int)unit.ID]);
+        configManager.PlaySound(movementSounds[gameManager.UnitManager[unit.ID].ID]);
     }
 
     protected void PlayAttackSFX(IUnit unit)
     {
-        configManager.PlaySound(attackSounds[(int)unit.ID]);
+        configManager.PlaySound(attackSounds[gameManager.UnitManager[unit.ID].ID]);
+    }
+
+    [ContextMenu("Play Attack Sound 1")]
+    protected void TestPlaySFX()
+    {
+        configManager.PlaySound(initAttackSFX[0]);
     }
 }

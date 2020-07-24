@@ -3,10 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 public class AITeam : Team
-{
-    //Need to get references from Game Manager
-    protected Pathfinder pathfinder;
-
+{    
     //Used for base data population
     protected int defaultDetectionRange = 3;
     protected int detectionRange;
@@ -16,14 +13,14 @@ public class AITeam : Team
 
     //Used for determining strategy
     protected HashSet<Vector3Int> enemiesSeen = new HashSet<Vector3Int>();
-    protected HashSet<Vector3Int> unguardedCells = new HashSet<Vector3Int>();
+    protected HashSet<ICell> unguardedCells = new HashSet<ICell>();
     protected Dictionary<Vector3Int, HashSet<AttackPattern>> possibleAttacks =
                                                             new Dictionary<Vector3Int, HashSet<AttackPattern>>();
     protected Dictionary<Vector3Int, HashSet<DefendPattern>> possibleDefenses =
                                                             new Dictionary<Vector3Int, HashSet<DefendPattern>>();
     protected Stack<AttackPattern> bestHits = new Stack<AttackPattern>();
     protected Stack<DefendPattern> bestBlocks = new Stack<DefendPattern>();
-    protected Stack<Vector3Int> teamRange = new Stack<Vector3Int>();
+    protected HashSet<ICell> teamRange = new HashSet<ICell>();
 
     public AITeam
         (GameManager gameManager,
@@ -58,9 +55,8 @@ public class AITeam : Team
     {
         controlledArea = units.Count();        
         detectionRange = Mathf.RoundToInt(defaultDetectionRange * ConfigManager.instance.GameDifficulty);
-        teamRange = battlefieldManager.GetNeighborCells(StartPosition, detectionRange * 2) as Stack<Vector3Int>;
+        teamRange.UnionWith(battlefieldManager.GetNeighborCells(StartPosition, detectionRange * 2));
         enemiesSeen.Clear();
-        unitsUnmoved.Clear();
         unitsUnmoved.UnionWith(units);
         unguardedCells.Clear();
         possibleAttacks.Clear();
@@ -143,19 +139,17 @@ public class AITeam : Team
         Debug.Log("Getting line of sight.");
         foreach (Vector3Int enemyLoc in enemiesSeen)
         {
-            Queue<Vector3Int> path = pathfinder.FindPath(StartPosition, enemyLoc, false) as Queue<Vector3Int>;
+            IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(StartPosition, enemyLoc, false);
             ICell checkCell;
 
             foreach (Vector3Int location in path)
             {
                 battlefieldManager.World.TryGetValue(location, out checkCell);
 
-                if (checkCell.Unit != null)
-                {
-                    path.Dequeue();
+                if (checkCell.Unit != null && checkCell.Unit.Team.TeamNumber != Teams.Player)
                     continue;
-                }
-                unguardedCells.Add(path.Dequeue());
+                
+                unguardedCells.Add(checkCell);
             }
         }
     }
@@ -183,7 +177,10 @@ public class AITeam : Team
 
     private bool CheckInTeamRange(IUnit unit)
     {
-        if (!teamRange.Contains(unit.Location))
+        ICell unitCell;
+        battlefieldManager.World.TryGetValue(unit.Location, out unitCell);
+
+        if (!teamRange.Contains(unitCell))
             return false;
         return true;
     }
@@ -193,7 +190,7 @@ public class AITeam : Team
         Debug.Log("Evaluating possible attacks.");
         foreach (Vector3Int location in results)
         {
-            IEnumerable<Vector3Int> path = pathfinder.FindPath(unit.Location, location);
+            IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(unit.Location, location);
             IEnumerable<Vector3Int> hits = unit.DiscoverHits(location, ability).Select(X=>X.GridPosition);
 
             if (hits == default)
@@ -215,12 +212,12 @@ public class AITeam : Team
     {
         Debug.Log("Evaluating possible defenses.");
         foreach (Vector3Int location in results)
-            foreach (Vector3Int cell in unguardedCells)
+            foreach (Vector3Int cell in unguardedCells.Select(x => x.GridPosition))
             {
                 if (location != cell)
                     continue;
 
-                IEnumerable<Vector3Int> path = pathfinder.FindPath(unit.Location, location);
+                IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(unit.Location, location);
 
                 DefendPattern defense = new DefendPattern(unit, ability, path, location);
                 SaveDefensePattern(possibleDefenses, location, defense);
@@ -250,7 +247,7 @@ public class AITeam : Team
                 bestBlocks.Push(entry.Value.ElementAt(0));
         }
 
-        if (bestBlocks.Count == 0)
+        if (bestBlocks.Count == 0 && possibleDefenses.Count > 0)
             bestBlocks.Push(possibleDefenses.First().Value.ElementAt(0));
     }
 
@@ -348,7 +345,7 @@ public class AITeam : Team
 
         if (gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, selectedDefense.TargetLocation, selectedDefense.Path))
         {
-            unguardedCells.Remove(selectedDefense.TargetLocation);
+            unguardedCells.Remove(battlefieldManager.World[selectedDefense.TargetLocation]);
 
             UnitHasMoved(selectedDefense.Unit);
 
@@ -379,39 +376,42 @@ public class AITeam : Team
 
     protected Vector3Int toTarget;
     protected IAbility toUse;
-    protected void GetRoute(IUnit unit, IEnumerable<Vector3Int> locationsToCheck, bool shortestRoute = true)
+    protected void GetRoute(IUnit unit, IEnumerable<ICell> locationsToCheck, bool shortestRoute = true)
     {
+        if (unit == null)
+            return;
         Debug.Log("Getting a new route, nonattack, nondefense.");
 
-        Vector3Int locationToGo = locationsToCheck.First();
+        Vector3Int locationToGo = locationsToCheck.First().GridPosition;
 
-        foreach(Vector3Int location in locationsToCheck)
+        foreach(Vector3Int location in locationsToCheck.Select(x => x.GridPosition))
         {
-            if (pathfinder.FindPath(unit.Location, locationToGo).Count() >
-                pathfinder.FindPath(unit.Location, location).Count() && shortestRoute)
+            if (GameManager.Pathing.FindPath(unit.Location, locationToGo).Count() >
+                GameManager.Pathing.FindPath(unit.Location, location).Count() && shortestRoute)
                 locationToGo = location;
-            else if (pathfinder.FindPath(unit.Location, locationToGo).Count() < 
-                     pathfinder.FindPath(unit.Location, location).Count())
+            else if (GameManager.Pathing.FindPath(unit.Location, locationToGo).Count() <
+                     GameManager.Pathing.FindPath(unit.Location, location).Count() && !shortestRoute)
                  locationToGo = location;
         }
+        Debug.Log("Finished.");
 
-        IEnumerable<Vector3Int> checkLocations = pathfinder.FindPath(unit.Location, locationToGo);
+        //IEnumerable<Vector3Int> checkLocations = GameManager.Pathing.FindPath(unit.Location, locationToGo);
 
-        Vector3Int toTarget = unit.Location;
+        //Vector3Int toTarget = unit.Location;
         
-        while(toTarget == unit.Location)
-            foreach (IAbility ability in unit.Abilites)
-                foreach (Vector3Int location in unit.CalcuateValidNewLocation(ability))
-                    foreach(Vector3Int pathLocation in checkLocations)
-                        if (location == pathLocation)
-                        {
-                            toUse = ability;
-                            toTarget = location;
-                        }
+        //while(toTarget == unit.Location)
+        //    foreach (IAbility ability in unit.Abilites)
+        //        foreach (Vector3Int location in unit.CalcuateValidNewLocation(ability))
+        //            foreach(Vector3Int pathLocation in checkLocations)
+        //                if (location == pathLocation)
+        //                {
+        //                    toUse = ability;
+        //                    toTarget = location;
+        //                }
 
-        IEnumerable<Vector3Int> path = pathfinder.FindPath(unit.Location, toTarget);
-        if (gameManager.PerformMove(unit, toUse, toTarget, path))
-            UnitHasMoved(unit);
+        //IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(unit.Location, toTarget);
+        //if (gameManager.PerformMove(unit, toUse, toTarget, path))
+        //    UnitHasMoved(unit);
     }
 
     public override void EndTurn() => base.EndTurn();
