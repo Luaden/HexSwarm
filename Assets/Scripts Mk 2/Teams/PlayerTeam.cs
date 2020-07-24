@@ -47,7 +47,7 @@ public class PlayerTeam : Team
     protected void TeamInit()
     {
         unitsUnmoved.Clear();
-        unitsUnmoved.Union(units);
+        unitsUnmoved.UnionWith(units);
     }
 
     protected void ToggleCameraControls()
@@ -56,18 +56,41 @@ public class PlayerTeam : Team
         ConfigManager.instance.ToggleCameraControls(camControls);
     }
 
-    protected void HandleHighlighting()
+    protected bool HandleHighlighting()
     {
         pathEndPoint = GameManager.GetCellUnderMouse();
 
-        if ((gameManager.SelectedAbility == default)||(gameManager.DisplayedUnit == default)||
+        if ((gameManager.SelectedAbility == default) || (gameManager.DisplayedUnit == default) ||
             (gameManager.DisplayedUnit.Team != this))
-        {
-            pathEndPoint = default;
-            return;
-        }
-
+            return InvalidateHighLight();
         //my unit is selected and I have a selected ablity
+        if (!validMoves.Contains(pathEndPoint))
+            return InvalidateHighLight();
+        //I actually am over a valid point
+
+        var myDirection = DeterminMouseAngle();
+
+
+        return true;
+    }
+
+    protected Direction DeterminMouseAngle()
+    {
+        var mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var mydelta = mouseLocation - pathEndPoint.WorldPosition;
+        var angle = Mathf.Atan2(mydelta.y, mydelta.x) * Mathf.Rad2Deg + 30;
+        if (angle < 0)
+            angle += 360;
+        angle %= 360;
+        return (Direction)Mathf.FloorToInt((angle / 60));
+    }
+
+    protected bool InvalidateHighLight()
+    {
+        pathEndPoint = default;
+        GameManager.Battlefield.ClearHighlights();
+        travelPath = default;
+        return true;
     }
 
 

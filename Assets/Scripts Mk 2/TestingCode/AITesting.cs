@@ -7,7 +7,6 @@ public class AITesting : GameManager
     [SerializeField] protected Sprite Player1Icon;
     [SerializeField] protected Sprite AIIcon;
     protected bool gameIsStarted = false;
-    protected PlayerTeam player1;
     protected AITeam ai1;
     protected bool canAddAI = false;
     protected bool canAddPlayer = false;
