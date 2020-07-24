@@ -46,6 +46,6 @@ public class Unit : IUnit
 
     public IEnumerable<ICell> DiscoverHits(Vector3Int location, IAbility move, Direction direction = Direction.Zero)
     {
-        return move.GetAttack(Direction.Zero, location);
+        return move.GetAttack(direction, location).Where(x => x.Unit != default);
     }
 }

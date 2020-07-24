@@ -196,13 +196,13 @@ public class AITeam : Team
             if (hits == default)
                 continue;
 
-            AttackPattern attack = new AttackPattern(unit, ability, location, path, hits);
+            //AttackPattern attack = new AttackPattern(unit, ability, location, path, hits);
 
-            if (enemiesSeen.Intersect(hits).Count() > 0)
-                EvaluateBestAttacks(attack);
+            //if (enemiesSeen.Intersect(hits).Count() > 0)
+                //EvaluateBestAttacks(attack);
 
-            foreach (Vector3Int hitLocation in hits)
-                SaveAttackPattern(possibleAttacks, hitLocation, attack);
+            //foreach (Vector3Int hitLocation in hits)
+                //SaveAttackPattern(possibleAttacks, hitLocation, attack);
         }
 
         GetBestAttacks();
@@ -315,13 +315,13 @@ public class AITeam : Team
     protected void UseOffensiveStrategy()
     {
         Debug.Log("Using best attack.");
-        if (gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.TargetLocation, selectedAttack.Path))
-        {
-            enemiesSeen.Remove(selectedAttack.TargetLocation);
-            UnitHasMoved(selectedAttack.Unit);
+        //if (gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.TargetLocation, selectedAttack.Path))
+        //{
+        //    enemiesSeen.Remove(selectedAttack.TargetLocation);
+        //    UnitHasMoved(selectedAttack.Unit);
 
-            selectedAttack = null;
-        }        
+        //    selectedAttack = null;
+        //}        
     }
 
     protected void GetBestDefense()
@@ -343,14 +343,14 @@ public class AITeam : Team
     {
         Debug.Log("Using best defense.");
 
-        if (gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, selectedDefense.TargetLocation, selectedDefense.Path))
-        {
-            unguardedCells.Remove(battlefieldManager.World[selectedDefense.TargetLocation]);
+        //if (gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, selectedDefense.TargetLocation, selectedDefense.Path))
+        //{
+        //    unguardedCells.Remove(battlefieldManager.World[selectedDefense.TargetLocation]);
 
-            UnitHasMoved(selectedDefense.Unit);
+        //    UnitHasMoved(selectedDefense.Unit);
 
-            selectedDefense = null;
-        }        
+        //    selectedDefense = null;
+        //}        
     }
 
     protected void UnitHasMoved(IUnit unit)

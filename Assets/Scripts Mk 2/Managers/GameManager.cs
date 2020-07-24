@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour, IGameManager
         return true;
     }
 
-    public bool PerformMove(IUnit unit, IAbility ability, Vector3Int target, IEnumerable<Vector3Int> path)
+    public bool PerformMove(IUnit unit, IAbility ability, Direction direction, Vector3Int target, IEnumerable<Vector3Int> path)
     {
         if (unit.Team != activeTeams.Peek())
             return false;
@@ -142,25 +142,24 @@ public class GameManager : MonoBehaviour, IGameManager
             foreach (Vector3Int location in path)
                 pathEnds.Push(location);
 
-            end = DisplayedUnit.Location;
+            end = unit.Location;
             secondEnd = pathEnds.Pop();
         }
 
         if (path.Count() == 0)
             return false;
 
-        Direction angleOfAttack = GetDirection(secondEnd, end);
-
-        IEnumerable<ICell> attackLocations = ability.GetAttack(angleOfAttack, end);
+        IEnumerable<ICell> attackLocations = ability.GetAttack(direction, end);
 
         foreach (ICell cell in attackLocations)
             if (cell.Unit != null && cell.Unit.Team.TeamNumber == Teams.Player)
                 deaths.Add(cell.Unit);
 
-        Battlefield.MoveUnit(unit.Location, target, path);
+        if(path.Count() > 1)
+            Battlefield.MoveUnit(unit.Location, target, path);
 
         ResolveDeaths(deaths, unit);
-        Battlefield.ClearHighlights();
+        //Battlefield.ClearHighlights();
         return true;
     }
 
@@ -227,7 +226,7 @@ public class GameManager : MonoBehaviour, IGameManager
     }
 
     public Direction GetDirection(Vector3Int secondTolast, Vector3Int lastPostion)
-    {                    
+    {
         if (secondTolast.x < lastPostion.x && secondTolast.y > lastPostion.y)
             return Direction.Sixty;
         if (secondTolast.x == lastPostion.x && secondTolast.y > lastPostion.y)
@@ -263,7 +262,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
             Battlefield.DestroyUnit(corpse.Location);
 
-            if ((activeTeams.Peek().TeamNumber & Teams.Player) == 0)
+            if ((activeTeams.Peek().TeamNumber & Teams.Player) == Teams.Player)
                 GenerateUnitForTeam(unit.Team, unit, corpse.Location);
         }
     }
