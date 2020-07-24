@@ -11,7 +11,7 @@ public interface IUnit
     Vector3Int Location { get; }
 
     IEnumerable<IAbility> Abilites { get; }
-    IEnumerable<Vector3Int> CalcuateValidNewLocation(IAbility move);
+    IEnumerable<ICell> CalcuateValidNewLocation(IAbility move);
     IEnumerable<ICell> DiscoverHits(Vector3Int location, IAbility move, Direction refernce = Direction.Zero);
 }
 

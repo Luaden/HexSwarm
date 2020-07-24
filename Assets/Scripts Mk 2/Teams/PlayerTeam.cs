@@ -10,6 +10,10 @@ public class PlayerTeam : Team
     protected bool camControls = false;
     protected Vector3Int mousePosHighlight;
 
+    protected ICell pathEndPoint;
+    protected HashSet<ICell> validMoves;
+    protected IEnumerable<Vector3Int> travelPath;
+
     public PlayerTeam
         (GameManager gameManager,
         string name,
@@ -52,42 +56,40 @@ public class PlayerTeam : Team
         ConfigManager.instance.ToggleCameraControls(camControls);
     }
 
-
-    public void GetMouseInput()
+    protected void HandleHighlighting()
     {
-        if (gameManager.SelectedAbility != null && gameManager.DisplayedUnit != null)
+        pathEndPoint = GameManager.GetCellUnderMouse();
+
+        if ((gameManager.SelectedAbility == default)||(gameManager.DisplayedUnit == default)||
+            (gameManager.DisplayedUnit.Team != this))
         {
-            if(mousePosHighlight != gameManager.GetMousePosition())
-            {
-                mousePosHighlight = gameManager.GetMousePosition();
-                gameManager.ResolveHighlight(mousePosHighlight);                
-            }            
+            pathEndPoint = default;
+            return;
         }
 
-        if(Input.GetMouseButtonDown(0) && gameManager.SelectedAbility == null) 
-        {
-            if (EventSystem.current.IsPointerOverGameObject())
-                return;
-            
-            gameManager.InspectUnitUnderMouse();
-        }
+        //my unit is selected and I have a selected ablity
+    }
 
-        if (Input.GetMouseButtonDown(0) && gameManager.DisplayedUnit != null && gameManager.SelectedAbility != null)
-        {
-            if (EventSystem.current.IsPointerOverGameObject())
-                return;
 
-            Vector3Int mousePos = gameManager.GetMousePosition();
-            IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(gameManager.DisplayedUnit.Location, mousePos); 
-            gameManager.PerformMove(gameManager.DisplayedUnit, gameManager.SelectedAbility, mousePos, path);
-        }            
-
+    public void GetMouseInput() { ResolveMouseInput(); }
+    protected bool ResolveMouseInput()
+    {
         if (Input.GetMouseButtonDown(1))
-        {
-            if (EventSystem.current.IsPointerOverGameObject())
-                return;
             gameManager.ClearActiveUnit();
-        }
-            
+
+        if (!EventSystem.current.IsPointerOverGameObject())
+            return false;
+        //must be over grid
+
+        HandleHighlighting();
+
+        if (!Input.GetMouseButtonDown(0))
+            return true;
+        
+        if (pathEndPoint != default)
+            return gameManager.PerformMove(gameManager.DisplayedUnit, gameManager.SelectedAbility, pathEndPoint.GridPosition, travelPath);
+
+        gameManager.InspectUnitUnderMouse();
+        return true;
     }
 }

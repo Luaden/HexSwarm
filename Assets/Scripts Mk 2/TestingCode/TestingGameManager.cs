@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class TestingGameManager : GameManager
 {
-    [SerializeField] protected Sprite Team1Icon;
+    [SerializeField, Header("TestingGameManager")] protected Sprite Team1Icon;
     [SerializeField] protected Sprite Team2Icon;
 
     protected new void Start()

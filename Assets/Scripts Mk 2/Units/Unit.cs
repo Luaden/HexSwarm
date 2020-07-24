@@ -39,10 +39,9 @@ public class Unit : IUnit
 
 
 
-    public IEnumerable<Vector3Int> CalcuateValidNewLocation(IAbility move)
+    public IEnumerable<ICell> CalcuateValidNewLocation(IAbility move)
     {
-        return GameManager.Battlefield.GetNeighborCells(Location, move.MovementRange)
-            .Select(X=>X.GridPosition);
+        return move.GetMoves(this.Location).Where(X=>(X.Unit == default)||(X.Unit == this));
     }
 
     public IEnumerable<ICell> DiscoverHits(Vector3Int location, IAbility move, Direction direction = Direction.Zero)

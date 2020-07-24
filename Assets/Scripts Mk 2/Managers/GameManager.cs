@@ -34,12 +34,19 @@ public class GameManager : MonoBehaviour, IGameManager
     public IUnit DisplayedUnit { get; protected set; }
     public IAbility SelectedAbility => DisplayedUnit?.Abilites.ElementAtOrDefault(SelectedUnitPanel.LastSelected); 
 
-    public Vector3Int GetMousePosition() => Battlefield.GetVectorByClick(Input.mousePosition);
+    public static Vector3Int GetMousePosition() => Battlefield.GetVectorByClick(Input.mousePosition);
+
+    public static ICell GetCellUnderMouse()
+    {
+        ICell selectedcell;
+        Battlefield.World.TryGetValue(GetMousePosition(), out selectedcell);
+        return selectedcell;
+    }
 
     public void InspectUnitUnderMouse()
     {
         ICell selectedcell;
-        if (!Battlefield.World.TryGetValue(GetMousePosition(), out selectedcell))
+        if ((selectedcell = GetCellUnderMouse()) == default)
             return;
 
         if (selectedcell.Unit == default)

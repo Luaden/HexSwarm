@@ -11,6 +11,7 @@ public interface IAbility
     int MovementRange { get; }
     bool IsJump { get; }
     bool IsSpawn { get; }
+    IEnumerable<ICell> GetMoves(Vector3Int origin);
     IEnumerable<ICell> GetAttack(Direction direction, Vector3Int origin);
 }
 

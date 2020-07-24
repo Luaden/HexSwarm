@@ -42,6 +42,10 @@ public class Ability : IAbility
     [SerializeField] protected bool isJump;
     public bool IsJump => isJump;
 
+    public IEnumerable<ICell> GetMoves(Vector3Int gridOrigin)
+    {
+        return GameManager.Battlefield.GetValidCells(gridOrigin, defaultRanges.MovementRange);
+    }
     public IEnumerable<ICell> GetAttack(Direction direction, Vector3Int gridOrigin)
     {
         return GameManager.Battlefield.GetValidCells(gridOrigin, RotateAbility(direction, defaultRanges.DamageRange));

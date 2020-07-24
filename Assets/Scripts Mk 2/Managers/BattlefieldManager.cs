@@ -142,6 +142,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 
     public void HighlightGrid(IEnumerable<ICell> moveCells)
     {
+        ClearHighlights();
         foreach (ICell cell in moveCells)
         {
             moveHighlightMap.SetTile(cell.GridPosition, highlightTile);

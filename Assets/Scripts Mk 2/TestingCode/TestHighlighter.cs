@@ -21,7 +21,7 @@ public class TestHighlighter : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 ICell cell;
-                if (!GameManager.Battlefield.World.TryGetValue(gameManager.GetMousePosition(), out cell))
+                if (!GameManager.Battlefield.World.TryGetValue(GameManager.GetMousePosition(), out cell))
                     return;
 
                 Debug.Log("Adding move cell at " + cell.GridPosition);
@@ -32,7 +32,7 @@ public class TestHighlighter : MonoBehaviour
             if (Input.GetMouseButtonDown(1))
             {
                 ICell cell;
-                if (!GameManager.Battlefield.World.TryGetValue(gameManager.GetMousePosition(), out cell))
+                if (!GameManager.Battlefield.World.TryGetValue(GameManager.GetMousePosition(), out cell))
                     return;
                 Debug.Log("Removing move cell at " + cell.GridPosition);
                 highlightedMoveCells.Remove(cell);
@@ -45,7 +45,7 @@ public class TestHighlighter : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 ICell cell;
-                if (!GameManager.Battlefield.World.TryGetValue(gameManager.GetMousePosition(), out cell))
+                if (!GameManager.Battlefield.World.TryGetValue(GameManager.GetMousePosition(), out cell))
                     return;
                 Debug.Log("Adding attack cell at " + cell.GridPosition);
                 highlightedAttackCells.Add(cell);
@@ -55,7 +55,7 @@ public class TestHighlighter : MonoBehaviour
             if (Input.GetMouseButtonDown(1))
             {
                 ICell cell;
-                if (!GameManager.Battlefield.World.TryGetValue(gameManager.GetMousePosition(), out cell))
+                if (!GameManager.Battlefield.World.TryGetValue(GameManager.GetMousePosition(), out cell))
                     return;
                 Debug.Log("Removing attack cell at " + cell.GridPosition);
                 highlightedAttackCells.Remove(cell);

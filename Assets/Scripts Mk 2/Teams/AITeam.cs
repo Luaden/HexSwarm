@@ -164,7 +164,7 @@ public class AITeam : Team
                 if(CheckInTeamRange(unit))
                 {
                     Debug.Log("This unit is in team range!");
-                    IEnumerable<Vector3Int> results = unit.CalcuateValidNewLocation(ability);
+                    IEnumerable<Vector3Int> results = unit.CalcuateValidNewLocation(ability).Select(X=>X.GridPosition);
                     EvaluatePossibleAttacks(unit, ability, results);
                     EvaluatePossibleDefense(unit, ability, results);
                 }
