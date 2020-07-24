@@ -568,6 +568,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 97384929722761122, guid: bfa3684a3341fcf4cb652cbbe7306e3e,
         type: 3}
+      propertyPath: initAttackSFX.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 97384929722761122, guid: bfa3684a3341fcf4cb652cbbe7306e3e,
+        type: 3}
+      propertyPath: initMoveSFX.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 97384929722761122, guid: bfa3684a3341fcf4cb652cbbe7306e3e,
+        type: 3}
       propertyPath: unitSprites.Array.data[1]
       value: 
       objectReference: {fileID: 3026120706474155957, guid: 7ff6e1907a56f694281471628bc15303,
@@ -584,6 +594,36 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8355217360322311386, guid: 7ff6e1907a56f694281471628bc15303,
         type: 3}
+    - target: {fileID: 97384929722761122, guid: bfa3684a3341fcf4cb652cbbe7306e3e,
+        type: 3}
+      propertyPath: initAttackSFX.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 835ad794a85646640b3964f340c2ab09, type: 3}
+    - target: {fileID: 97384929722761122, guid: bfa3684a3341fcf4cb652cbbe7306e3e,
+        type: 3}
+      propertyPath: initAttackSFX.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: ac2e358dbe9b4704a881155989b976ad, type: 3}
+    - target: {fileID: 97384929722761122, guid: bfa3684a3341fcf4cb652cbbe7306e3e,
+        type: 3}
+      propertyPath: initAttackSFX.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 6955aac55028d1445a2b0f2f1bab062e, type: 3}
+    - target: {fileID: 97384929722761122, guid: bfa3684a3341fcf4cb652cbbe7306e3e,
+        type: 3}
+      propertyPath: initAttackSFX.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 6955aac55028d1445a2b0f2f1bab062e, type: 3}
+    - target: {fileID: 97384929722761122, guid: bfa3684a3341fcf4cb652cbbe7306e3e,
+        type: 3}
+      propertyPath: initAttackSFX.Array.data[4]
+      value: 
+      objectReference: {fileID: 8300000, guid: d33aca5747cc77c429cdd4632b704be3, type: 3}
+    - target: {fileID: 97384929722761122, guid: bfa3684a3341fcf4cb652cbbe7306e3e,
+        type: 3}
+      propertyPath: initMoveSFX.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: d33aca5747cc77c429cdd4632b704be3, type: 3}
     - target: {fileID: 3005742250650889028, guid: bfa3684a3341fcf4cb652cbbe7306e3e,
         type: 3}
       propertyPath: m_LocalPosition.x

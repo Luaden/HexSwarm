@@ -45,13 +45,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldUnitPrefab: {fileID: 5716365289145609130, guid: 9342a9dcf7e53af448f0e1c28264a4b2,
     type: 3}
-  unitSprites:
-  - {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
-  - {fileID: 3026120706474155957, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
-  - {fileID: 3026120706474155957, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
-  - {fileID: -7377170927877912761, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
-  - {fileID: 8355217360322311386, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
-  movementSounds: []
-  attackSounds: []
+  initMoveSFX:
+  - {fileID: 8300000, guid: d33aca5747cc77c429cdd4632b704be3, type: 3}
+  initAttackSFX:
+  - {fileID: 8300000, guid: 835ad794a85646640b3964f340c2ab09, type: 3}
+  - {fileID: 8300000, guid: ac2e358dbe9b4704a881155989b976ad, type: 3}
+  - {fileID: 8300000, guid: 6955aac55028d1445a2b0f2f1bab062e, type: 3}
   moveSpeed: 1
   dieSpeed: 1

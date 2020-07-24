@@ -79,7 +79,7 @@ public class PlayerTeam : Team
 
             Vector3Int mousePos = gameManager.GetMousePosition();
             IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(gameManager.DisplayedUnit.Location, mousePos); 
-            gameManager.PerformMove(gameManager.DisplayedUnit, gameManager.SelectedAbility, mousePos, path);
+            //gameManager.PerformMove(gameManager.DisplayedUnit, gameManager.SelectedAbility, mousePos, path);
         }            
 
         if (Input.GetMouseButtonDown(1))

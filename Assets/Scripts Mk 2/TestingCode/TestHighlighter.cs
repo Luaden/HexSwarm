@@ -1,5 +1,7 @@
 ﻿
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class TestHighlighter : MonoBehaviour
@@ -7,6 +9,8 @@ public class TestHighlighter : MonoBehaviour
     [SerializeField] protected List<ICell> highlightedMoveCells = new List<ICell>();
     [SerializeField] protected List<ICell> highlightedAttackCells = new List<ICell>();
     protected GameManager gameManager;
+    protected Vector3Int startPos;
+    protected bool findingPath;
 
     private void Awake()
     {
@@ -61,6 +65,34 @@ public class TestHighlighter : MonoBehaviour
                 highlightedAttackCells.Remove(cell);
                 GameManager.Battlefield.HighlightGrid(highlightedMoveCells, highlightedAttackCells);
             }
+        }
+
+        if(Input.GetKey(KeyCode.W))
+        {
+            if(Input.GetMouseButtonDown(0))
+            {
+                startPos = gameManager.GetMousePosition();
+                findingPath = true;
+            }
+
+            if(Input.GetMouseButtonDown(1))
+                findingPath = false;
+        }
+
+        if(findingPath)
+        {
+            highlightedMoveCells.Clear();
+            highlightedAttackCells.Clear();
+            GameManager.Battlefield.ClearHighlights();
+            IEnumerable<Vector3Int> newPath;
+            foreach (Vector3Int location in GameManager.Pathing.FindPath(startPos, gameManager.GetMousePosition()))
+            {
+                ICell cell;
+                if (GameManager.Battlefield.World.TryGetValue(location, out cell))
+                    highlightedMoveCells.Add(cell);
+            }
+
+            GameManager.Battlefield.HighlightGrid(highlightedMoveCells);            
         }
     }
 

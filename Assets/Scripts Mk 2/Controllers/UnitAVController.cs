@@ -34,6 +34,8 @@ public class UnitAVController : MonoBehaviour
 
     public void MoveUnit(IUnit unit, IEnumerable<Vector3Int> path)
     {
+        if (unit == null)
+            return;
         GameObject worldUnit;
         worldUnits.TryGetValue(unit, out worldUnit);
 
@@ -47,7 +49,6 @@ public class UnitAVController : MonoBehaviour
         }
         
         worldUnitPath.Add(worldPath, worldUnit);
-
     }
 
     public void DestroyUnit(IUnit unit)
