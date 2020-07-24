@@ -71,7 +71,7 @@ public class TestHighlighter : MonoBehaviour
         {
             if(Input.GetMouseButtonDown(0))
             {
-                startPos = gameManager.GetMousePosition();
+                startPos = GameManager.GetMousePosition();
                 findingPath = true;
             }
 
@@ -85,7 +85,7 @@ public class TestHighlighter : MonoBehaviour
             highlightedAttackCells.Clear();
             GameManager.Battlefield.ClearHighlights();
             IEnumerable<Vector3Int> newPath;
-            foreach (Vector3Int location in GameManager.Pathing.FindPath(startPos, gameManager.GetMousePosition()))
+            foreach (Vector3Int location in GameManager.Pathing.FindPath(startPos, GameManager.GetMousePosition()))
             {
                 ICell cell;
                 if (GameManager.Battlefield.World.TryGetValue(location, out cell))

@@ -13,6 +13,7 @@ public class PlayerTeam : Team
     protected ICell pathEndPoint;
     protected HashSet<ICell> validMoves;
     protected IEnumerable<Vector3Int> travelPath;
+    protected Direction direction;
 
     public PlayerTeam
         (GameManager gameManager,
@@ -110,7 +111,7 @@ public class PlayerTeam : Team
             return true;
         
         if (pathEndPoint != default)
-            return gameManager.PerformMove(gameManager.DisplayedUnit, gameManager.SelectedAbility, pathEndPoint.GridPosition, travelPath);
+            return gameManager.PerformMove(gameManager.DisplayedUnit, gameManager.SelectedAbility, direction, pathEndPoint.GridPosition, travelPath);
 
         gameManager.InspectUnitUnderMouse();
         return true;

@@ -141,7 +141,7 @@ public class TestAITeam : Team
             if (CheckInTeamRange(unit))
                 foreach (IAbility ability in unit.Abilites)
                 {
-                    IEnumerable<Vector3Int> results = unit.CalcuateValidNewLocation(ability);
+                    IEnumerable<Vector3Int> results = unit.CalcuateValidNewLocation(ability).Select(X=>X.GridPosition);
                     //EvaluatePossibleAttacks(unit, ability, results);
                     //EvaluatePossibleDefense(unit, ability, results);
                     GetRoute(unit, false);
@@ -421,12 +421,12 @@ public class TestAITeam : Team
 
         while (toTarget == unit.Location)
             foreach (IAbility ability in unit.Abilites)
-                foreach (Vector3Int location in unit.CalcuateValidNewLocation(ability))
+                foreach (ICell location in unit.CalcuateValidNewLocation(ability))
                     foreach (Vector3Int pathLocation in currentRoute)
-                        if (location == pathLocation)
+                        if (location.GridPosition == pathLocation)
                         {
                             toUse = ability;
-                            toTarget = location;
+                            toTarget = location.GridPosition;
                         }
 
         IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(unit.Location, toTarget);
