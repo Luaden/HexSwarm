@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SOAbility
   myAbility:
     Id: 136
+    isSpawn: 0
+    needsClearLand: 1
     name: SprayAndPrey
     description: lots of damage
     icon: {fileID: 0}
