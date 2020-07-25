@@ -92,10 +92,7 @@ public class UnitAVController : MonoBehaviour
             gameManager = FindObjectOfType<GameManager>();
     }
 
-    protected void Start()
-    {
-        teamColors = configManager.TeamColors;
-    }
+    protected void Start() => teamColors = configManager.TeamColors;
 
     protected void Update()
     {
