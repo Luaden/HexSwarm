@@ -18,5 +18,5 @@ MonoBehaviour:
     name: X of ?
     description: part of the evergrowing swarm
     ablities:
-    - {fileID: 11400000, guid: e277583b51ff66543b41f62e81b7d504, type: 2}
-    - {fileID: 0}
+    - {fileID: 11400000, guid: fd089c4460a6deb4784d54f6511b0020, type: 2}
+    - {fileID: 11400000, guid: 736e3ef7bc416224a80dba39f38a3405, type: 2}

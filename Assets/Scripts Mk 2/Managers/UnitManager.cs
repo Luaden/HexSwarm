@@ -3,16 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[Serializable]
-public class UnitManager
+[CreateAssetMenu(fileName = "UnitManager", menuName = "ScriptableObjects/UnitManager")]
+public class UnitManager : ScriptableObject, IScriptableCollection<SOUnit>
 {
     [SerializeField] protected List<SOUnit> EditorList;
-    protected Dictionary<Units, SOUnit> createUnits;
+    protected Dictionary<Units, SOUnit> createdUnits;
+    IReadOnlyDictionary<Units, SOUnit> CreatedUnits {
+        get
+        {
+            if (createdUnits == default)
+                SetInfo(EditorList);
+            return createdUnits;
+        }
+    }
 
-    public void Awake()
+    [ContextMenu("ReloadFromList")]
+    protected void reloadFromList()
     {
-        EditorList = GameObject.FindObjectsOfType<SOUnit>().ToList();
-        createUnits = EditorList.ToDictionary(X=>((Unit)X).ID);
+        SetInfo(EditorList);
+    }
+
+    protected void Awake()
+    {
+        if (EditorList == default)
+            return;
+        SetInfo(EditorList);
+    }
+
+    public void SetInfo(IEnumerable<SOUnit> units)
+    {
+        EditorList = EditorList.ToList();
+        createdUnits = EditorList.ToDictionary(X => ((Unit)X).ID);
     }
 
     public Unit this[Units key]
@@ -20,7 +41,7 @@ public class UnitManager
         get
         {
             SOUnit retrieved;
-            createUnits.TryGetValue(key, out retrieved);
+            CreatedUnits.TryGetValue(key, out retrieved);
             return retrieved;
         }
     }

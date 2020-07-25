@@ -18,4 +18,4 @@ MonoBehaviour:
     name: Factory
     description: Kill it with fire
     ablities:
-    - {fileID: 11400000, guid: 9fe1ac78b7dfda349900bbb808cd7663, type: 2}
+    - {fileID: 11400000, guid: d7cf357fe7cf48244bcc6bba1caad562, type: 2}

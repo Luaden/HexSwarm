@@ -221,6 +221,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
         if (ConfigManager == null)
             ConfigManager = ConfigManager.instance;
+
     }
     protected void Start() => NewGame();
 

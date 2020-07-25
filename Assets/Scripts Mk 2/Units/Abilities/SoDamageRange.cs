@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using System.Collections;
+using ThreeAxisExtensions;
 
 [CreateAssetMenu(fileName = "SODamgeRange", menuName = "ScriptableObjects/SODamgeRange")]
 public class SODamgeRange : ScriptableObject, IRange<Vector3Int>

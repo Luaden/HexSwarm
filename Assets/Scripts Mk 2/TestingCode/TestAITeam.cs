@@ -66,7 +66,6 @@ public class TestAITeam : Team
         possibleDefenses.Clear();
         bestHits.Clear();
         bestBlocks.Clear();
-
     }
 
     protected void CheckForEnemies()
