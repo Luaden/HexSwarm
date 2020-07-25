@@ -98,20 +98,36 @@ public class TestAITeam : Team
         GetEnemyLOS();
         GetPossibleMoves();
 
-        foreach(IUnit unit in units)
+        while(unitsUnmoved.Count > 0)
         {
-            if(enemiesSeen.Count > 0)
+            if (enemiesSeen.Count == 0)
             {
-                if (bestHits.Count() > 0)
-                    UseOffensiveStrategy();
-                //if (selectedDefense != null)
-                //    UseDefensiveStrategy();
+                GetNeutralRoute(unitsUnmoved.First());
+                GetBestAttacks();
+                continue;
             }
-            //else
-            //{
-            //    GetNeutralRoute(unit, false);
-            //}            
-        }
+
+            while (bestHits.Count > 0 && bestBlocks.Count > 0 && enemiesSeen.Count > 0)
+            {
+                if (ResolvedAttackDifficult())
+                {
+                    UseOffensiveStrategy();
+                    GetBestAttacks();
+                    continue;
+                }
+
+                UseDefensiveStrategy();
+                GetBestDefense();
+            }
+
+            while (bestBlocks.Count > 0 && enemiesSeen.Count > 0)
+            {
+                UseDefensiveStrategy();
+                GetBestDefense();
+            }
+
+            GetNeutralRoute(unitsUnmoved.First(), false);
+        }        
     }
 
     protected void GetEnemyLOS()
@@ -131,8 +147,6 @@ public class TestAITeam : Team
                 unguardedCells.Add(checkCell);
             }
         }
-
-        battlefieldManager.HighlightGrid(unguardedCells);
     }
 
     protected void GetPossibleMoves()
@@ -145,13 +159,13 @@ public class TestAITeam : Team
                 {
                     IEnumerable<Vector3Int> results = unit.CalcuateValidNewLocation(ability).Select(X => X.GridPosition);
                     EvaluatePossibleAttacks(unit, ability, results);
-                    //EvaluatePossibleDefense(unit, ability, results);
+                    EvaluatePossibleDefense(unit, ability, results);
                 }
             }
-            //else
-            //{
-            //    GetNeutralRoute(unit, true);
-            //}        
+            else
+            {
+                GetNeutralRoute(unit, true);
+            }
         }
     }
 
@@ -187,27 +201,25 @@ public class TestAITeam : Team
         GetBestAttacks();
     }
 
-    //private void EvaluatePossibleDefense(IUnit unit, IAbility ability, IEnumerable<Vector3Int> results)
-    //{
-    //    foreach (Vector3Int location in results)
-    //        foreach (Vector3Int cell in unguardedCells.Select(x => x.GridPosition))
-    //        {
-    //            if (location != cell)
-    //                continue;
+    private void EvaluatePossibleDefense(IUnit unit, IAbility ability, IEnumerable<Vector3Int> results)
+    {
+        foreach (Vector3Int location in results)
+            foreach (Vector3Int cell in unguardedCells.Select(x => x.GridPosition))
+            {
+                if (location != cell)
+                    continue;
 
-    //            IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(unit.Location, location);
+                IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(unit.Location, location);
 
-    //            DefendPattern defense = new DefendPattern(unit, ability, path, location);
-    //            SaveDefensePattern(possibleDefenses, location, defense);
-    //        }
+                DefendPattern defense = new DefendPattern(unit, ability, path, location);
+                SaveDefensePattern(possibleDefenses, location, defense);
+            }
 
-    //    GetBestDefense();
-    //}
+        GetBestDefense();
+    }
 
     protected void EvaluateBestAttacks(AttackPattern attackToCheck)
     {
-        Debug.Log("Adding / amending best hits : " + attackToCheck.HitCount);
-
         if ((bestHits.Count == 0) || (attackToCheck.HitCount > bestHits.Peek().HitCount))
         {
             bestHits.Clear();
@@ -220,17 +232,17 @@ public class TestAITeam : Team
         }
     }
 
-    //protected void EvaluateBestDefenses()
-    //{
-    //    foreach (KeyValuePair<Vector3Int, HashSet<DefendPattern>> entry in possibleDefenses)
-    //    {
-    //        if (entry.Value.Count == 1)
-    //            bestBlocks.Enqueue(entry.Value.ElementAt(0));
-    //    }
+    protected void EvaluateBestDefenses()
+    {
+        foreach (KeyValuePair<Vector3Int, HashSet<DefendPattern>> entry in possibleDefenses)
+        {
+            if (entry.Value.Count == 1)
+                bestBlocks.Enqueue(entry.Value.ElementAt(0));
+        }
 
-    //    if (bestBlocks.Count == 0 && possibleDefenses.Count > 0)
-    //        bestBlocks.Enqueue(possibleDefenses.First().Value.First());
-    //}
+        if (bestBlocks.Count == 0 && possibleDefenses.Count > 0)
+            bestBlocks.Enqueue(possibleDefenses.First().Value.First());
+    }
 
     protected void SaveAttackPattern(Dictionary<Vector3Int, HashSet<AttackPattern>> target, Vector3Int key, AttackPattern value)
     {
@@ -245,22 +257,22 @@ public class TestAITeam : Team
         targetPoint.Add(value);
     }
 
-    //protected void SaveDefensePattern(Dictionary<Vector3Int, HashSet<DefendPattern>> target, Vector3Int key, DefendPattern value)
-    //{
-    //    HashSet<DefendPattern> targetPoint;
+    protected void SaveDefensePattern(Dictionary<Vector3Int, HashSet<DefendPattern>> target, Vector3Int key, DefendPattern value)
+    {
+        HashSet<DefendPattern> targetPoint;
 
-    //    if (!target.TryGetValue(key, out targetPoint))
-    //    {
-    //        targetPoint = new HashSet<DefendPattern>();
-    //        target.Add(key, targetPoint);
-    //    }
+        if (!target.TryGetValue(key, out targetPoint))
+        {
+            targetPoint = new HashSet<DefendPattern>();
+            target.Add(key, targetPoint);
+        }
 
-    //    targetPoint.Add(value);
-    //}
+        targetPoint.Add(value);
+    }
 
     protected bool ResolvedAttackDifficult()
     {
-        int i = UnityEngine.Random.Range(1, 11);
+        int i = Random.Range(1, 11);
         float j = i * ConfigManager.instance.GameDifficulty;
 
         if (j <= 5)
@@ -295,42 +307,36 @@ public class TestAITeam : Team
         }
     }
 
-    //protected void GetBestDefense()
-    //{
-    //    EvaluateBestDefenses();
+    protected void GetBestDefense()
+    {
+        EvaluateBestDefenses();
 
-    //    if (bestBlocks.Count > 0)
-    //    {
-    //        Debug.Log("Assigning selected defense.");
-    //        selectedDefense = bestBlocks.Dequeue();
-    //    }
-    //}
+        if (bestBlocks.Count > 0)
+            selectedDefense = bestBlocks.Dequeue();
+    }
 
-    //protected void UseDefensiveStrategy()
-    //{
-    //    Debug.Log("Using best defense.");
+    protected void UseDefensiveStrategy()
+    {
+        Debug.Log("Using best defense.");
 
-    //    Queue<ICell> pathCells = new Queue<ICell>();
+        Queue<ICell> pathCells = new Queue<ICell>();
 
-    //    foreach (Vector3Int location in selectedDefense.Path)
-    //    {
-    //        ICell cell;
-    //        battlefieldManager.World.TryGetValue(location, out cell);
-    //        pathCells.Enqueue(cell);
-    //    }
+        foreach (Vector3Int location in selectedDefense.Path)
+        {
+            ICell cell;
+            battlefieldManager.World.TryGetValue(location, out cell);
+            pathCells.Enqueue(cell);
+        }
 
+        if (gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, Direction.Zero, selectedDefense.TargetLocation, selectedDefense.Path))
+        {
+            unguardedCells.Remove(battlefieldManager.World[selectedDefense.TargetLocation]);
 
-    //    GameManager.Battlefield.HighlightGrid(pathCells);
+            UnitHasMoved(selectedDefense.Unit);
 
-    //    if (gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, Direction.Zero, selectedDefense.TargetLocation, selectedDefense.Path))
-    //    {
-    //        unguardedCells.Remove(battlefieldManager.World[selectedDefense.TargetLocation]);
-
-    //        UnitHasMoved(selectedDefense.Unit);
-
-    //        selectedDefense = null;
-    //    }
-    //}
+            selectedDefense = null;
+        }
+    }
 
     protected void UnitHasMoved(IUnit unit)
     {
@@ -359,69 +365,67 @@ public class TestAITeam : Team
     protected IEnumerable<Vector3Int> checkPath;
 
 
-    //protected void GetNeutralRoute(IUnit unit, bool shortestRoute = true)
-    //{
-    //    int i = Random.Range(0, teamRange.Count);
-    //    int j = 0;
+    protected void GetNeutralRoute(IUnit unit, bool shortestRoute = true)
+    {
+        int i = Random.Range(0, teamRange.Count);
+        int j = 0;
 
-    //    foreach (ICell location in teamRange)
-    //    {
-    //        if (location.Unit != null || location == null)
-    //            continue;
+        foreach (ICell location in teamRange)
+        {
+            if (location.Unit != null || location == null)
+                continue;
 
-    //        j++;
-    //        if (j == i)
-    //            destination = location.GridPosition;
-    //    }
+            j++;
+            if (j == i)
+                destination = location.GridPosition;
+        }
 
-    //    currentPath = GameManager.Pathing.FindPath(unit.Location, destination);
+        currentPath = GameManager.Pathing.FindPath(unit.Location, destination);
 
-    //    if (shortestRoute)
-    //    {
-    //        foreach (ICell location in teamRange)
-    //        {
-    //            checkPath = GameManager.Pathing.FindPath(unit.Location, location.GridPosition);
+        if (shortestRoute)
+        {
+            foreach (ICell location in teamRange)
+            {
+                checkPath = GameManager.Pathing.FindPath(unit.Location, location.GridPosition);
 
-    //            if (checkPath == null || location.Unit != null)
-    //                continue;
+                if (checkPath == null || location.Unit != null)
+                    continue;
 
-    //            if (currentPath.Count() > checkPath.Count())
-    //            {
-    //                destination = location.GridPosition;
-    //                currentPath = checkPath;
-    //            }
-    //        }
+                if (currentPath.Count() > checkPath.Count())
+                {
+                    destination = location.GridPosition;
+                    currentPath = checkPath;
+                }
+            }
 
-    //        TakePath(unit, currentPath);
-    //    }
-    //    else if(!shortestRoute)
-    //    {
-    //        currentPath = GameManager.Pathing.FindPath(unit.Location, destination);
-    //        TakePath(unit, currentPath);
-    //    }
-    //}
+            TakePath(unit, currentPath);
+        }
+        else if (!shortestRoute)
+        {
+            currentPath = GameManager.Pathing.FindPath(unit.Location, destination);
+            TakePath(unit, currentPath);
+        }
+    }
 
-    //private void TakePath(IUnit unit, IEnumerable<Vector3Int> currentPath)
-    //{
-    //    foreach (IAbility ability in unit.Abilites)
-    //        foreach (Vector3Int location in currentPath)
-    //            foreach (Vector3Int target in unit.CalcuateValidNewLocation(ability).Select(x => x.GridPosition))
-    //                if (target == location && target != unit.Location)
-    //                {
-    //                    toTarget = target;
-    //                    toUse = ability;
-    //                    break;
-    //                }
+    private void TakePath(IUnit unit, IEnumerable<Vector3Int> currentPath)
+    {
+        foreach (IAbility ability in unit.Abilites)
+            foreach (Vector3Int location in currentPath)
+                foreach (Vector3Int target in unit.CalcuateValidNewLocation(ability).Select(x => x.GridPosition))
+                    if (target == location && target != unit.Location)
+                    {
+                        toTarget = target;
+                        toUse = ability;
+                        break;
+                    }
 
 
-    //    IEnumerable<Vector3Int> abilityPath = GameManager.Pathing.FindPath(unit.Location, toTarget);
+        IEnumerable<Vector3Int> abilityPath = GameManager.Pathing.FindPath(unit.Location, toTarget);
 
-    //    if (gameManager.PerformMove(unit, toUse, Direction.Zero, toTarget, abilityPath))
-    //    {
-    //        Debug.Log("Unit has moved.");
-    //        UnitHasMoved(unit);
-    //    }            
-    //}
+        gameManager.PerformMove(unit, toUse, Direction.Zero, toTarget, abilityPath);
+        UnitHasMoved(unit);
+    }
 
-    public override void EndTurn() => base.EndTurn();
+    public override void EndTurn() => gameManager.EndTurn();
+
 }

@@ -10,7 +10,7 @@ public class UnitAVController : MonoBehaviour
     [SerializeField] protected float moveSpeed = 1f;
     [SerializeField] protected float dieSpeed;
 
-    protected ColorConfig[] teamColors;
+    protected List<ColorConfig> teamColors;
     protected GameManager gameManager;
     protected ConfigManager configManager;
     protected Dictionary<IUnit, GameObject> worldUnits = new Dictionary<IUnit, GameObject>();
@@ -29,7 +29,6 @@ public class UnitAVController : MonoBehaviour
             worldUnits.Add(unit, worldUnit);
 
         int team = (int)unit.Team.TeamNumber;
-        Debug.Log("Team: " + team);
         renderer.color = configManager.TeamColors[team].PrimaryColor;
         renderer.sprite = unit.Icon;
         
@@ -64,7 +63,7 @@ public class UnitAVController : MonoBehaviour
         worldUnits.Remove(unit);
     }
 
-    public void ChangeTeamColors(ColorConfig[] colors)
+    public void ChangeTeamColors(List<ColorConfig> colors)
     {
         foreach (ColorConfig color in colors)
             foreach (KeyValuePair<IUnit, GameObject> worldUnit in worldUnits)

@@ -9,17 +9,16 @@ public enum Colors
     green = 5,
     orange = 6,
     purple = 7,
-    black = 8,
-    white = 9
+    pink = 8,
+    black = 9,
+    white = 10
 }
 
 public interface IColorConfig
 {
     Color PrimaryColor { get; }
-    Color SecondaryColor { get; }
 
     Colors PrimaryColorCategory { get; }
-    Colors SecondaryColorCategory { get; }
 }
 
 [System.Serializable]
@@ -27,9 +26,7 @@ public class ColorConfig : IColorConfig
 {
     public Teams TeamNumber;
     public Color PrimaryColor { get; set; }
-    public Color SecondaryColor { get; set; }
     public Colors PrimaryColorCategory { get; set; }
-    public Colors SecondaryColorCategory { get; set; }
 
     public Color GetColor(Colors color)
     {
@@ -47,6 +44,8 @@ public class ColorConfig : IColorConfig
             return new Color(255/255f, 112/255f, 0f, 255/255f);
         if (color == Colors.purple)
             return new Color(97/255f, 13/255f, 224/255f, 255/255f);
+        if (color == Colors.pink)
+            return new Color(255 / 255f, 0f, 203 / 255f, 255f);
         if (color == Colors.black)
             return Color.black;
         

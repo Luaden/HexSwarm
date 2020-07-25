@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Title Scene Mk 2.unity
     guid: de26f546fb67a7c47a22e815bd346c9c
   - enabled: 1
-    path: Assets/Scenes/Game Scene Mk 2.unity
-    guid: 7fd79fc8ab1ce4f46b6c0e3b462cba10
+    path: Assets/Scenes/AI Testing Game Scene.unity
+    guid: 3a51d4eb4cd00394e9e641310a9aeec6
   m_configObjects: {}

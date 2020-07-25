@@ -7,7 +7,7 @@ public interface IGameOptions
 {
     float GameDifficulty { get;  }
     MapShape MapShape { get; }
-    ColorConfig[] TeamColors { get; }
+    List<ColorConfig> TeamColors { get; }
 
     void ChangeTeamColor(int teamIndex, ColorConfig colors);
 }

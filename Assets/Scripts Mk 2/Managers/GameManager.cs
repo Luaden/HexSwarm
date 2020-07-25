@@ -138,34 +138,11 @@ public class GameManager : MonoBehaviour, IGameManager
         {
             Debug.Log("Bad spawner. Go away.");
             return true;
-        }
-            
+        }            
 
-        List<IUnit> deaths = new List<IUnit>();
-        Stack<Vector3Int> pathEnds = new Stack<Vector3Int>();
+        List<IUnit> deaths = new List<IUnit>();        
 
-        if (path.Count() > 1)
-        {
-            foreach (Vector3Int location in path)
-                pathEnds.Push(location);
-
-            end = pathEnds.Pop();
-            secondEnd = pathEnds.Pop();
-        }
-
-        if (path.Count() == 1)
-        {
-            foreach (Vector3Int location in path)
-                pathEnds.Push(location);
-
-            end = unit.Location;
-            secondEnd = pathEnds.Pop();
-        }
-
-        if (path.Count() == 0)
-            return false;
-
-        IEnumerable<ICell> attackLocations = ability.GetAttack(direction, end);
+        IEnumerable<ICell> attackLocations = ability.GetAttack(direction, target);
 
         foreach (ICell cell in attackLocations)
             if (cell.Unit != null && cell.Unit.Team.TeamNumber == Teams.Player)
@@ -175,7 +152,6 @@ public class GameManager : MonoBehaviour, IGameManager
             Battlefield.MoveUnit(unit.Location, target, path);
 
         ResolveDeaths(deaths, unit);
-        //Battlefield.ClearHighlights();
         return true;
     }
 
@@ -239,10 +215,12 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void Update()
     {
-        //if (activeTeams.Count == 0)
-        //    return;
+        if (activeTeams.Count == 0)
+            return;
         //PlayerTeam currentPlayer = activeTeams.Peek() as PlayerTeam;
         //currentPlayer?.GetMouseInput();
+        if (activeTeams.Peek() == player1)
+            EndTurn();
     }
 
     public Direction GetDirection(Vector3Int secondTolast, Vector3Int lastPostion)
@@ -349,16 +327,12 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void SpawnAITeam(int i)
     {
-
         while (true)
         {
             if (ValidateSpawnLocation(GetSpawnLocation()))
-            {
-                int j = i;
-                if (j > 9)
-                    j -= 8;
+            {               
 
-                TestAITeam ai = new TestAITeam(this, "AI" + j, "Tank wielding maniac.", UnitManager[Units.Infantry].Icon, (Teams)j,
+                TestAITeam ai = new TestAITeam(this, "AI" + i, "Tank wielding maniac.", UnitManager[Units.Infantry].Icon, (Teams)i,
                 spawnLocation,
                 new HashSet<IUnit>());
                 activeTeams.Enqueue(ai);
