@@ -413,6 +413,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitManager: {fileID: 11400000, guid: a69608da3ef9e1a4a8d363ab46ce1084, type: 2}
+  teamCountPerLevel: 4
+  rangeFromNeighbors: 3
+  levelCounter: 0
+  gridSize: 0
   Team1Icon: {fileID: 21300000, guid: 23716a8d47909fe428596134d68887d1, type: 3}
   Team2Icon: {fileID: 21300000, guid: 37676670ef4795e48afb647ba484baaa, type: 3}
 --- !u!114 &1576566968
@@ -428,6 +432,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitManager: {fileID: 11400000, guid: a69608da3ef9e1a4a8d363ab46ce1084, type: 2}
+  teamCountPerLevel: 0
+  rangeFromNeighbors: 0
+  levelCounter: 0
+  gridSize: 0
   Team1Icon: {fileID: 21300000, guid: 23716a8d47909fe428596134d68887d1, type: 3}
   Team2Icon: {fileID: 21300000, guid: 37676670ef4795e48afb647ba484baaa, type: 3}
   validateAblity: {fileID: 11400000, guid: 29cf73a40fc6ffe4892b29921ee9ea21, type: 2}
@@ -2853,6 +2861,15 @@ PrefabInstance:
       propertyPath: unitManager.EditorList.Array.data[1]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1895993705, guid: bb7ed41ce2aa0eb47bb7ee2c34983834, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1895993705, guid: bb7ed41ce2aa0eb47bb7ee2c34983834, type: 3}
+      propertyPath: unitManager
+      value: 
+      objectReference: {fileID: 11400000, guid: a69608da3ef9e1a4a8d363ab46ce1084,
+        type: 2}
     - target: {fileID: 6339621299134571379, guid: bb7ed41ce2aa0eb47bb7ee2c34983834,
         type: 3}
       propertyPath: m_Name
