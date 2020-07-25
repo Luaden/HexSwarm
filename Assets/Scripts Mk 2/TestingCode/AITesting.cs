@@ -49,7 +49,7 @@ public class AITesting : GameManager
             new HashSet<IUnit>());
         activeTeams.Enqueue(ai1);
 
-        GenerateUnitForTeam(ai1, UnitManager[Units.Spawner], ai1.StartPosition);
+        GenerateUnitForTeam(ai1, UnitManager[Units.Infantry], ai1.StartPosition);
     }
 
     protected void GeneratePlayerTeam(Vector3Int target)

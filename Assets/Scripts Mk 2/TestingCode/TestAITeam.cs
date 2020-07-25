@@ -5,7 +5,7 @@ using UnityEngine;
 public class TestAITeam : Team
 {
     //Used for base data population
-    protected int defaultDetectionRange = 3;
+    protected int defaultDetectionRange = 6;
     protected int detectionRange;
     protected int controlledArea;
     protected AttackPattern selectedAttack;
@@ -67,12 +67,10 @@ public class TestAITeam : Team
         bestHits.Clear();
         bestBlocks.Clear();
 
-        Debug.Log("Initialization complete.");
     }
 
     protected void CheckForEnemies()
     {
-        Debug.Log("Checking for enemies.");
         foreach (IUnit unit in units)
         {
             CheckForEnemies(unit);
@@ -97,17 +95,26 @@ public class TestAITeam : Team
 
     protected void DetermineStrategy()
     {
-        Debug.Log("Determining strategy.");
         GetEnemyLOS();
-        Debug.Log("Team range is: " + detectionRange * 2);
-        Debug.Log("Team range count: " + teamRange.Count);
         GetPossibleMoves();
-        //if (bestHits.Count() > 0)
-        //    UseOffensiveStrategy();
-        //if (selectedDefense != null)
-        //    UseDefensiveStrategy();
-        
-            
+
+        foreach(IUnit unit in units)
+        {
+            if (!unitsUnmoved.Contains(unit))
+                continue;
+
+            if(enemiesSeen.Count > 0)
+            {
+                if (bestHits.Count() > 0)
+                    UseOffensiveStrategy();
+                if (selectedDefense != null)
+                    UseDefensiveStrategy();
+            }
+            else
+            {
+                GetNeutralRoute(unit, false);
+            }            
+        }
     }
 
     protected void GetEnemyLOS()
@@ -135,22 +142,19 @@ public class TestAITeam : Team
     {
         foreach (IUnit unit in units)
         {
-            if (!unitsUnmoved.Contains(unit))
-                continue;
-
             if (CheckInTeamRange(unit))
+            {
                 foreach (IAbility ability in unit.Abilites)
                 {
-                    IEnumerable<Vector3Int> results = unit.CalcuateValidNewLocation(ability).Select(X=>X.GridPosition);
-                    //EvaluatePossibleAttacks(unit, ability, results);
-                    //EvaluatePossibleDefense(unit, ability, results);
-                    GetRoute(unit, false);
+                    IEnumerable<Vector3Int> results = unit.CalcuateValidNewLocation(ability).Select(X => X.GridPosition);
+                    EvaluatePossibleAttacks(unit, ability, results);
+                    EvaluatePossibleDefense(unit, ability, results);
                 }
+            }
             else
-                {
-                    Debug.Log("Unit out of team range.");
-                    GetRoute(unit, true);
-                }
+            {
+                GetNeutralRoute(unit, true);
+            }        
         }
     }
 
@@ -164,195 +168,193 @@ public class TestAITeam : Team
         return true;
     }
 
-    //protected void EvaluatePossibleAttacks(IUnit unit, IAbility ability, IEnumerable<Vector3Int> results)
-    //{
-    //    foreach (Vector3Int location in results)
-    //    {
-    //        foreach(Direction direction in System.Enum.GetValues(typeof(Direction)))
-    //        {
-    //            IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(unit.Location, location);
-    //            IEnumerable<Vector3Int> hits = unit.DiscoverHits(location, ability, direction).Select(X => X.GridPosition);
+    protected void EvaluatePossibleAttacks(IUnit unit, IAbility ability, IEnumerable<Vector3Int> results)
+    {
+        foreach (Vector3Int location in results)
+        {
+            foreach (Direction direction in System.Enum.GetValues(typeof(Direction)))
+            {
+                IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(unit.Location, location);
+                IEnumerable<Vector3Int> hits = unit.DiscoverHits(location, ability, direction).Select(X => X.GridPosition);
 
-    //            if (hits == default)
-    //                continue;
+                if (hits == default)
+                    continue;
 
-    //            AttackPattern attack = new AttackPattern(unit, ability, direction, location, path, hits);
+                AttackPattern attack = new AttackPattern(unit, ability, direction, location, path, hits);
 
-    //            foreach (Vector3Int hitLocation in hits)
-    //                SaveAttackPattern(possibleAttacks, hitLocation, attack);
-    //        }            
-    //    }
+                foreach (Vector3Int hitLocation in hits)
+                    SaveAttackPattern(possibleAttacks, hitLocation, attack);
+            }
+        }
 
-    //    GetBestAttacks();
-    //}
+        GetBestAttacks();
+    }
 
-    //private void EvaluatePossibleDefense(IUnit unit, IAbility ability, IEnumerable<Vector3Int> results)
-    //{
-    //    Debug.Log("Evaluating possible defenses.");
-    //    foreach (Vector3Int location in results)
-    //        foreach (Vector3Int cell in unguardedCells.Select(x => x.GridPosition))
-    //        {
-    //            if (location != cell)
-    //                continue;
+    private void EvaluatePossibleDefense(IUnit unit, IAbility ability, IEnumerable<Vector3Int> results)
+    {
+        foreach (Vector3Int location in results)
+            foreach (Vector3Int cell in unguardedCells.Select(x => x.GridPosition))
+            {
+                if (location != cell)
+                    continue;
 
-    //            IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(unit.Location, location);
+                IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(unit.Location, location);
 
-    //            DefendPattern defense = new DefendPattern(unit, ability, path, location);
-    //            SaveDefensePattern(possibleDefenses, location, defense);
-    //        }
+                DefendPattern defense = new DefendPattern(unit, ability, path, location);
+                SaveDefensePattern(possibleDefenses, location, defense);
+            }
 
-    //    GetBestDefense();
-    //}
+        GetBestDefense();
+    }
 
-    //protected void EvaluateBestAttacks(AttackPattern attackToCheck)
-    //{
-    //    Debug.Log("Adding / amending best hits : " + attackToCheck.HitCount);
+    protected void EvaluateBestAttacks(AttackPattern attackToCheck)
+    {
+        Debug.Log("Adding / amending best hits : " + attackToCheck.HitCount);
 
-    //    if ((bestHits.Count == 0) || (attackToCheck.HitCount > bestHits.Peek().HitCount))
-    //    {
-    //        bestHits.Clear();
-    //        bestHits.Push(attackToCheck);
-    //    }
+        if ((bestHits.Count == 0) || (attackToCheck.HitCount > bestHits.Peek().HitCount))
+        {
+            bestHits.Clear();
+            bestHits.Push(attackToCheck);
+        }
 
-    //    else if (attackToCheck.HitCount == bestHits.Peek().HitCount)
-    //    {
-    //        bestHits.Push(attackToCheck);
-    //    }
-    //}
+        else if (attackToCheck.HitCount == bestHits.Peek().HitCount)
+        {
+            bestHits.Push(attackToCheck);
+        }
+    }
 
-    //protected void EvaluateBestDefenses()
-    //{
-    //    foreach (KeyValuePair<Vector3Int, HashSet<DefendPattern>> entry in possibleDefenses)
-    //    {
-    //        if (entry.Value.Count == 1)
-    //        {
-    //            bestBlocks.Enqueue(entry.Value.ElementAt(0));
-    //            Debug.Log("Added defense to best blocks.");
-    //        }                
-    //    }
+    protected void EvaluateBestDefenses()
+    {
+        foreach (KeyValuePair<Vector3Int, HashSet<DefendPattern>> entry in possibleDefenses)
+        {
+            if (entry.Value.Count == 1)
+                bestBlocks.Enqueue(entry.Value.ElementAt(0));
+        }
 
-    //    if (bestBlocks.Count == 0 && possibleDefenses.Count > 0)
-    //    {
-    //        bestBlocks.Enqueue(possibleDefenses.First().Value.First());
-    //        Debug.Log("Added defense to best blocks.");
-    //    }            
-    //}
+        if (bestBlocks.Count == 0 && possibleDefenses.Count > 0)
+            bestBlocks.Enqueue(possibleDefenses.First().Value.First());
+    }
 
-    //protected void SaveAttackPattern(Dictionary<Vector3Int, HashSet<AttackPattern>> target, Vector3Int key, AttackPattern value)
-    //{
-    //    HashSet<AttackPattern> targetPoint;
+    protected void SaveAttackPattern(Dictionary<Vector3Int, HashSet<AttackPattern>> target, Vector3Int key, AttackPattern value)
+    {
+        HashSet<AttackPattern> targetPoint;
 
-    //    if (!target.TryGetValue(key, out targetPoint))
-    //    {
-    //        targetPoint = new HashSet<AttackPattern>();
-    //        target.Add(key, targetPoint);
-    //    }
+        if (!target.TryGetValue(key, out targetPoint))
+        {
+            targetPoint = new HashSet<AttackPattern>();
+            target.Add(key, targetPoint);
+        }
 
-    //    targetPoint.Add(value);
-    //}
+        targetPoint.Add(value);
+    }
 
-    //protected void SaveDefensePattern(Dictionary<Vector3Int, HashSet<DefendPattern>> target, Vector3Int key, DefendPattern value)
-    //{
-    //    HashSet<DefendPattern> targetPoint;
+    protected void SaveDefensePattern(Dictionary<Vector3Int, HashSet<DefendPattern>> target, Vector3Int key, DefendPattern value)
+    {
+        HashSet<DefendPattern> targetPoint;
 
-    //    if (!target.TryGetValue(key, out targetPoint))
-    //    {
-    //        targetPoint = new HashSet<DefendPattern>();
-    //        target.Add(key, targetPoint);
-    //    }
+        if (!target.TryGetValue(key, out targetPoint))
+        {
+            targetPoint = new HashSet<DefendPattern>();
+            target.Add(key, targetPoint);
+        }
 
-    //    targetPoint.Add(value);
-    //    Debug.Log("I have " + possibleDefenses.Count + " defense patterns.");
-    //}
+        targetPoint.Add(value);
+    }
 
-    //protected bool ResolvedAttackDifficult()
-    //{
-    //    int i = UnityEngine.Random.Range(1, 11);
-    //    float j = i * ConfigManager.instance.GameDifficulty;
+    protected bool ResolvedAttackDifficult()
+    {
+        int i = UnityEngine.Random.Range(1, 11);
+        float j = i * ConfigManager.instance.GameDifficulty;
 
-    //    if (j <= 5)
-    //        return false;
-    //    return true;
-    //}
+        if (j <= 5)
+            return false;
+        return true;
+    }
 
-    //protected void MoveRandomly(IUnit unit)
-    //{
-    //    Debug.Log("Decided to move randomly.");
-    //    CheckInTeamRange(unit);
-    //    GetRoute(unit, teamRange);
-    //}
+    protected void GetBestAttacks()
+    {
+        foreach (KeyValuePair<Vector3Int, HashSet<AttackPattern>> entry in possibleAttacks)
+        {
+            if (!enemiesSeen.Contains(entry.Key))
+                continue;
 
-    //protected void GetBestAttacks()
-    //{
-    //    foreach (KeyValuePair<Vector3Int, HashSet<AttackPattern>> entry in possibleAttacks)
-    //    {
-    //        if (!enemiesSeen.Contains(entry.Key))
-    //            continue;
+            foreach (AttackPattern attack in entry.Value)
+                EvaluateBestAttacks(attack);
+        }
 
-    //        foreach (AttackPattern attack in entry.Value)
-    //            EvaluateBestAttacks(attack);
-    //    }
+        if (bestHits.Count != 0)
+            selectedAttack = bestHits.Pop();
+    }
 
-    //    if (bestHits.Count != 0)
-    //        selectedAttack = bestHits.Pop();
-    //}
+    protected void UseOffensiveStrategy()
+    {
+        Queue<ICell> pathCells = new Queue<ICell>();
+        Queue<ICell> attackLocs = new Queue<ICell>();
 
-    //protected void UseOffensiveStrategy()
-    //{
-    //    Queue<ICell> pathCells = new Queue<ICell>();
-    //    Queue<ICell> attackLocs = new Queue<ICell>();
+        foreach (Vector3Int location in selectedAttack.Path)
+        {
+            ICell cell;
+            battlefieldManager.World.TryGetValue(location, out cell);
+            pathCells.Enqueue(cell);
+        }
 
-    //    foreach(Vector3Int location in selectedAttack.Path)
-    //    {
-    //        ICell cell;
-    //        battlefieldManager.World.TryGetValue(location, out cell);
-    //        pathCells.Enqueue(cell);
-    //    }
+        foreach (Vector3Int location in selectedAttack.LocationsHit)
+        {
+            ICell cell;
+            battlefieldManager.World.TryGetValue(location, out cell);
+            attackLocs.Enqueue(cell);
+        }
 
-    //    foreach(Vector3Int location in selectedAttack.LocationsHit)
-    //    {
-    //        ICell cell;
-    //        battlefieldManager.World.TryGetValue(location, out cell);
-    //        attackLocs.Enqueue(cell);
-    //    }
+        GameManager.Battlefield.HighlightGrid(pathCells, attackLocs);
 
-    //    GameManager.Battlefield.HighlightGrid(pathCells, attackLocs);
+        if (gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.Direction, selectedAttack.TargetLocation, selectedAttack.Path))
+        {
+            enemiesSeen.ExceptWith(selectedAttack.LocationsHit);
+            UnitHasMoved(selectedAttack.Unit);
 
-    //    if (gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.Direction, selectedAttack.TargetLocation, selectedAttack.Path))
-    //    {
-    //        enemiesSeen.ExceptWith(selectedAttack.LocationsHit);
-    //        UnitHasMoved(selectedAttack.Unit);
+            selectedAttack = null;
+            Debug.Log("Using best offense.");
+        }
+    }
 
-    //        selectedAttack = null;
-    //    }
-    //}
+    protected void GetBestDefense()
+    {
+        EvaluateBestDefenses();
 
-    //protected void GetBestDefense()
-    //{
-    //    EvaluateBestDefenses();
+        if (bestBlocks.Count > 0)
+        {
+            Debug.Log("Assigning selected defense.");
+            selectedDefense = bestBlocks.Dequeue();
+        }
+    }
 
-    //    if (bestBlocks.Count > 0)
-    //    {
-    //        Debug.Log("Assigning selected defense.");
-    //        selectedDefense = bestBlocks.Dequeue();
-    //    }            
-    //}
+    protected void UseDefensiveStrategy()
+    {
+        Debug.Log("Using best defense.");
 
-    //protected void UseDefensiveStrategy()
-    //{
-    //    Debug.Log("Using best defense.");
+        Queue<ICell> pathCells = new Queue<ICell>();
 
-    //    if (gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, Direction.Zero, selectedDefense.TargetLocation, selectedDefense.Path))
-    //    {
-    //        unguardedCells.Remove(battlefieldManager.World[selectedDefense.TargetLocation]);
+        foreach (Vector3Int location in selectedDefense.Path)
+        {
+            ICell cell;
+            battlefieldManager.World.TryGetValue(location, out cell);
+            pathCells.Enqueue(cell);
+        }
 
-    //        UnitHasMoved(selectedDefense.Unit);
 
-    //        selectedDefense = null;
-    //    }
-    //}
+        GameManager.Battlefield.HighlightGrid(pathCells);
 
-        protected void UnitHasMoved(IUnit unit)
+        if (gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, Direction.Zero, selectedDefense.TargetLocation, selectedDefense.Path))
+        {
+            unguardedCells.Remove(battlefieldManager.World[selectedDefense.TargetLocation]);
+
+            UnitHasMoved(selectedDefense.Unit);
+
+            selectedDefense = null;
+        }
+    }
+
+    protected void UnitHasMoved(IUnit unit)
     {
         CheckForEnemies(unit);
         unitsUnmoved.Remove(unit);
@@ -373,65 +375,74 @@ public class TestAITeam : Team
 
 
     protected Vector3Int toTarget;
+    protected Vector3Int destination;
     protected IAbility toUse;
-    protected void GetRoute(IUnit unit, bool shortestRoute = true)
+    protected IEnumerable<Vector3Int> currentPath;
+    protected IEnumerable<Vector3Int> checkPath;
+
+
+    protected void GetNeutralRoute(IUnit unit, bool shortestRoute = true)
     {
-        if (!shortestRoute)
+        int i = Random.Range(0, teamRange.Count);
+        int j = 0;
+
+        foreach (ICell location in teamRange)
         {
-            IEnumerable<ICell> avoidRange = battlefieldManager.GetNeighborCells(StartPosition, detectionRange);
-            HashSet<ICell> tempRange = new HashSet<ICell>();
-            tempRange.UnionWith(teamRange);
-            tempRange.ExceptWith(avoidRange);
-
-            TakeRoute(unit, tempRange, shortestRoute);            
-        }
-        else
-        {
-            TakeRoute(unit, teamRange, shortestRoute);
-        }            
-    }
-
-    protected void TakeRoute(IUnit unit, HashSet<ICell> cellRange, bool shortestRoute)
-    {
-        Vector3Int destination = cellRange.First().GridPosition;
-        IEnumerable<Vector3Int> currentRoute = GameManager.Pathing.FindPath(unit.Location, destination);
-
-
-        foreach (ICell location in cellRange)
-        {
-            if (location.Unit != null)
+            if (location.Unit != null || location == null)
                 continue;
 
-            IEnumerable<Vector3Int> checkPath = GameManager.Pathing.FindPath(unit.Location, location.GridPosition);
-
-            if (!shortestRoute && currentRoute.Count() < checkPath.Count())
-            {
+            j++;
+            if (j == i)
                 destination = location.GridPosition;
-                currentRoute = checkPath;
-            }            
-
-            if (shortestRoute && currentRoute.Count() > checkPath.Count())
-            {
-                destination = location.GridPosition;
-                currentRoute = checkPath;
-            }
         }
 
-        toTarget = unit.Location;
+        currentPath = GameManager.Pathing.FindPath(unit.Location, destination);
 
-        while (toTarget == unit.Location)
-            foreach (IAbility ability in unit.Abilites)
-                foreach (ICell location in unit.CalcuateValidNewLocation(ability))
-                    foreach (Vector3Int pathLocation in currentRoute)
-                        if (location.GridPosition == pathLocation)
-                        {
-                            toUse = ability;
-                            toTarget = location.GridPosition;
-                        }
+        if (shortestRoute)
+        {
+            foreach (ICell location in teamRange)
+            {
+                checkPath = GameManager.Pathing.FindPath(unit.Location, location.GridPosition);
 
-        IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(unit.Location, toTarget);
-        if (gameManager.PerformMove(unit, toUse, Direction.Zero, toTarget, path))
+                if (checkPath == null || location.Unit != null)
+                    continue;
+
+                if (currentPath.Count() > checkPath.Count())
+                {
+                    destination = location.GridPosition;
+                    currentPath = checkPath;
+                }
+            }
+
+            TakePath(unit, currentPath);
+        }
+        else if(!shortestRoute)
+        {
+            currentPath = GameManager.Pathing.FindPath(unit.Location, destination);
+            TakePath(unit, currentPath);
+        }
+    }
+
+    private void TakePath(IUnit unit, IEnumerable<Vector3Int> currentPath)
+    {
+        foreach (IAbility ability in unit.Abilites)
+            foreach (Vector3Int location in currentPath)
+                foreach (Vector3Int target in unit.CalcuateValidNewLocation(ability).Select(x => x.GridPosition))
+                    if (target == location && target != unit.Location)
+                    {
+                        toTarget = target;
+                        toUse = ability;
+                        break;
+                    }
+
+
+        IEnumerable<Vector3Int> abilityPath = GameManager.Pathing.FindPath(unit.Location, toTarget);
+
+        if (gameManager.PerformMove(unit, toUse, Direction.Zero, toTarget, abilityPath))
+        {
+            Debug.Log("Unit has moved.");
             UnitHasMoved(unit);
+        }            
     }
 
     public override void EndTurn() => base.EndTurn();

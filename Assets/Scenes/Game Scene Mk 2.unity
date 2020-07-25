@@ -1008,6 +1008,11 @@ PrefabInstance:
     - target: {fileID: 1576566967, guid: bb7ed41ce2aa0eb47bb7ee2c34983834, type: 3}
       propertyPath: unitManager.EditorList.Array.data[2]
       value: 
+      objectReference: {fileID: 11400000, guid: 5287f4df1be53c54a8d99dc9356b3ca4,
+        type: 2}
+    - target: {fileID: 1576566967, guid: bb7ed41ce2aa0eb47bb7ee2c34983834, type: 3}
+      propertyPath: unitManager.EditorList.Array.data[1]
+      value: 
       objectReference: {fileID: 11400000, guid: 01b85b05480e0e14daccdfc19833a17c,
         type: 2}
     - target: {fileID: 6339621299134571379, guid: bb7ed41ce2aa0eb47bb7ee2c34983834,
