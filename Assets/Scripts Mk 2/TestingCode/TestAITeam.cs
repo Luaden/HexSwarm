@@ -285,29 +285,6 @@ public class TestAITeam : Team
 
     protected void UseOffensiveStrategy()
     {
-        Queue<ICell> pathCells = new Queue<ICell>();
-        Queue<ICell> attackLocs = new Queue<ICell>();
-
-        if(selectedAttack.Path != null)
-        {
-            foreach (Vector3Int location in selectedAttack.Path)
-            {
-                ICell cell;
-                battlefieldManager.World.TryGetValue(location, out cell);
-                pathCells.Enqueue(cell);
-            }           
-        }
-
-        foreach (Vector3Int location in selectedAttack.LocationsHit)
-        {
-            ICell cell;
-            battlefieldManager.World.TryGetValue(location, out cell);
-            attackLocs.Enqueue(cell);
-        }
-
-
-        GameManager.Battlefield.HighlightGrid(pathCells, attackLocs);
-
         if (gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.Direction, selectedAttack.TargetLocation, selectedAttack.Path))
         {
             enemiesSeen.ExceptWith(selectedAttack.LocationsHit);
