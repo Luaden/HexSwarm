@@ -75,15 +75,13 @@ public class PlayerTeam : Team
 
         direction = DeterminMouseAngle(pathEndPoint);
 
-        IEnumerable<Vector3Int> displayPath =
+        travelPath =
             ((gameManager.SelectedAbility.IsJump) || validMoves.Count == 1) ?
                 validMoves.Select(X=>X.GridPosition) :
                 GameManager.Pathing.FindPath(gameManager.DisplayedUnit.Location, pathEndPoint.GridPosition);
-                  
-            
 
         GameManager.Battlefield.HighlightGrid(
-            displayPath,
+            travelPath,
             gameManager.SelectedAbility.GetAttack(direction, pathEndPoint.GridPosition)
         );
 
@@ -125,12 +123,12 @@ public class PlayerTeam : Team
         if (!Input.GetMouseButton(0))
             return true;
 
-        if (!validMoves.Contains(pathEndPoint))
+        if (validMoves.Contains(pathEndPoint))
         {
             if (gameManager.PerformMove(gameManager.DisplayedUnit, gameManager.SelectedAbility, direction, pathEndPoint.GridPosition, travelPath))
                 unitsUnmoved.Remove(gameManager.DisplayedUnit);
-               
         }
+
         gameManager.InspectUnitUnderMouse();
         validMoves.Clear();
         return true;
