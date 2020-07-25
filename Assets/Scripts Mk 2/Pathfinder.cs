@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using UnityEditor.Animations;
 using UnityEngine;
 using DictonaryExtentions;
 
@@ -101,7 +96,7 @@ public class Pathfinder
 
         if (!allCells.TryGetValue(destinationVector, out destination))
             return System.Array.Empty<Vector3Int>();
-
+        // Fix zero movement pathing
         
 
         origin.FCost = 0;

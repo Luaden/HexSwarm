@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -12,6 +10,7 @@ public class UnitAVController : MonoBehaviour
     [SerializeField] protected float moveSpeed = 1f;
     [SerializeField] protected float dieSpeed;
 
+    protected List<ColorConfig> teamColors;
     protected GameManager gameManager;
     protected ConfigManager configManager;
     protected Dictionary<IUnit, GameObject> worldUnits = new Dictionary<IUnit, GameObject>();
@@ -24,11 +23,15 @@ public class UnitAVController : MonoBehaviour
     public void PlaceNewUnit(IUnit unit)
     {
         GameObject worldUnit = Instantiate(worldUnitPrefab, this.transform);
+        SpriteRenderer renderer = worldUnit.GetComponent<SpriteRenderer>();
 
         if (!worldUnits.ContainsKey(unit))
             worldUnits.Add(unit, worldUnit);
 
-        worldUnit.GetComponent<SpriteRenderer>().sprite = unit.Icon;
+        int team = (int)unit.Team.TeamNumber;
+        renderer.color = configManager.TeamColors[team].PrimaryColor;
+        renderer.sprite = unit.Icon;
+        
         worldUnit.transform.position = GameManager.Battlefield.GetWorldLocation(unit.Location);
     }
 
@@ -60,12 +63,25 @@ public class UnitAVController : MonoBehaviour
         worldUnits.Remove(unit);
     }
 
-    public void ChangeTeamColors(IEnumerable<ColorConfig> colors)
+    public void ChangeTeamColors(List<ColorConfig> colors)
     {
         foreach (ColorConfig color in colors)
             foreach (KeyValuePair<IUnit, GameObject> worldUnit in worldUnits)
                 if (color.TeamNumber == worldUnit.Key.Team.TeamNumber)
                     worldUnit.Value.GetComponent<SpriteRenderer>().color = color.PrimaryColor;
+    }
+
+    public void Nuke()
+    {
+        foreach(KeyValuePair<IUnit, GameObject> entry in worldUnits)
+        {
+            Destroy(entry.Value);
+        }
+
+        worldUnits.Clear();
+        worldUnitPath.Clear();
+        totalUnitsToDie.Clear();
+        currentUnitsToDie.Clear();
     }
 
     protected void Awake()
@@ -74,6 +90,11 @@ public class UnitAVController : MonoBehaviour
             configManager = FindObjectOfType<ConfigManager>();
         if (gameManager == null)
             gameManager = FindObjectOfType<GameManager>();
+    }
+
+    protected void Start()
+    {
+        teamColors = configManager.TeamColors;
     }
 
     protected void Update()

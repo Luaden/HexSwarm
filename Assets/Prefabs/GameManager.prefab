@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6339621299134571380}
-  - component: {fileID: 1576566967}
+  - component: {fileID: 1895993705}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1576566967
+--- !u!114 &1895993705
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,7 +40,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6339621299134571379}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 023a9e31b52a86b4d876ff3123c97933, type: 3}
+  m_Script: {fileID: 11500000, guid: cce56a6fd0c6d314ebba9708a2fa5a0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   unitManager:
@@ -49,6 +49,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 1b33e950f2729694badf61b2fa96ce00, type: 2}
     - {fileID: 11400000, guid: 01b85b05480e0e14daccdfc19833a17c, type: 2}
     - {fileID: 0}
-  Player1Icon: {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303,
-    type: 3}
-  AIIcon: {fileID: 8355217360322311386, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
+  teamCountPerLevel: 2
+  rangeFromNeighbors: 2
+  levelCounter: 1
+  gridSize: 10

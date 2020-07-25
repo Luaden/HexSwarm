@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class ConfigManager : MonoBehaviour, IConfigManager
 {
-    protected ColorConfig[] teamColors;
+    protected GameManager gameManager;
+    protected List<ColorConfig> teamColors;
     protected KeyCode scrollLeft = KeyCode.A;
     protected KeyCode scrollRight = KeyCode.D;
     protected KeyCode scrollUp = KeyCode.W;
@@ -29,7 +31,7 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     public KeyCode Ability3 => ability3;
     public KeyCode Ability4 => ability4;
     public float GameDifficulty { get => gameDifficulty; set => gameDifficulty = value; }
-    public IColorConfig[] TeamColors { get => teamColors; }
+    public List<ColorConfig> TeamColors { get => teamColors; }
     public AudioController AudioController { get; set; }
     public CameraController CameraController { get; set; }
     public MapShape MapShape { get; set; }
@@ -60,15 +62,21 @@ public class ConfigManager : MonoBehaviour, IConfigManager
         get => speedModifier;
         set => UpdateSpeedModifier(value);
     }
-
     
-
-    //This needs to be expanded to call to the team through the game manager and update colors.
-    public void ChangeTeamColor(int teamIndex, IColorConfig colors) => TeamColors[teamIndex] = colors;
     public void PlayMusic(AudioClip bgm) => AudioController.PlayMusic(bgm);
     public void PlaySound(AudioClip sfx) => AudioController.PlaySound(sfx);
     public void RepositionCamera(Vector3Int cameraPosition) => CameraController.RepositionCamera(cameraPosition);
     public void ToggleCameraControls(bool cameraControlOnOff) => CameraController.ToggleCameraControls(cameraControlOnOff);
+
+    public void ChangeTeamColor(int teamIndex, ColorConfig colors)
+    {
+        TeamColors[teamIndex] = colors;
+
+        if(GameManager.UnitAVController != null)
+        {
+            GameManager.UnitAVController.ChangeTeamColors(TeamColors);
+        }
+    }
 
     protected void Awake()
     {
@@ -113,19 +121,32 @@ public class ConfigManager : MonoBehaviour, IConfigManager
 
     protected void InitTeamColors()
     {
-        teamColors = new ColorConfig[9];
+        teamColors = new List<ColorConfig>();
+        ColorConfig config = new ColorConfig();
 
-        for(int i = 0; i < teamColors.Length; i++)
+        foreach(Teams team in System.Enum.GetValues(typeof(Teams)))
         {
-            ColorConfig config = new ColorConfig();
-            config.TeamNumber = (Teams)i;
-            config.PrimaryColor = config.GetColor((Colors)i);
-            config.PrimaryColorCategory = (Colors)i;
-            config.SecondaryColor = config.GetColor((Colors)i);
-            config.SecondaryColorCategory = (Colors)i;
+            
+            config = new ColorConfig();
+            config.TeamNumber = team;
+            config.PrimaryColor = config.GetColor((Colors)(int)team);
+            config.PrimaryColorCategory = (Colors)(int)team;
 
-            teamColors[i] = config;
+            Debug.Log(config.TeamNumber);
+            Debug.Log(config.GetColor((Colors)(int)team));
+            teamColors.Add(config);
         }
+        //for (int i = 0; i < teamColors.Length; i++)
+        //{            
+        //    config = new ColorConfig();
+        //    config.TeamNumber = (Teams)i;
+        //    config.PrimaryColor = config.GetColor((Colors)i);
+        //    config.PrimaryColorCategory = (Colors)i;
+
+        //    Debug.Log(config.TeamNumber);
+        //    Debug.Log(config.GetColor((Colors)i));
+        //    teamColors[i] = config;
+        //}
     }
 
     protected void OnLevelWasLoaded(int level)
