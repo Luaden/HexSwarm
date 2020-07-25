@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 914ac5c843249814c912c56da95bc9d2, type: 3}
   m_Name: SpawnM1-1
   m_EditorClassIdentifier: Assembly-CSharp::SODamgeRange
-  rotates: 1
+  rotates: 0
   isSpawn: 1
   ThreeAxisRange:
   - {x: 1, y: 0, z: -1}

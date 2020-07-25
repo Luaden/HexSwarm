@@ -10,13 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 845f1d78a090766459836192a8b90060, type: 3}
-  m_Name: Grey Goo
+  m_Name: Nanos
   m_EditorClassIdentifier: 
   myUnit:
     id: 16
     icon: {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
-    name: X of ?
-    description: part of the evergrowing swarm
-    ablities:
-    - {fileID: 11400000, guid: fd089c4460a6deb4784d54f6511b0020, type: 2}
-    - {fileID: 11400000, guid: 736e3ef7bc416224a80dba39f38a3405, type: 2}
+    name: 
+    description: 
+    ablities: []

@@ -15,8 +15,6 @@ MonoBehaviour:
   myUnit:
     id: 8
     icon: {fileID: -7377170927877912761, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
-    name: Grunt
-    description: Expendable and tasty!
-    ablities:
-    - {fileID: 11400000, guid: a588e8dfd1bbfd04d9bf2d02920a26a5, type: 2}
-    - {fileID: 11400000, guid: 277ca37f4626bf647b0d952669a34e7b, type: 2}
+    name: 
+    description: 
+    ablities: []

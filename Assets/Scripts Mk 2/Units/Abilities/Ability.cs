@@ -16,7 +16,7 @@ public class Ability : IAbility
     public Sprite Icon { get => icon; set => icon = value; }
 
 
-    [SerializeField] protected SODamgeRange ThreeAxisAttack;
+    [SerializeField] protected SODamageRange ThreeAxisAttack;
     public bool IsSpawn => ThreeAxisAttack.IsSpawn;
     [SerializeField] protected SOMovementRange ThreeAxisMove;
     public bool NeedsClearLand => ThreeAxisMove.NeedsClearSpace;

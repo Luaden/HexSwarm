@@ -4,8 +4,8 @@ using System;
 using System.Collections;
 using ThreeAxisExtensions;
 
-[CreateAssetMenu(fileName = "SODamgeRange", menuName = "ScriptableObjects/SODamgeRange")]
-public class SODamgeRange : ScriptableObject, IRange<Vector3Int>
+[CreateAssetMenu(fileName = "SODamageRange", menuName = "ScriptableObjects/SODamageRange")]
+public class SODamageRange : ScriptableObject, IRange<Vector3Int>
 {
     [SerializeField] protected bool rotates = false;
     public bool Rotates => rotates;
