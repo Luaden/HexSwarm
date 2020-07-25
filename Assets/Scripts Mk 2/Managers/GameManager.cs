@@ -124,6 +124,12 @@ public class GameManager : MonoBehaviour, IGameManager
             return false;
         if (path == null)
             return false;
+        if (unit.ID == Units.Spawner)
+        {
+            Debug.Log("Bad spawner. Go away.");
+            return true;
+        }
+            
 
         List<IUnit> deaths = new List<IUnit>();
         Stack<Vector3Int> pathEnds = new Stack<Vector3Int>();
