@@ -3414,9 +3414,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4fc0957996e6bb40a6a5928dc9e3481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundMap: {fileID: 9172483065449588445}
   groundTiles:
   - {fileID: 11400000, guid: 33e0e996e956fbd4e95554536c8cb864, type: 2}
-  highlightTile: {fileID: 11400000, guid: 55eca38f9372ff248b07aa8a36cd057a, type: 2}
-  groundMap: {fileID: 9172483065449588445}
   moveHighlightMap: {fileID: 8437128120866082831}
+  moveTile: {fileID: 11400000, guid: c559fad75e32e854c95d4864a23bf8f8, type: 2}
   attackHighlightMap: {fileID: 3907107774899642754}
+  attackTile: {fileID: 11400000, guid: 55eca38f9372ff248b07aa8a36cd057a, type: 2}

@@ -2,19 +2,20 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using MapExtensions;
 
 public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
 {
+    [SerializeField, Header("Ground")] protected Tilemap groundMap;
     [SerializeField] protected Tile[] groundTiles;
-    [SerializeField] protected Tile highlightTile;
-    [SerializeField] protected Tilemap groundMap;
-    [SerializeField] protected Tilemap moveHighlightMap;
-    [SerializeField] protected Tilemap attackHighlightMap;
+    [SerializeField, Header("Movement")] protected Tilemap moveHighlightMap;
+    [SerializeField] protected Tile moveTile;
+    [SerializeField, Header("Attacks")] protected Tilemap attackHighlightMap;
+    [SerializeField] protected Tile attackTile;
 
     protected Grid mapGrid;
     protected Dictionary<Vector3Int, ICell> gridLookup = new Dictionary<Vector3Int, ICell>();
     protected Dictionary<Vector3Int, ICell> threeAxisLookup = new Dictionary<Vector3Int, ICell>();
-    protected List<ICell> highlightedCells = new List<ICell>();
     protected List<ICell> neighbors;
     protected ICell checkCell;
     protected ICell fromCell;
@@ -130,35 +131,20 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     #region Highlight Cells
     public void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<ICell> attackCells)
     {
-        ClearHighlights();
         HighlightGrid(moveCells);
-
-        foreach (ICell cell in attackCells)
-        {
-            attackHighlightMap.SetTile(cell.GridPosition, highlightTile);
-            highlightedCells.Add(cell);
-        }
+        attackHighlightMap.PaintTiles(attackCells.Select(X => X.GridPosition), attackTile);
     }
 
     public void HighlightGrid(IEnumerable<ICell> moveCells)
     {
         ClearHighlights();
-        foreach (ICell cell in moveCells)
-        {
-            moveHighlightMap.SetTile(cell.GridPosition, highlightTile);
-            highlightedCells.Add(cell);
-        }
+        moveHighlightMap.PaintTiles(moveCells.Select(X => X.GridPosition), moveTile);
     }
 
     public void ClearHighlights()
     {
-        foreach (ICell cell in highlightedCells)
-        {
-            moveHighlightMap.SetTile(cell.GridPosition, null);
-            attackHighlightMap.SetTile(cell.GridPosition, null);
-        }
-
-        highlightedCells.Clear();
+        moveHighlightMap.ClearAllTiles();
+        attackHighlightMap.ClearAllTiles();
     }
     #endregion
 
