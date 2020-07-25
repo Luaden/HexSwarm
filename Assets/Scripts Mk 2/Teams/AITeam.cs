@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using DictonaryExtentions;
 
 public class AITeam : Team
 {    
@@ -220,7 +221,7 @@ public class AITeam : Team
                 IEnumerable<Vector3Int> path = GameManager.Pathing.FindPath(unit.Location, location);
 
                 DefendPattern defense = new DefendPattern(unit, ability, path, location);
-                SaveDefensePattern(possibleDefenses, location, defense);
+                possibleDefenses.JustAdd(location, defense);
             }
         EvaluateBestDefenses();
     }
