@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour, IGameManager
             Battlefield.MoveUnit(unit.Location, target, path);
 
         List<IUnit> deaths = new List<IUnit>();
-        IEnumerable<ICell> attackLocations = ability.GetAttack(direction, end);
+        IEnumerable<ICell> attackLocations = ability.GetAttack(direction, target);
 
         foreach (ICell cell in attackLocations)
             if (cell.Unit != null && cell.Unit.Team.TeamNumber == Teams.Player)
