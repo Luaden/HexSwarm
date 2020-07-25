@@ -129,16 +129,21 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     #endregion
 
     #region Highlight Cells
-    public void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<ICell> attackCells)
+    public void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<ICell> attackCells){ HighlightGrid(moveCells, attackCells.Select(X => X.GridPosition));}
+    public void HighlightGrid(IEnumerable<Vector3Int> moveCells, IEnumerable<ICell> attackCells) { HighlightGrid(moveCells, attackCells.Select(X => X.GridPosition)); }
+    public void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<Vector3Int> attackCells) {HighlightGrid(moveCells, attackCells);}
+    public void HighlightGrid(IEnumerable<Vector3Int> moveCells, IEnumerable<Vector3Int> attackCells)
     {
         HighlightGrid(moveCells);
-        attackHighlightMap.PaintTiles(attackCells.Select(X => X.GridPosition), attackTile);
+        attackHighlightMap.PaintTiles(attackCells, attackTile);
     }
 
-    public void HighlightGrid(IEnumerable<ICell> moveCells)
+    public void HighlightGrid(IEnumerable<ICell> moveCells) { HighlightGrid(moveCells.Select(X => X.GridPosition)); }
+    public void HighlightGrid(IEnumerable<Vector3Int> moveCells)
     {
         ClearHighlights();
-        moveHighlightMap.PaintTiles(moveCells.Select(X => X.GridPosition), moveTile);
+        moveHighlightMap.PaintTiles(moveCells, moveTile);
+
     }
 
     public void ClearHighlights()

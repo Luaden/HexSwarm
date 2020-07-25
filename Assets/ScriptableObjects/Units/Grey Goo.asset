@@ -15,8 +15,8 @@ MonoBehaviour:
   myUnit:
     id: 16
     icon: {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
-    name: X of ???
+    name: X of ?
     description: part of the evergrowing swarm
     ablities:
-    - {fileID: 11400000, guid: fe868ac2a2e425244be044b33f94fa1a, type: 2}
-    - {fileID: 11400000, guid: 9a5ff8792ad4ca34abd15404bd0c8c3f, type: 2}
+    - {fileID: 11400000, guid: e277583b51ff66543b41f62e81b7d504, type: 2}
+    - {fileID: 0}

@@ -173,8 +173,9 @@ public class GameManager : MonoBehaviour, IGameManager
     {
         GridSize = Mathf.RoundToInt((10 + levelCounter) * ConfigManager.GameDifficulty);
         Battlefield.GenerateGrid(GridSize, ConfigManager.MapShape);
-
         activeTeams.Clear();
+
+
 
         EndTurn();
         return true;

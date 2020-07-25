@@ -71,7 +71,11 @@ public class PlayerTeam : Team
 
         direction = DeterminMouseAngle(pathEndPoint);
 
-        //GameManager.Battlefield.HighlightGrid();
+
+        GameManager.Battlefield.HighlightGrid(
+            GameManager.Pathing.FindPath(gameManager.DisplayedUnit.Location, pathEndPoint.GridPosition),
+            gameManager.SelectedAbility.GetAttack(direction, pathEndPoint.GridPosition)
+        );
 
         return true;
     }
@@ -102,13 +106,13 @@ public class PlayerTeam : Team
         if (Input.GetMouseButtonDown(1))
             gameManager.ClearActiveUnit();
 
-        if (!EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current.IsPointerOverGameObject())
             return false;
         //must be over grid
 
         HandleHighlighting();
 
-        if (!Input.GetMouseButtonDown(0))
+        if (!Input.GetMouseButton(0))
             return true;
         
         if (pathEndPoint != default)

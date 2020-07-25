@@ -18,6 +18,9 @@ public interface IBattlefieldManager
     IEnumerable<ICell> GetNeighborCells(Vector3Int origin, int range = 1);
     Vector3Int GetVectorByClick(Vector2 mouseScreenPos);
     void GenerateGrid(int gridHeight, MapShape mapShape);
+    void HighlightGrid(IEnumerable<Vector3Int> moveCells, IEnumerable<Vector3Int> attackCells);
+    void HighlightGrid(IEnumerable<Vector3Int> moveCells, IEnumerable<ICell> attackCells);
+    void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<Vector3Int> attackCells);
     void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<ICell> attackCells);
     void HighlightGrid(IEnumerable<ICell> moveCells);
     void ClearHighlights();

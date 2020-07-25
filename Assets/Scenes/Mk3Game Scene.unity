@@ -415,12 +415,11 @@ MonoBehaviour:
   unitManager:
     EditorList:
     - {fileID: 11400000, guid: 5287f4df1be53c54a8d99dc9356b3ca4, type: 2}
-    - {fileID: 11400000, guid: 01b85b05480e0e14daccdfc19833a17c, type: 2}
     - {fileID: 11400000, guid: 1b33e950f2729694badf61b2fa96ce00, type: 2}
     - {fileID: 0}
   Team1Icon: {fileID: 21300000, guid: 23716a8d47909fe428596134d68887d1, type: 3}
   Team2Icon: {fileID: 21300000, guid: 37676670ef4795e48afb647ba484baaa, type: 3}
-  validateAblity: {fileID: 11400000, guid: 11d0a9f96c0589740a229c8044ea4871, type: 2}
+  validateAblity: {fileID: 0}
   valdateUnit: {fileID: 11400000, guid: 1b33e950f2729694badf61b2fa96ce00, type: 2}
   ValidateMovement: 1
 --- !u!114 &1576566968
@@ -448,6 +447,26 @@ MonoBehaviour:
   direction: 0
   useUpdate: 1
   angle: 0
+--- !u!114 &1576566969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576566966}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a619b0f41cf91a14288b95705db566b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitManager:
+    EditorList:
+    - {fileID: 11400000, guid: 01b85b05480e0e14daccdfc19833a17c, type: 2}
+    - {fileID: 11400000, guid: 5287f4df1be53c54a8d99dc9356b3ca4, type: 2}
+    - {fileID: 11400000, guid: 1b33e950f2729694badf61b2fa96ce00, type: 2}
+    - {fileID: 0}
+  Team1Icon: {fileID: 21300000, guid: 23716a8d47909fe428596134d68887d1, type: 3}
+  Team2Icon: {fileID: 21300000, guid: 37676670ef4795e48afb647ba484baaa, type: 3}
 --- !u!114 &2102556315 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2569526561222782265, guid: e01ce1583ed3f16428897b2b65caa1e3,
