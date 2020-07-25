@@ -15,9 +15,9 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>, IButtonIndexer
     [SerializeField] protected int lastSelected;
     public int LastSelected => lastSelected;
     public void Start()
-    {
-        for (int i = 0; i < Abilites.Count; i++)
-            Abilites[i].Init(false, i, this);
+    {
+        for (int i = 0; i < Abilites.Count; i++)
+            Abilites[i].Init(false, i, this);
     }
 
     public override void UpdateUI(IUnit unit)
@@ -28,11 +28,9 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>, IButtonIndexer
         UpdateSprite(unitImage, unit.Icon);
         UpdateText(unitName, unit.Name);
         UpdateText(unitDescription, unit.Description);
-
         foreach (AbilityDisplay ablitydisplay in Abilites)
             ablitydisplay.UpdateUI(unit.Abilites.ElementAtOrDefault(ablitydisplay.Index));
-
-        Buttonclicked(-1);
+        Buttonclicked(-1);
     }
 
     protected override bool ClearedIfEmpty(IUnit unit)

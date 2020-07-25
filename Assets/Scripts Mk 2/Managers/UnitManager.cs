@@ -3,38 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[Serializable]
-public class UnitManager : ISerializationCallbackReceiver
+[CreateAssetMenu(fileName = "UnitManager", menuName = "ScriptableObjects/UnitManager")]
+public class UnitManager : ScriptableObject, IScriptableCollection<SOUnit>
 {
-    [SerializeField] protected List<SOUnit> EditorList = new List<SOUnit>();
-    protected Dictionary<Units, SOUnit> createUnits = new Dictionary<Units, SOUnit>();
+    [SerializeField] protected List<SOUnit> EditorList;
+    protected Dictionary<Units, SOUnit> createdUnits;
+    IReadOnlyDictionary<Units, SOUnit> CreatedUnits {
+        get
+        {
+            if (createdUnits == default)
+                SetInfo(EditorList);
+            return createdUnits;
+        }
+    }
+
+    [ContextMenu("ReloadFromList")]
+    protected void reloadFromList()
+    {
+        SetInfo(EditorList);
+    }
+
+    protected void Awake()
+    {
+        if (EditorList == default)
+            return;
+        SetInfo(EditorList);
+    }
+
+    public void SetInfo(IEnumerable<SOUnit> units)
+    {
+        EditorList = EditorList.ToList();
+        createdUnits = EditorList.ToDictionary(X => ((Unit)X).ID);
+    }
 
     public Unit this[Units key]
     {
         get
         {
             SOUnit retrieved;
-            createUnits.TryGetValue(key, out retrieved);
+            CreatedUnits.TryGetValue(key, out retrieved);
             return retrieved;
         }
-    }
-
-    public void OnAfterDeserialize()
-    {
-        createUnits.Clear();
-        foreach (SOUnit type in EditorList.Where(x => (x != default) && ((Unit)x) != default))
-            if (createUnits.ContainsKey(((Unit)type).ID))
-                Debug.Log(string.Format("entry {0} has duplicate key {1}", EditorList.FindIndex(x => ((Unit)x).ID == ((Unit)type).ID), ((Unit)type).ID));
-            else
-                createUnits.Add(((Unit)type).ID, type);
-    }
-
-    public void OnBeforeSerialize()
-    {
-        if (createUnits.Count == 0)
-            return;
-        EditorList.Clear();
-        EditorList.AddRange(createUnits.Values);
-        EditorList.Add(default);
     }
 }

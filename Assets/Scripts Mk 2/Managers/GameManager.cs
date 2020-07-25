@@ -69,56 +69,6 @@ public class GameManager : MonoBehaviour, IGameManager
         SelectedUnitPanel.UpdateUI(DisplayedUnit);
     }
 
-    public void ResolveHighlight(Vector3Int mousePos)
-    {
-        Stack<Vector3Int> pathEnds = new Stack<Vector3Int>();
-                
-        IEnumerable<Vector3Int> path = Pathing.FindPath(
-            DisplayedUnit.Location,
-            mousePos,
-            !selectedAbility.IsJump,
-            selectedAbility.MovementRange);
-        if (path == null)
-            return;
-
-        if(path.Count() > 1)
-        {
-            foreach (Vector3Int location in path)
-                pathEnds.Push(location);
-
-            end = pathEnds.Pop();
-            secondEnd = pathEnds.Pop();
-        }
-
-        if(path.Count() == 1)
-        {
-            foreach (Vector3Int location in path)
-                pathEnds.Push(location);
-
-            end = DisplayedUnit.Location;
-            secondEnd = pathEnds.Pop();
-        }
-
-        if (path.Count() == 0)
-            return;
-        
-        Direction angleOfAttack = GetDirection(secondEnd, end);
-
-        Queue<ICell> moveCells = new Queue<ICell>();
-        ICell cell;
-
-        foreach (Vector3Int location in path)
-        {
-            Battlefield.World.TryGetValue(location, out cell);
-            moveCells.Enqueue(cell);
-        }            
-        
-        IEnumerable<ICell> attackCells = selectedAbility.GetAttack(angleOfAttack, end);
-
-        Battlefield.HighlightGrid(moveCells, attackCells);
-
-    }
-
     public bool NewGame()
     {
         levelCounter = 1;
@@ -134,25 +84,31 @@ public class GameManager : MonoBehaviour, IGameManager
             return false;
         if (path == null)
             return false;
-        if (unit.ID == Units.Spawner)
-        {
-            Debug.Log("Bad spawner. Go away.");
-            return true;
-        }            
 
-        List<IUnit> deaths = new List<IUnit>();        
+        if (unit.Location != target)
+            Battlefield.MoveUnit(unit.Location, target, path);
 
+        List<IUnit> deaths = new List<IUnit>();
         IEnumerable<ICell> attackLocations = ability.GetAttack(direction, target);
 
         foreach (ICell cell in attackLocations)
             if (cell.Unit != null && cell.Unit.Team.TeamNumber == Teams.Player)
                 deaths.Add(cell.Unit);
 
-        if(path.Count() > 1)
-            Battlefield.MoveUnit(unit.Location, target, path);
-
         ResolveDeaths(deaths, unit);
+
         return true;
+    }
+
+    protected void ResolveAttack(IAbility move, Direction direction, Vector3Int location)
+    {
+        List<IUnit> deaths = new List<IUnit>();
+        IEnumerable<ICell> attackLocations = move.GetAttack(direction, end);
+
+        foreach (ICell cell in attackLocations)
+            if (cell.Unit != null && cell.Unit.Team.TeamNumber == Teams.Player)
+                deaths.Add(cell.Unit);
+
     }
 
     [ContextMenu("New Level")]
@@ -166,7 +122,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
         SpawnTeams();
         Debug.Log("Current active team: " + activeTeams.Peek().Name);
-        //EndTurn();
+        EndTurn();
         return true;
     }
 
@@ -210,6 +166,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
         if (ConfigManager == null)
             ConfigManager = ConfigManager.instance;
+
     }
     protected void Start() => NewGame();
 
@@ -221,21 +178,6 @@ public class GameManager : MonoBehaviour, IGameManager
         //currentPlayer?.GetMouseInput();
         if (activeTeams.Peek() == player1)
             EndTurn();
-    }
-
-    public Direction GetDirection(Vector3Int secondTolast, Vector3Int lastPostion)
-    {
-        if (secondTolast.x < lastPostion.x && secondTolast.y > lastPostion.y)
-            return Direction.Sixty;
-        if (secondTolast.x == lastPostion.x && secondTolast.y > lastPostion.y)
-            return Direction.One20;
-        if (secondTolast.x < lastPostion.x && secondTolast.y == lastPostion.y)
-            return Direction.One80;
-        if (secondTolast.x > lastPostion.x && secondTolast.y < lastPostion.y)
-            return Direction.Two40;
-        if (secondTolast.x == lastPostion.x && secondTolast.y < lastPostion.y)
-            return Direction.Threehundred;
-        return Direction.Zero;
     }
 
     protected void RemoveTeam(ITeam team)

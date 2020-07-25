@@ -9,37 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: e19e05e15c37e5e46b51ff4a19eba431, type: 3}
   m_Name: Infantry2
-  m_EditorClassIdentifier: Assembly-CSharp::SOAbility
+  m_EditorClassIdentifier: 
   myAbility:
     Id: 264
-    name: They don't have eyes sarge
-    description: long range attack
+    name: Snipe
+    description: 
     icon: {fileID: 0}
-    defaultRanges:
-      movementRange:
-      - {x: -2, y: 2, z: 0}
-      - {x: -1, y: 2, z: -1}
-      - {x: 0, y: 2, z: -2}
-      - {x: -2, y: 1, z: 1}
-      - {x: -1, y: 1, z: 0}
-      - {x: 0, y: 1, z: -1}
-      - {x: 1, y: 1, z: -2}
-      - {x: -2, y: 0, z: 2}
-      - {x: -1, y: 0, z: 1}
-      - {x: 0, y: 0, z: 0}
-      - {x: 1, y: 0, z: -1}
-      - {x: 2, y: 0, z: 2}
-      - {x: -2, y: -1, z: 3}
-      - {x: -1, y: -1, z: 2}
-      - {x: 0, y: -1, z: 1}
-      - {x: 1, y: -1, z: 0}
-      - {x: 0, y: -2, z: 2}
-      - {x: 1, y: -2, z: 1}
-      - {x: 2, y: -2, z: 0}
-      damageRange:
-      - {x: 2, y: 0, z: -2}
-      - {x: 3, y: 0, z: -3}
-    movementRange: 2
-    isJump: 0
+    ThreeAxisAttack: {fileID: 11400000, guid: 78b99b548509ae14ab8d44c30242b408, type: 2}
+    ThreeAxisMove: {fileID: 11400000, guid: ba277869debf7f1408710f615cc683a2, type: 2}

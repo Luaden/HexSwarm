@@ -49,6 +49,7 @@ public class PlayerTeam : Team
     {
         unitsUnmoved.Clear();
         unitsUnmoved.UnionWith(units);
+        validMoves = new HashSet<ICell>();
     }
 
     protected void ToggleCameraControls()
@@ -60,18 +61,29 @@ public class PlayerTeam : Team
     protected bool HandleHighlighting()
     {
         pathEndPoint = GameManager.GetCellUnderMouse();
-
-        if ((gameManager.SelectedAbility == default) || (gameManager.DisplayedUnit == default) ||
-            (gameManager.DisplayedUnit.Team != this))
+        
+        if ((pathEndPoint == default)||(gameManager.SelectedAbility == default) || (gameManager.DisplayedUnit == default) ||
+            !unitsUnmoved.Contains(gameManager.DisplayedUnit))
             return InvalidateHighLight();
         //my unit is selected and I have a selected ablity
+        if (validMoves.Count == 0)
+            validMoves.UnionWith(gameManager.SelectedAbility.GetMoves(gameManager.DisplayedUnit.Location));
+
         if (!validMoves.Contains(pathEndPoint))
             return InvalidateHighLight();
         //I actually am over a valid point
 
         direction = DeterminMouseAngle(pathEndPoint);
 
-        //GameManager.Battlefield.HighlightGrid();
+        travelPath =
+            ((gameManager.SelectedAbility.IsJump) || validMoves.Count == 1) ?
+                validMoves.Select(X=>X.GridPosition) :
+                GameManager.Pathing.FindPath(gameManager.DisplayedUnit.Location, pathEndPoint.GridPosition);
+
+        GameManager.Battlefield.HighlightGrid(
+            travelPath,
+            gameManager.SelectedAbility.GetAttack(direction, pathEndPoint.GridPosition)
+        );
 
         return true;
     }
@@ -102,19 +114,23 @@ public class PlayerTeam : Team
         if (Input.GetMouseButtonDown(1))
             gameManager.ClearActiveUnit();
 
-        if (!EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current.IsPointerOverGameObject())
             return false;
         //must be over grid
 
         HandleHighlighting();
 
-        if (!Input.GetMouseButtonDown(0))
+        if (!Input.GetMouseButton(0))
             return true;
-        
-        if (pathEndPoint != default)
-            return gameManager.PerformMove(gameManager.DisplayedUnit, gameManager.SelectedAbility, direction, pathEndPoint.GridPosition, travelPath);
+
+        if (validMoves.Contains(pathEndPoint))
+        {
+            if (gameManager.PerformMove(gameManager.DisplayedUnit, gameManager.SelectedAbility, direction, pathEndPoint.GridPosition, travelPath))
+                unitsUnmoved.Remove(gameManager.DisplayedUnit);
+        }
 
         gameManager.InspectUnitUnderMouse();
+        validMoves.Clear();
         return true;
     }
 }

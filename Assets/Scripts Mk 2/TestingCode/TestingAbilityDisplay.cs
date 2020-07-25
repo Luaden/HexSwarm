@@ -19,21 +19,6 @@ public class TestingAblityDisplay : MonoBehaviour
     [SerializeField] protected Quaternion gridAngle;
     [SerializeField] protected Vector3Int gridDelta;
 
-    [ContextMenu("BlurtOptions")]
-    public void Blurt()
-    {
-        foreach(var quartPair in Ability.Transforms)
-        {
-            Debug.Log(quartPair.Value.eulerAngles);
-            float angle;
-            Vector3 axis;
-            quartPair.Value.ToAngleAxis(out angle, out axis);
-            Debug.Log(string.Format("angle :{0}, axis {1}", angle, axis));
-
-        }
-    }
-
-
     [ContextMenu("CheckAngles")]
     public void CheckAngles()
     {

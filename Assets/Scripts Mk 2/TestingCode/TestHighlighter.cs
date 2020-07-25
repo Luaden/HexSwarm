@@ -84,7 +84,6 @@ public class TestHighlighter : MonoBehaviour
             highlightedMoveCells.Clear();
             highlightedAttackCells.Clear();
             GameManager.Battlefield.ClearHighlights();
-            IEnumerable<Vector3Int> newPath;
             foreach (Vector3Int location in GameManager.Pathing.FindPath(startPos, GameManager.GetMousePosition()))
             {
                 ICell cell;
