@@ -34,7 +34,7 @@ public class ColorConfig : IColorConfig
     public Color GetColor(Colors color)
     {
         if (color == Colors.grey)
-            return new Color(102/255, 102/255, 102/255, 1);
+            return new Color(102/255f, 102/255f, 102/255f, 1f);
         if (color == Colors.red)
             return Color.red;
         if (color == Colors.blue)
@@ -44,9 +44,9 @@ public class ColorConfig : IColorConfig
         if (color == Colors.green)
             return Color.green;
         if (color == Colors.orange)
-            return new Color(255 / 255, 112 / 255, 0, 255 / 255);
+            return new Color(255/255f, 112/255f, 0f, 255/255f);
         if (color == Colors.purple)
-            return new Color(97 / 255, 13 / 255, 224 / 255, 255 / 255);
+            return new Color(97/255f, 13/255f, 224/255f, 255/255f);
         if (color == Colors.black)
             return Color.black;
         

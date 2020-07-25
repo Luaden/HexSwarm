@@ -54,7 +54,7 @@ public class SliderUpdater : MonoBehaviour
 
     public void GetTeamColors()
     {
-        ColorConfig config = configManager.TeamColors[teamNumber.value];
+        ColorConfig config = configManager.TeamColors[teamNumber.value + 1];
         
         primaryColor.value = (int)config.PrimaryColorCategory;
         secondaryColor.value = (int)config.SecondaryColorCategory;
