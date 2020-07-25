@@ -17,4 +17,6 @@ MonoBehaviour:
     icon: {fileID: -7377170927877912761, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
     name: 
     description: 
-    ablities: []
+    ablities:
+    - {fileID: 11400000, guid: b697adf0f6b621248ad0c933a9dc9e3d, type: 2}
+    - {fileID: 11400000, guid: 548dcb9b24940604f8f427ccf4591276, type: 2}

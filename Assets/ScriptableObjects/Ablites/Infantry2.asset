@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19e05e15c37e5e46b51ff4a19eba431, type: 3}
+  m_Name: Infantry2
+  m_EditorClassIdentifier: 
+  myAbility:
+    Id: 264
+    name: Snipe
+    description: 
+    icon: {fileID: 0}
+    ThreeAxisAttack: {fileID: 11400000, guid: 78b99b548509ae14ab8d44c30242b408, type: 2}
+    ThreeAxisMove: {fileID: 11400000, guid: ba277869debf7f1408710f615cc683a2, type: 2}

@@ -88,7 +88,7 @@ public class Pathfinder
     }
 
     public IEnumerable<Vector3Int> FindPath(Vector3Int originVector, Vector3Int destinationVector, bool avoidUnits = true, int maxRange = int.MaxValue)
-    {        
+    {
         InitPathfinder();  
 
         closedSet.Clear();
