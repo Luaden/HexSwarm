@@ -2,6 +2,7 @@
 
 public class ConfigManager : MonoBehaviour, IConfigManager
 {
+    protected GameManager gameManager;
     protected ColorConfig[] teamColors;
     protected KeyCode scrollLeft = KeyCode.A;
     protected KeyCode scrollRight = KeyCode.D;
@@ -29,7 +30,7 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     public KeyCode Ability3 => ability3;
     public KeyCode Ability4 => ability4;
     public float GameDifficulty { get => gameDifficulty; set => gameDifficulty = value; }
-    public IColorConfig[] TeamColors { get => teamColors; }
+    public ColorConfig[] TeamColors { get => teamColors; }
     public AudioController AudioController { get; set; }
     public CameraController CameraController { get; set; }
     public MapShape MapShape { get; set; }
@@ -60,15 +61,21 @@ public class ConfigManager : MonoBehaviour, IConfigManager
         get => speedModifier;
         set => UpdateSpeedModifier(value);
     }
-
     
-
-    //This needs to be expanded to call to the team through the game manager and update colors.
-    public void ChangeTeamColor(int teamIndex, IColorConfig colors) => TeamColors[teamIndex] = colors;
     public void PlayMusic(AudioClip bgm) => AudioController.PlayMusic(bgm);
     public void PlaySound(AudioClip sfx) => AudioController.PlaySound(sfx);
     public void RepositionCamera(Vector3Int cameraPosition) => CameraController.RepositionCamera(cameraPosition);
     public void ToggleCameraControls(bool cameraControlOnOff) => CameraController.ToggleCameraControls(cameraControlOnOff);
+
+    public void ChangeTeamColor(int teamIndex, ColorConfig colors)
+    {
+        TeamColors[teamIndex] = colors;
+
+        if(GameManager.UnitAVController != null)
+        {
+            GameManager.UnitAVController.ChangeTeamColors(TeamColors);
+        }
+    }
 
     protected void Awake()
     {
@@ -113,11 +120,20 @@ public class ConfigManager : MonoBehaviour, IConfigManager
 
     protected void InitTeamColors()
     {
-        teamColors = new ColorConfig[9];
+        teamColors = new ColorConfig[10];
+        ColorConfig config = new ColorConfig();
 
-        for(int i = 0; i < teamColors.Length; i++)
+
+        for (int i = 0; i < teamColors.Length; i++)
         {
-            ColorConfig config = new ColorConfig();
+            if (i == 0)
+            {
+                config = new ColorConfig();
+                teamColors[i] = config;
+                continue;
+            }
+
+            config = new ColorConfig();
             config.TeamNumber = (Teams)i;
             config.PrimaryColor = config.GetColor((Colors)i);
             config.PrimaryColorCategory = (Colors)i;

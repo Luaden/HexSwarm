@@ -101,7 +101,7 @@ public class Pathfinder
 
         if (!allCells.TryGetValue(destinationVector, out destination))
             return System.Array.Empty<Vector3Int>();
-
+        // Fix zero movement pathing
         
 
         origin.FCost = 0;

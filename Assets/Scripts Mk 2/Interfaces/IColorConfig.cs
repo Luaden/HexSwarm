@@ -2,15 +2,15 @@
 
 public enum Colors
 {
-    grey = 0,
-    red = 1,
-    blue = 2,
-    yellow = 3,
-    green = 4,
-    orange = 5,
-    purple = 6,
-    black = 7,
-    white = 8
+    grey = 1,
+    red = 2,
+    blue = 3,
+    yellow = 4,
+    green = 5,
+    orange = 6,
+    purple = 7,
+    black = 8,
+    white = 9
 }
 
 public interface IColorConfig
@@ -33,7 +33,9 @@ public class ColorConfig : IColorConfig
 
     public Color GetColor(Colors color)
     {
-        if(color == Colors.red)
+        if (color == Colors.grey)
+            return new Color(102/255, 102/255, 102/255, 1);
+        if (color == Colors.red)
             return Color.red;
         if (color == Colors.blue)
             return Color.blue;
