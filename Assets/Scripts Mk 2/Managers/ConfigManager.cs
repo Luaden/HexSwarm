@@ -123,30 +123,17 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     {
         teamColors = new List<ColorConfig>();
         ColorConfig config = new ColorConfig();
+        teamColors.Add(config);
 
         foreach(Teams team in System.Enum.GetValues(typeof(Teams)))
-        {
-            
+        {            
             config = new ColorConfig();
             config.TeamNumber = team;
             config.PrimaryColor = config.GetColor((Colors)(int)team);
             config.PrimaryColorCategory = (Colors)(int)team;
 
-            Debug.Log(config.TeamNumber);
-            Debug.Log(config.GetColor((Colors)(int)team));
             teamColors.Add(config);
         }
-        //for (int i = 0; i < teamColors.Length; i++)
-        //{            
-        //    config = new ColorConfig();
-        //    config.TeamNumber = (Teams)i;
-        //    config.PrimaryColor = config.GetColor((Colors)i);
-        //    config.PrimaryColorCategory = (Colors)i;
-
-        //    Debug.Log(config.TeamNumber);
-        //    Debug.Log(config.GetColor((Colors)i));
-        //    teamColors[i] = config;
-        //}
     }
 
     protected void OnLevelWasLoaded(int level)

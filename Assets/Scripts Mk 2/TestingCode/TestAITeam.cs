@@ -150,7 +150,7 @@ public class TestAITeam : Team
 
     protected void GetPossibleMoves()
     {
-        foreach (IUnit unit in units)
+        foreach (IUnit unit in unitsUnmoved)
         {
             if (CheckInTeamRange(unit))
             {
@@ -296,14 +296,13 @@ public class TestAITeam : Team
 
     protected void UseOffensiveStrategy()
     {
-        if (gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.Direction, selectedAttack.TargetLocation, selectedAttack.Path))
-        {
-            enemiesSeen.ExceptWith(selectedAttack.LocationsHit);
-            UnitHasMoved(selectedAttack.Unit);
+        gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.Direction, selectedAttack.TargetLocation, selectedAttack.Path);
+        
+        enemiesSeen.ExceptWith(selectedAttack.LocationsHit);
+        UnitHasMoved(selectedAttack.Unit);
 
-            selectedAttack = null;
-            Debug.Log("Using best offense.");
-        }
+        selectedAttack = null;
+        Debug.Log("Using best offense.");
     }
 
     protected void GetBestDefense()
@@ -327,14 +326,13 @@ public class TestAITeam : Team
             pathCells.Enqueue(cell);
         }
 
-        if (gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, Direction.Zero, selectedDefense.TargetLocation, selectedDefense.Path))
-        {
-            unguardedCells.Remove(battlefieldManager.World[selectedDefense.TargetLocation]);
+        gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, Direction.Zero, selectedDefense.TargetLocation, selectedDefense.Path);
+        
+        unguardedCells.Remove(battlefieldManager.World[selectedDefense.TargetLocation]);
 
-            UnitHasMoved(selectedDefense.Unit);
+        UnitHasMoved(selectedDefense.Unit);
 
-            selectedDefense = null;
-        }
+        selectedDefense = null;
     }
 
     protected void UnitHasMoved(IUnit unit)
@@ -421,7 +419,9 @@ public class TestAITeam : Team
 
         IEnumerable<Vector3Int> abilityPath = GameManager.Pathing.FindPath(unit.Location, toTarget);
 
-        gameManager.PerformMove(unit, toUse, Direction.Zero, toTarget, abilityPath);
+        if(toUse != null)
+            gameManager.PerformMove(unit, toUse, Direction.Zero, toTarget, abilityPath);            
+
         UnitHasMoved(unit);
     }
 

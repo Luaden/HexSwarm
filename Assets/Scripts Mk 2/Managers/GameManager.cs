@@ -284,6 +284,7 @@ public class GameManager : MonoBehaviour, IGameManager
             }
         }
     }
+
     protected Vector3Int GetSpawnLocation()
     {
         int i = UnityEngine.Random.Range(0, Battlefield.World.Count + 1);
