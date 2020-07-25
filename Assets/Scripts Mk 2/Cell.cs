@@ -18,4 +18,11 @@ public class Cell : ICell
         Unit = unit;
         Tile = tile;
     }
+
+    public uint DistanceFrom(ICell cell)
+    {
+        var delta = cell.ThreeAxisPosition - this.ThreeAxisPosition;
+        return ((uint)Mathf.Abs(delta.x) + (uint)Mathf.Abs(delta.y) + (uint)Mathf.Abs(delta.z)) / 2;
+    }
+
 }

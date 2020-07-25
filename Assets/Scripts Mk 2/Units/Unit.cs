@@ -41,7 +41,7 @@ public class Unit : IUnit
 
     public IEnumerable<ICell> CalcuateValidNewLocation(IAbility move)
     {
-        return move.GetMoves(this.Location).Where(X=>(X.Unit == default)||(X.Unit == this));
+        return move.GetMoves(this.Location).Where(X=>(!move.NeedsClearLand||(X.Unit == default)) ||(X.Unit == this));
     }
 
     public IEnumerable<ICell> DiscoverHits(Vector3Int location, IAbility move, Direction direction = Direction.Zero)

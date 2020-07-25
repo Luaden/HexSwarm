@@ -9,6 +9,8 @@ public class Ability : IAbility
     public Abilitys ID => Id;
     [SerializeField] protected bool isSpawn;
     public bool IsSpawn => isSpawn;
+    [SerializeField] protected bool needsClearLand;
+    public bool NeedsClearLand => needsClearLand;
     [SerializeField] protected string name;
     public string Name { get => name; set => name = value;}
     [SerializeField] protected string description;

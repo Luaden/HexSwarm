@@ -54,7 +54,7 @@ public class PlayerTeam : Team
     protected void ToggleCameraControls()
     {
         camControls = !camControls;
-        ConfigManager.instance.ToggleCameraControls(camControls);
+        //ConfigManager.instance.ToggleCameraControls(camControls);
     }
 
     protected bool HandleHighlighting()
@@ -69,16 +69,17 @@ public class PlayerTeam : Team
             return InvalidateHighLight();
         //I actually am over a valid point
 
-        var myDirection = DeterminMouseAngle();
+        direction = DeterminMouseAngle(pathEndPoint);
 
+        //GameManager.Battlefield.HighlightGrid();
 
         return true;
     }
 
-    protected Direction DeterminMouseAngle()
+    public static Direction DeterminMouseAngle(ICell cell)
     {
         var mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        var mydelta = mouseLocation - pathEndPoint.WorldPosition;
+        var mydelta = mouseLocation - cell.WorldPosition;
         var angle = Mathf.Atan2(mydelta.y, mydelta.x) * Mathf.Rad2Deg + 30;
         if (angle < 0)
             angle += 360;

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using UnityEditor.Animations;
 using UnityEngine;
+using DictonaryExtentions;
 
 public class Pathfinder
 {
@@ -48,22 +49,42 @@ public class Pathfinder
         }
     }
 
-    public IEnumerable<Vector3Int> FindTraversableArea(Vector3Int originVector, int maxRange)
+
+
+    public HashSet<ICell> FindTraversableArea(ICell origin, IUnit unit, IAbility move)
     {
+        HashSet<ICell> rawMoves = new HashSet<ICell>( unit.CalcuateValidNewLocation(move));
+        if (move.IsJump)
+            return rawMoves;
 
-        IEnumerable<Vector3Int> totalArea = battlefieldManager.GetNeighborCells(originVector, maxRange) as IEnumerable<Vector3Int>;
-        HashSet<Vector3Int> traversableArea = new HashSet<Vector3Int>();
 
-        foreach(Vector3Int destination in totalArea)
+        Dictionary<uint, HashSet<ICell>> absoluteDistances = new Dictionary<uint, HashSet<ICell>>();
+        foreach(ICell cell in rawMoves)
         {
-            IEnumerable<Vector3Int> openSet = FindPath(originVector, destination, true, maxRange);
-
-            foreach (Vector3Int location in openSet)
-                if (!traversableArea.Contains(location))
-                    traversableArea.Add(location);
+            uint distance = origin.DistanceFrom(cell);
+            absoluteDistances.JustAdd(distance, cell);
         }
 
-        return traversableArea;
+        HashSet<ICell> previousLevel;
+        if (!absoluteDistances.TryGetValue(0, out previousLevel))
+            return new HashSet<ICell>();
+
+        HashSet<ICell> validMoves = previousLevel;
+
+        uint minRange = 1;
+        while (minRange <= move.MovementRange)
+        {
+            HashSet<ICell> currentLevel;
+            if (!absoluteDistances.TryGetValue(minRange, out currentLevel))
+                return validMoves;
+            foreach (ICell possiblemove in currentLevel)
+                if (validMoves.Any(X => X.DistanceFrom(possiblemove) == 1))
+                    validMoves.Add(possiblemove);
+                else
+                    absoluteDistances.JustAdd(minRange+1, possiblemove);
+            minRange++;
+        }
+        return validMoves;
     }
 
     public IEnumerable<Vector3Int> FindPath(Vector3Int originVector, Vector3Int destinationVector, bool avoidUnits = true, int maxRange = int.MaxValue)
