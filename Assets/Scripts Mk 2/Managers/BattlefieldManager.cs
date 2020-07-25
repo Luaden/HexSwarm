@@ -131,7 +131,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     #region Highlight Cells
     public void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<ICell> attackCells){ HighlightGrid(moveCells, attackCells.Select(X => X.GridPosition));}
     public void HighlightGrid(IEnumerable<Vector3Int> moveCells, IEnumerable<ICell> attackCells) { HighlightGrid(moveCells, attackCells.Select(X => X.GridPosition)); }
-    public void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<Vector3Int> attackCells) {HighlightGrid(moveCells, attackCells);}
+    public void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<Vector3Int> attackCells) {HighlightGrid(moveCells.Select(X=>X.GridPosition), attackCells);}
     public void HighlightGrid(IEnumerable<Vector3Int> moveCells, IEnumerable<Vector3Int> attackCells)
     {
         HighlightGrid(moveCells);
