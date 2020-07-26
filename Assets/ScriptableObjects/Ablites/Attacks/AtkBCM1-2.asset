@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotates: 1
   isSpawn: 0
+  isSpawnVoid: 0
   ThreeAxisRange:
   - {x: 0, y: 1, z: -1}
-  - {x: 1, y: 1, z: -1}
+  - {x: 1, y: 1, z: -2}
   - {x: 1, y: 0, z: -1}
   - {x: 2, y: 0, z: -2}
   - {x: 1, y: -1, z: 0}

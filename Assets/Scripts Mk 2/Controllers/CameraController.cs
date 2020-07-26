@@ -18,7 +18,7 @@ public class CameraController : MonoBehaviour
     protected float speedModifier = 1f;
     protected Vector3 mousePos;
     protected Vector3 cameraPosToBe;
-    protected bool movementEnabled = true;
+    protected bool movementEnabled = false;
 
     public float SensitivityModifier { set => sensitivityModifier = value; }
     public float SpeedModifier { set => speedModifier = value; }
