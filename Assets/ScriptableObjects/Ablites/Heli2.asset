@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19e05e15c37e5e46b51ff4a19eba431, type: 3}
+  m_Name: Heli2
+  m_EditorClassIdentifier: 
+  myAbility:
+    Id: 4
+    name: Rocket Barage
+    description: Short movement, large area of effect attack.
+    icon: {fileID: 7588156885531411890, guid: 9ae9025ffa81e9d409ba104b5dfbe0f6, type: 3}
+    ThreeAxisAttack: {fileID: 11400000, guid: 239201f9412dca34f9ed306757559a6a, type: 2}
+    ThreeAxisMove: {fileID: 11400000, guid: ba277869debf7f1408710f615cc683a2, type: 2}

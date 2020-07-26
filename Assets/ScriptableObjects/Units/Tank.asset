@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 845f1d78a090766459836192a8b90060, type: 3}
-  m_Name: Nanos
+  m_Name: Tank
   m_EditorClassIdentifier: 
   myUnit:
-    id: 16
-    icon: {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
-    name: Grey Goo
-    description: Swarm of nano robots, dissasembles enemies, duplicates itself.
+    id: 2
+    icon: {fileID: -2868358445743897955, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
+    name: Tank
+    description: High damage artillery pice, great range.
     MoveSFX: {fileID: 0}
-    AttackSFX: {fileID: 0}
+    AttackSFX: {fileID: 8300000, guid: ac2e358dbe9b4704a881155989b976ad, type: 3}
     ablities:
-    - {fileID: 11400000, guid: 710d249a93975c842ac6a7159c6fc3b1, type: 2}
-    - {fileID: 11400000, guid: c4ccb1d6759af484a8768c9cf5f852e2, type: 2}
+    - {fileID: 11400000, guid: b722cfd16dba0e34faf9eb02991c01fe, type: 2}
+    - {fileID: 11400000, guid: 0a1cbf0e46c81b445ac1b95b6dc752c2, type: 2}

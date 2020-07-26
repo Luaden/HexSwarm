@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19e05e15c37e5e46b51ff4a19eba431, type: 3}
+  m_Name: Tank2
+  m_EditorClassIdentifier: 
+  myAbility:
+    Id: 2
+    name: Here comes the calvary!
+    description: Charge forward and blow up a target a short distance away.
+    icon: {fileID: -5548141500001189539, guid: 9ae9025ffa81e9d409ba104b5dfbe0f6, type: 3}
+    ThreeAxisAttack: {fileID: 11400000, guid: d0768410f51f78249b43ed7178330967, type: 2}
+    ThreeAxisMove: {fileID: 11400000, guid: ba277869debf7f1408710f615cc683a2, type: 2}

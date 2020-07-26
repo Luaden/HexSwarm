@@ -348,7 +348,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1895993704}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cce56a6fd0c6d314ebba9708a2fa5a0f, type: 3}
   m_Name: 
@@ -365,7 +365,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1895993704}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2cb1b01059145f4785777284319a2e3, type: 3}
   m_Name: 
@@ -379,8 +379,8 @@ MonoBehaviour:
     type: 3}
   Team2Icon: {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303,
     type: 3}
-  validateAblity: {fileID: 11400000, guid: b697adf0f6b621248ad0c933a9dc9e3d, type: 2}
-  valdateUnit: {fileID: 11400000, guid: 691959e3599025a48be1184d96d8927a, type: 2}
+  validateAblity: {fileID: 11400000, guid: 160ac671fb2538342b849399abb9d04a, type: 2}
+  valdateUnit: {fileID: 11400000, guid: 040e16bbc57a1f54485e424cfe435a89, type: 2}
   ValidateMovement: 0
 --- !u!114 &2102556315 stripped
 MonoBehaviour:

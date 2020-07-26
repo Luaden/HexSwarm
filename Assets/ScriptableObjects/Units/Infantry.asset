@@ -15,8 +15,10 @@ MonoBehaviour:
   myUnit:
     id: 8
     icon: {fileID: 8355217360322311386, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
-    name: 
-    description: 
+    name: Infantry
+    description: Snipe or barrage of close fire.
+    MoveSFX: {fileID: 8300000, guid: d33aca5747cc77c429cdd4632b704be3, type: 3}
+    AttackSFX: {fileID: 8300000, guid: 835ad794a85646640b3964f340c2ab09, type: 3}
     ablities:
     - {fileID: 11400000, guid: b697adf0f6b621248ad0c933a9dc9e3d, type: 2}
     - {fileID: 11400000, guid: 548dcb9b24940604f8f427ccf4591276, type: 2}

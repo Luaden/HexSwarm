@@ -30,6 +30,10 @@ public class Unit : IUnit
     [SerializeField] protected string description;
     public string Description => description;
 
+    [SerializeField] protected AudioClip MoveSFX;
+
+    [SerializeField] protected AudioClip AttackSFX;
+
     public ITeam Team { get; set; }
 
     public Vector3Int Location { get; set; }
