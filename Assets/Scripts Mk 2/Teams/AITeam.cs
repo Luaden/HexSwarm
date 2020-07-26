@@ -48,8 +48,6 @@ public class AITeam : Team
 
         CheckForEnemies();
         DetermineStrategy();
-
-        EndTurn();
     }
 
     protected void TeamInit()
@@ -414,6 +412,11 @@ public class AITeam : Team
         //if (gameManager.PerformMove(unit, toUse, toTarget, path))
         //    UnitHasMoved(unit);
     }
+    
+    public override void EndTurn() { }
 
-    public override void EndTurn() => base.EndTurn();
+    public override void NextMove(float elapsedTime)
+    {
+        throw new System.NotImplementedException();
+    }
 }

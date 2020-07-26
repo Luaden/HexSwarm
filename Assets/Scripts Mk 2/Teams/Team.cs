@@ -15,15 +15,9 @@ public abstract class Team : ITeam
     public IEnumerable<IUnit> Units { get => units; }
     public Vector3Int StartPosition { get; set; }
 
-    public virtual void StartTurn()
-    {
- 
-    }
-
-    public virtual void EndTurn()
-    {
-        
-    }
+    public abstract void StartTurn();
+    public abstract void NextMove(float elapsedTime);
+    public abstract void EndTurn();
 
     public void AddNewUnit(IUnit unit)
     {

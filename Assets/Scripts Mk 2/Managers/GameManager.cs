@@ -172,9 +172,12 @@ public class GameManager : MonoBehaviour, IGameManager
     }
     protected void Start() => NewGame();
 
-    protected void Update()
+    protected void FixedUpdate()
     {
-        
+        activeTeams.Peek().NextMove(Time.deltaTime);
+    }
+    protected void Update()
+    {    
         PlayerTeam currentPlayer = activeTeams.Peek() as PlayerTeam;
         currentPlayer?.GetMouseInput();
     }

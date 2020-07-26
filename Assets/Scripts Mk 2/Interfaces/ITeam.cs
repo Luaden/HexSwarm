@@ -11,6 +11,8 @@ public interface ITeam
     Vector3Int StartPosition { get; }
     IEnumerable<IUnit> Units { get; }
     void StartTurn();
+    void NextMove(float deltaTime);
+    void EndTurn();
     void RemoveUnit(IUnit unit);
     void AddNewUnit(IUnit unit);
 }

@@ -39,6 +39,7 @@ public class TestAITeam : Team
         TeamNumber = teamNumber;
         StartPosition = origin;
         this.units = units;
+        passedTime = 0;
     }
 
     public override void StartTurn()
@@ -46,9 +47,8 @@ public class TestAITeam : Team
         TeamInit();
 
         CheckForEnemies();
-        DetermineStrategy();
 
-        EndTurn();
+        DetermineStrategy();
     }
 
     protected void TeamInit()
@@ -97,38 +97,33 @@ public class TestAITeam : Team
         GetEnemyLOS();
         GetPossibleMoves();
 
-        while(unitsUnmoved.Count > 0)
+        if (enemiesSeen.Count == 0)
         {
-            if (enemiesSeen.Count == 0)
-            {
-                GetNeutralRoute(unitsUnmoved.First());
-                GetBestAttacks();
-                continue;
-            }
-
-            while (bestHits.Count > 0 && bestBlocks.Count > 0 && enemiesSeen.Count > 0)
-            {
-                if (ResolvedAttackDifficult())
-                {
-                    UseOffensiveStrategy();
-                    GetBestAttacks();
-                    continue;
-                }
-
-                UseDefensiveStrategy();
-                GetBestDefense();
-            }
-
-            while (bestBlocks.Count > 0 && enemiesSeen.Count > 0)
-            {
-                UseDefensiveStrategy();
-                GetBestDefense();
-            }
-
-            GetNeutralRoute(unitsUnmoved.First(), false);
+            GetNeutralRoute(unitsUnmoved.First());
+            GetBestAttacks();
+            return;
         }
 
-        EndTurn();
+        while (bestHits.Count > 0 && bestBlocks.Count > 0 && enemiesSeen.Count > 0)
+        {
+            if (ResolvedAttackDifficult())
+            {
+                UseOffensiveStrategy();
+                GetBestAttacks();
+                return;
+            }
+
+            UseDefensiveStrategy();
+            GetBestDefense();
+        }
+
+        while (bestBlocks.Count > 0 && enemiesSeen.Count > 0)
+        {
+            UseDefensiveStrategy();
+            GetBestDefense();
+        }
+
+        GetNeutralRoute(unitsUnmoved.First(), false);
     }
 
     protected void GetEnemyLOS()
@@ -363,7 +358,6 @@ public class TestAITeam : Team
     protected IEnumerable<Vector3Int> currentPath;
     protected IEnumerable<Vector3Int> checkPath;
 
-
     protected void GetNeutralRoute(IUnit unit, bool shortestRoute = true)
     {
         int i = Random.Range(0, teamRange.Count);
@@ -429,4 +423,15 @@ public class TestAITeam : Team
 
     public override void EndTurn() => gameManager.EndTurn();
 
+
+    protected float passedTime;
+    public override void NextMove(float elapsedTime)
+    {
+        passedTime += elapsedTime;
+        Debug.Log(System.DateTime.FromBinary((long)passedTime).ToLongTimeString());
+        DetermineStrategy();
+
+        if (unitsUnmoved.Count == 0)
+            EndTurn();
+    }
 }

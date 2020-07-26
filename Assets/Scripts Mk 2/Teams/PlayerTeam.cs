@@ -135,4 +135,11 @@ public class PlayerTeam : Team
         validMoves.Clear();
         return true;
     }
+
+    public override void NextMove(float elapsedTime)
+    {
+        //TODO: DO NOTHING
+        //TODO: maybe setup a time elapsed for turn and for game duration
+        // for speed runing lol
+    }
 }
