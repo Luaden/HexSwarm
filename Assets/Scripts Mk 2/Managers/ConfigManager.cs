@@ -32,18 +32,7 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     public KeyCode Ability4 => ability4;
     public float GameDifficulty { get => gameDifficulty; set => gameDifficulty = value; }
     public AudioController AudioController { get; set; }
-    protected CameraController controler;
-    public CameraController CameraController
-    {
-        get
-        {
-            if (controler == default)
-                OnLevelWasLoaded(-1);
-            return controler;
-        }
-
-        set => controler = value;
-    }
+    public CameraController CameraController { get; set; } 
     public MapShape MapShape { get; set; }
 
     public Dictionary<Teams, ColorConfig> TeamColors { get => teamColors; set => teamColors = value; }
