@@ -174,6 +174,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void Update()
     {
+        
         PlayerTeam currentPlayer = activeTeams.Peek() as PlayerTeam;
         currentPlayer?.GetMouseInput();
     }

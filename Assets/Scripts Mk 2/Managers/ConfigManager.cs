@@ -32,7 +32,18 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     public KeyCode Ability4 => ability4;
     public float GameDifficulty { get => gameDifficulty; set => gameDifficulty = value; }
     public AudioController AudioController { get; set; }
-    public CameraController CameraController { get; set; }
+    protected CameraController controler;
+    public CameraController CameraController
+    {
+        get
+        {
+            if (controler == default)
+                OnLevelWasLoaded(-1);
+            return controler;
+        }
+
+        set => controler = value;
+    }
     public MapShape MapShape { get; set; }
 
     public Dictionary<Teams, ColorConfig> TeamColors { get => teamColors; set => teamColors = value; }
@@ -67,7 +78,7 @@ public class ConfigManager : MonoBehaviour, IConfigManager
     public void PlayMusic(AudioClip bgm) => AudioController.PlayMusic(bgm);
     public void PlaySound(AudioClip sfx) => AudioController.PlaySound(sfx);
     public void RepositionCamera(Vector3Int cameraPosition) => CameraController.RepositionCamera(cameraPosition);
-    public void ToggleCameraControls(bool cameraControlOnOff) => CameraController.ToggleCameraControls(cameraControlOnOff);
+    public void ToggleCameraControls(bool cameraControlOnOff) => CameraController?.ToggleCameraControls(cameraControlOnOff);
 
     public void ChangeTeamColor(Teams team, ColorConfig colors)
     {

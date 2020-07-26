@@ -353,6 +353,30 @@ MonoBehaviour:
   rangeFromNeighbors: 3
   levelCounter: 15
   gridSize: 0
+--- !u!114 &1895993706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895993704}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2cb1b01059145f4785777284319a2e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitManager: {fileID: 11400000, guid: a69608da3ef9e1a4a8d363ab46ce1084, type: 2}
+  teamCountPerLevel: 0
+  rangeFromNeighbors: 0
+  levelCounter: 0
+  gridSize: 0
+  Team1Icon: {fileID: -7377170927877912761, guid: 7ff6e1907a56f694281471628bc15303,
+    type: 3}
+  Team2Icon: {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303,
+    type: 3}
+  validateAblity: {fileID: 11400000, guid: b697adf0f6b621248ad0c933a9dc9e3d, type: 2}
+  valdateUnit: {fileID: 11400000, guid: 691959e3599025a48be1184d96d8927a, type: 2}
+  ValidateMovement: 0
 --- !u!114 &2102556315 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2569526561222782265, guid: e01ce1583ed3f16428897b2b65caa1e3,
