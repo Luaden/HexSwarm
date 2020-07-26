@@ -29,7 +29,6 @@ public class UnitAVController : MonoBehaviour
 
         renderer.color = configManager.TeamColors[unit.Team.TeamNumber].PrimaryColor;
         renderer.sprite = unit.Icon;
-        Debug.Log(unit.Team.TeamNumber);
         
         worldUnit.transform.position = GameManager.Battlefield.GetWorldLocation(unit.Location);
     }

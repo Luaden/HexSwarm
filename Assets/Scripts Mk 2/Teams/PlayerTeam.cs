@@ -54,6 +54,7 @@ public class PlayerTeam : Team
     protected void ToggleCameraControls()
     {
         camControls = !camControls;
+        Debug.Log("Camera controls are" + camControls);
         ConfigManager.instance.ToggleCameraControls(camControls);
     }
 
