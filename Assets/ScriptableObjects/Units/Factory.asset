@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myUnit:
     id: 1
-    icon: {fileID: -7073836750161236421, guid: caebbabd8cc09b34b8ab55ca892a3a2d, type: 3}
+    icon: {fileID: 2349100956782994321, guid: 9ae9025ffa81e9d409ba104b5dfbe0f6, type: 3}
     name: Factory
     description: Kill it with fire
     ablities:

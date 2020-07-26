@@ -15,7 +15,7 @@ MonoBehaviour:
   myAbility:
     Id: 272
     name: Hexxagon!
-    description: 
-    icon: {fileID: 0}
+    description: Jump and destroy surrounding units and spawn a new swarm.
+    icon: {fileID: 21300000, guid: 9f1104386f2f0174f9a0479a71172d84, type: 3}
     ThreeAxisAttack: {fileID: 11400000, guid: affa156f2800e834798859ef882e4b76, type: 2}
     ThreeAxisMove: {fileID: 11400000, guid: aa0dc375c554bd8439d567476d17b552, type: 2}

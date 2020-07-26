@@ -1,10 +1,25 @@
 fileFormatVersion: 2
-guid: caebbabd8cc09b34b8ab55ca892a3a2d
+guid: 9ae9025ffa81e9d409ba104b5dfbe0f6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7073836750161236421
-    second: EeXHq1igAAAAABJRU5ErkJggg_0
+      213: 2349100956782994321
+    second: Second_Set_of_Icons_0
+  - first:
+      213: 2050611643309227591
+    second: Second_Set_of_Icons_1
+  - first:
+      213: 7588156885531411890
+    second: Second_Set_of_Icons_2
+  - first:
+      213: -5548141500001189539
+    second: Second_Set_of_Icons_3
+  - first:
+      213: 764393951737828887
+    second: Second_Set_of_Icons_4
+  - first:
+      213: -8449057894271311766
+    second: Second_Set_of_Icons_5
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -48,7 +63,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 250
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -126,13 +141,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: EeXHq1igAAAAABJRU5ErkJggg_0
+      name: Second_Set_of_Icons_0
       rect:
         serializedVersion: 2
-        x: 91
-        y: 12
-        width: 129
-        height: 138
+        x: 7
+        y: 295
+        width: 234
+        height: 186
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +155,71 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b3e298b54fea4dd90800000000000000
-      internalID: -7073836750161236421
+      spriteID: 193a496cfdea99020800000000000000
+      internalID: 2349100956782994321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Second_Set_of_Icons_1
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 293
+        width: 199
+        height: 157
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74ef9bbcc6c357c10800000000000000
+      internalID: 2050611643309227591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Second_Set_of_Icons_2
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 79
+        width: 207
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b5c80ecb7c8e4960800000000000000
+      internalID: 7588156885531411890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Second_Set_of_Icons_3
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 30
+        width: 208
+        height: 208
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5183d873ba0103b0800000000000000
+      internalID: -5548141500001189539
       vertices: []
       indices: 
       edges: []
