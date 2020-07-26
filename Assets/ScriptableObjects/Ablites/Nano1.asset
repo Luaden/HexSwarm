@@ -15,7 +15,7 @@ MonoBehaviour:
   myAbility:
     Id: 144
     name: AMitosis
-    description: 2 for 1
-    icon: {fileID: 0}
+    description: Spawns a new swarm.
+    icon: {fileID: 21300000, guid: d4c10dda67be15e419045b3409d76e10, type: 3}
     ThreeAxisAttack: {fileID: 11400000, guid: c48898b675634124f8b9c48dca9f550f, type: 2}
     ThreeAxisMove: {fileID: 11400000, guid: 698a5f97284540b4889826324460a9c2, type: 2}

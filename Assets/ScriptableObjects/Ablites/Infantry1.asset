@@ -15,7 +15,7 @@ MonoBehaviour:
   myAbility:
     Id: 136
     name: SprayAndPrey
-    description: 
-    icon: {fileID: 0}
+    description: Shoots in a wide arc close to the unit.
+    icon: {fileID: 2050611643309227591, guid: 9ae9025ffa81e9d409ba104b5dfbe0f6, type: 3}
     ThreeAxisAttack: {fileID: 11400000, guid: 9c3e7df98088ff5448a8be1c5ad2d3b9, type: 2}
     ThreeAxisMove: {fileID: 11400000, guid: 4459700270b9941498d89c32f44e8309, type: 2}

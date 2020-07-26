@@ -15,7 +15,7 @@ MonoBehaviour:
   myAbility:
     Id: 264
     name: Snipe
-    description: 
-    icon: {fileID: 0}
+    description: Shoots a far distance away with penetration.
+    icon: {fileID: 21300000, guid: 37676670ef4795e48afb647ba484baaa, type: 3}
     ThreeAxisAttack: {fileID: 11400000, guid: 78b99b548509ae14ab8d44c30242b408, type: 2}
     ThreeAxisMove: {fileID: 11400000, guid: ba277869debf7f1408710f615cc683a2, type: 2}

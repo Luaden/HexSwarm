@@ -126,7 +126,9 @@ public class TestAITeam : Team
             }
 
             GetNeutralRoute(unitsUnmoved.First(), false);
-        }        
+        }
+
+        EndTurn();
     }
 
     protected void GetEnemyLOS()

@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour, IGameManager
         Battlefield.GenerateGrid(GridSize, ConfigManager.MapShape);
 
         SpawnTeams();
-        //EndTurn();
+        EndTurn();
         return true;
     }
 
