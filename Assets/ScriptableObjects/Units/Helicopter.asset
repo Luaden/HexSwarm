@@ -17,8 +17,8 @@ MonoBehaviour:
     icon: {fileID: -7377170927877912761, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
     name: Helicopter
     description: Massive movement range, good damage.
-    MoveSFX: {fileID: 8300000, guid: f7e56c830973ada4ead1f1fe3384105d, type: 3}
-    AttackSFX: {fileID: 8300000, guid: 6955aac55028d1445a2b0f2f1bab062e, type: 3}
+    moveSFX: {fileID: 0}
+    attackSFX: {fileID: 0}
     ablities:
-    - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 11400000, guid: 160ac671fb2538342b849399abb9d04a, type: 2}
+    - {fileID: 11400000, guid: acdd5f83c80cc734fb46b2f589f7b1a7, type: 2}
