@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 914ac5c843249814c912c56da95bc9d2, type: 3}
-  m_Name: NanoCloud
+  m_Name: NanoSplash
   m_EditorClassIdentifier: 
   rotates: 1
   isSpawn: 0
   isSpawnVoid: 1
   ThreeAxisRange:
+  - {x: 0, y: 1, z: -1}
   - {x: 1, y: 0, z: -1}
-  - {x: 2, y: 0, z: -2}
-  - {x: 3, y: 0, z: -3}
+  - {x: 1, y: -1, z: 0}

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 914ac5c843249814c912c56da95bc9d2, type: 3}
-  m_Name: Heli2 NanoSplash
+  m_Name: Heli2
   m_EditorClassIdentifier: 
   rotates: 1
   isSpawn: 0
