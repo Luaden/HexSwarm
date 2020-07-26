@@ -18,6 +18,7 @@ public class Ability : IAbility
 
     [SerializeField] protected SODamageRange ThreeAxisAttack;
     public bool IsSpawn => ThreeAxisAttack.IsSpawn;
+    public bool IsSpawnVoid => ThreeAxisAttack.IsSpawnVoid;
     [SerializeField] protected SOMovementRange ThreeAxisMove;
     public bool NeedsClearLand => ThreeAxisMove.NeedsClearSpace;
     public bool IsJump => ThreeAxisMove.IsJump;

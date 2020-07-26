@@ -33,10 +33,11 @@ public abstract class Team : ITeam
 
     public virtual void RemoveUnit(IUnit unit)
     {
-        if(units.Contains(unit))
-        {
-            unit.Team = null;
-            units.Remove(unit);
-        }        
+        if (!units.Contains(unit))
+            return;
+
+        unit.Team = null;
+        units.Remove(unit);
+        GameManager.Battlefield.DestroyUnit(unit.Location);     
     }
 }

@@ -15,7 +15,7 @@ public class TestingGameManager : GameManager
     [ContextMenu("lets see it")]
     protected new void StartLevel()
     {
-        int gridRange = levelCounter + 10;
+        int gridRange = levelCounter + 4;
 
         Battlefield.GenerateGrid(gridRange, MapShape.Hexagon);
         activeTeams.Clear();
@@ -27,22 +27,22 @@ public class TestingGameManager : GameManager
             new HashSet<IUnit>());
         activeTeams.Enqueue(player2);
 
-        //GenerateTeam(player2,
-        //     UnitManager[Units.Infantry],
-        //     player2.StartPosition,
-        //     gridRange / 4);
-        //Debug.Log("second player made.");
+        GenerateTeam(player2,
+             UnitManager[Units.Infantry],
+             player2.StartPosition,
+             gridRange / 4);
+        Debug.Log("second player made.");
 
         player1 = new PlayerTeam(this, "Player1", "First Goo", Team1Icon, Teams.Player,
         new Vector3Int(Random.Range(-gridRange / 4, gridRange / 4), -gridRange / 2, 0),
         new HashSet<IUnit>());
         activeTeams.Enqueue(player1);
 
-        //GenerateTeam(player1,
-        //    UnitManager[Units.Nanos],
-        //    new Vector3Int(Random.Range(-gridRange / 4, gridRange / 4), -gridRange / 2, 0),
-        //    gridRange / 4);
-        //Debug.Log("First player made.");
+        GenerateTeam(player1,
+            UnitManager[Units.Nanos],
+            new Vector3Int(Random.Range(-gridRange / 4, gridRange / 4), -gridRange / 2, 0),
+            gridRange / 4);
+        Debug.Log("First player made.");
 
         EndTurn();
     }
@@ -55,18 +55,10 @@ public class TestingGameManager : GameManager
         currentPlayer?.GetMouseInput();
     }
 
-    [ContextMenu("EndPlayer1")]
-    protected void EndPlayer1Turn()
-    {
-        if (Player1 == activeTeams.Peek())
-            EndTurn();
-    }
-
     [ContextMenu("EndOtherTurn")]
-    protected void EndPlayer2Turn()
+    protected void ForceTurnEnd()
     {
-        if (Player1 != activeTeams.Peek())
-            EndTurn();
+        EndTurn();
     }
 }
 

@@ -88,27 +88,22 @@ public class GameManager : MonoBehaviour, IGameManager
         if (unit.Location != target)
             Battlefield.MoveUnit(unit.Location, target, path);
 
-        List<IUnit> deaths = new List<IUnit>();
-        IEnumerable<ICell> attackLocations = ability.GetAttack(direction, target);
-
-        foreach (ICell cell in attackLocations)
-            if (cell.Unit != null && cell.Unit.Team.TeamNumber == Teams.Player)
-                deaths.Add(cell.Unit);
-
-        ResolveDeaths(deaths, unit);
+        ResolveAttack(ability, unit, direction, target);
 
         return true;
     }
 
-    protected void ResolveAttack(IAbility move, Direction direction, Vector3Int location)
+    protected void ResolveAttack(IAbility move,IUnit unit, Direction direction, Vector3Int location)
     {
-        List<IUnit> deaths = new List<IUnit>();
-        IEnumerable<ICell> attackLocations = move.GetAttack(direction, end);
+        List<ICell> deaths = new List<ICell>();
+        IEnumerable<ICell> attackLocations = move.GetAttack(direction, location);
 
         foreach (ICell cell in attackLocations)
-            if (cell.Unit != null && cell.Unit.Team.TeamNumber == Teams.Player)
-                deaths.Add(cell.Unit);
+            if ((cell.Unit != null && cell.Unit.ID != unit.ID)||
+                (cell.Unit == null && move.IsSpawnVoid))
+                deaths.Add(cell);
 
+        ResolveDeaths(deaths, unit, move.IsSpawnVoid || move.IsSpawn);
     }
 
     [ContextMenu("New Level")]
@@ -136,6 +131,13 @@ public class GameManager : MonoBehaviour, IGameManager
         TurnOrderDisplay.UpdateUI(this);
 
         return true;
+    }
+
+    public void EndPlayerTurn()
+    {
+        if ((activeTeams.Peek().TeamNumber & Teams.AIS) != default)
+            return;
+        EndTurn();
     }
 
     public void ClearActiveUnit()
@@ -180,30 +182,40 @@ public class GameManager : MonoBehaviour, IGameManager
             EndTurn();
     }
 
-    protected void RemoveTeam(ITeam team)
+    public void RemoveTeam(ITeam team)
     {
         if (team == player1)
         {
             Loss();
             return;
         }
+        else if (activeTeams.Count == 2)
+        {
+            Win();
+            return;
+        }
+
+        ITeam currentTeam = activeTeams.Dequeue();
+
+        if (currentTeam != team)
+            activeTeams.Enqueue(currentTeam);
+        while (activeTeams.Peek() != currentTeam)
+        {
+            ITeam nextTeam = activeTeams.Dequeue();
+            if (nextTeam != team)
+                activeTeams.Enqueue(nextTeam);
+        }
     }
 
-    protected void ResolveDeaths(IEnumerable<IUnit> deaths, IUnit unit)
+    protected void ResolveDeaths(IEnumerable<ICell> deaths, IUnit unit, bool spawnReplacements)
     {
-        HashSet<ITeam> teamsWithLosses = new HashSet<ITeam>();
-
-        foreach (IUnit corpse in deaths)
+        foreach (ICell cell in deaths)
         {
-            ITeam oldTeam = corpse.Team;
-            Vector3Int oldLocation = corpse.Location;
-            corpse.Team.RemoveUnit(corpse);
-            teamsWithLosses.Add(oldTeam);
+            if (cell.Unit != default)
+                cell.Unit.Team.RemoveUnit(cell.Unit);
 
-            Battlefield.DestroyUnit(corpse.Location);
-
-            if ((activeTeams.Peek().TeamNumber & Teams.Player) == Teams.Player)
-                GenerateUnitForTeam(unit.Team, unit, corpse.Location);
+            if (spawnReplacements)
+                GenerateUnitForTeam(unit.Team, unit, cell.GridPosition);
         }
     }
 

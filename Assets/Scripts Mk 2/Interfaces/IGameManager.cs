@@ -16,4 +16,5 @@ public interface IGameManager
     IAbility SelectedAbility { get; }
     void InspectUnitUnderMouse();
     bool PerformMove(IUnit unit, IAbility ablity, Direction direction, Vector3Int target, IEnumerable<Vector3Int> path = default);
+    void RemoveTeam(ITeam team);
 }

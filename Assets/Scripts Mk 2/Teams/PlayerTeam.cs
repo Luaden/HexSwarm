@@ -67,7 +67,7 @@ public class PlayerTeam : Team
             return InvalidateHighLight();
         //my unit is selected and I have a selected ablity
         if (validMoves.Count == 0)
-            validMoves.UnionWith(gameManager.SelectedAbility.GetMoves(gameManager.DisplayedUnit.Location));
+            validMoves.UnionWith(gameManager.DisplayedUnit.CalcuateValidNewLocation(gameManager.SelectedAbility));
 
         if (!validMoves.Contains(pathEndPoint))
             return InvalidateHighLight();
@@ -77,8 +77,8 @@ public class PlayerTeam : Team
 
         travelPath =
             ((gameManager.SelectedAbility.IsJump) || validMoves.Count == 1) ?
-                validMoves.Select(X=>X.GridPosition) :
-                GameManager.Pathing.FindPath(gameManager.DisplayedUnit.Location, pathEndPoint.GridPosition);
+                new Vector3Int[] { pathEndPoint.GridPosition } :
+                GameManager.Pathing.FindPath(gameManager.DisplayedUnit.Location, pathEndPoint.GridPosition,true,gameManager.SelectedAbility.MovementRange);
 
         GameManager.Battlefield.HighlightGrid(
             travelPath,
@@ -127,6 +127,8 @@ public class PlayerTeam : Team
         {
             if (gameManager.PerformMove(gameManager.DisplayedUnit, gameManager.SelectedAbility, direction, pathEndPoint.GridPosition, travelPath))
                 unitsUnmoved.Remove(gameManager.DisplayedUnit);
+            if (unitsUnmoved.Count == 0)
+                gameManager.EndPlayerTurn();
         }
 
         gameManager.InspectUnitUnderMouse();

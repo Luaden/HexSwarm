@@ -11,7 +11,11 @@ public class SODamageRange : ScriptableObject, IRange<Vector3Int>
     public bool Rotates => rotates;
     [SerializeField] protected bool isSpawn;
     public bool IsSpawn => isSpawn;
+    [SerializeField] protected bool isSpawnVoid;
+    public bool IsSpawnVoid => isSpawnVoid;
+
     [SerializeField] protected List<Vector3Int> ThreeAxisRange;
+
 
     public IEnumerator<Vector3Int> GetEnumerator()
     {
