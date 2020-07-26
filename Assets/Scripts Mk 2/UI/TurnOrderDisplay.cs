@@ -19,7 +19,9 @@ public class TurnOrderDisplay : CoreUIElement<IGameManager>
 
         for (int i = 0; i < turnOrderIcons.Length; i++)
         {
-            turnOrderIcons[i].sprite = tempQueue.Peek().Icon;
+            turnOrderIcons[i].sprite = tempQueue.Peek().Icon;            
+            turnOrderIcons[i].color = GameManager.ConfigManager.TeamColors[tempQueue.Peek().TeamNumber].PrimaryColor;
+
             tempQueue.Enqueue(tempQueue.Dequeue());
         }
 

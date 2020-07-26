@@ -121,8 +121,7 @@ public class GameManager : MonoBehaviour, IGameManager
         Battlefield.GenerateGrid(GridSize, ConfigManager.MapShape);
 
         SpawnTeams();
-        Debug.Log("Current active team: " + activeTeams.Peek().Name);
-        EndTurn();
+        //EndTurn();
         return true;
     }
 
@@ -176,8 +175,8 @@ public class GameManager : MonoBehaviour, IGameManager
             return;
         //PlayerTeam currentPlayer = activeTeams.Peek() as PlayerTeam;
         //currentPlayer?.GetMouseInput();
-        if (activeTeams.Peek() == player1)
-            EndTurn();
+        //if (activeTeams.Peek() == player1)
+        //    EndTurn();
     }
 
     protected void RemoveTeam(ITeam team)
@@ -239,14 +238,10 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void SpawnTeams()
     {
+        SpawnPlayerTeam();
+
         for (int i = 1; i < Mathf.RoundToInt((teamCountPerLevel + levelCounter) * ConfigManager.GameDifficulty); i++)
         {
-            if (i == 1)
-            {
-                SpawnPlayerTeam();
-                continue;
-            }
-
             SpawnAITeam(i);
         }
     }
@@ -254,7 +249,8 @@ public class GameManager : MonoBehaviour, IGameManager
     {
         while (true)
         {
-            if (ValidateSpawnLocation(GetSpawnLocation()))
+            Vector3Int spawnLocation = GetSpawnLocation();
+            if (ValidateSpawnLocation(spawnLocation))
             {
                 player1 = new PlayerTeam(this, "Player1", "Grey Goo", UnitManager[Units.Nanos].Icon, Teams.Player,
                 spawnLocation,
@@ -271,13 +267,14 @@ public class GameManager : MonoBehaviour, IGameManager
     {
         while (true)
         {
-            if (ValidateSpawnLocation(GetSpawnLocation()))
-            {               
-
+            Vector3Int spawnLocation = GetSpawnLocation();
+            if (ValidateSpawnLocation(spawnLocation))
+            { 
                 TestAITeam ai = new TestAITeam(this, "AI" + i, "Tank wielding maniac.", UnitManager[Units.Infantry].Icon, (Teams)i,
                 spawnLocation,
                 new HashSet<IUnit>());
                 activeTeams.Enqueue(ai);
+                Debug.Log(ai.Name);
 
                 GenerateTeam(ai, UnitManager[Units.Infantry], ai.StartPosition);
                 break;
