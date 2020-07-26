@@ -95,6 +95,9 @@ public class UnitAVController : MonoBehaviour
         {
             foreach(KeyValuePair<Queue<Vector3>, GameObject> entry in worldUnitPath)
             {
+                if (entry.Key.Count == 0)
+                    continue;
+
                 GameObject worldUnit = entry.Value;
                 Vector3 nextPosition = entry.Key.Peek();
                 worldUnit.transform.position = Vector3.MoveTowards(
@@ -113,7 +116,8 @@ public class UnitAVController : MonoBehaviour
                             break;                            
                         }
 
-                    worldUnitPath.Remove(worldUnitPath.First().Key);
+                    worldUnitPath.Remove(entry.Key);
+                    break;
                 }                    
 
                 if (worldUnit.transform.position == nextPosition)
