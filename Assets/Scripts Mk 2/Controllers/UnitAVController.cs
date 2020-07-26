@@ -50,6 +50,7 @@ public class UnitAVController : MonoBehaviour
         }
         
         worldUnitPath.Add(worldPath, worldUnit);
+        PlayMoveSFX(unit);
     }
 
     public void DestroyUnit(IUnit unit)
@@ -103,12 +104,16 @@ public class UnitAVController : MonoBehaviour
 
                 KillCurrentUnits(worldUnit);
 
-                if (worldUnit.transform.position == nextPosition)
-                    nextPosition = worldUnitPath.First().Key.Dequeue();
-
-
                 if (worldUnitPath.First().Key.Count == 0 && worldUnit.transform.position == nextPosition)
+                {
                     worldUnitPath.Remove(worldUnitPath.First().Key);
+                    foreach(KeyValuePair<IUnit, GameObject> unit in worldUnits)
+                        if (unit.Value == entry.Value)
+                            PlayAttackSFX(unit.Key);
+                }                    
+
+                if (worldUnit.transform.position == nextPosition)
+                    nextPosition = worldUnitPath.First().Key.Dequeue();                
             }
         }
 
@@ -166,12 +171,14 @@ public class UnitAVController : MonoBehaviour
 
     protected void PlayMoveSFX(IUnit unit)
     {
-        configManager.PlaySound(movementSounds[gameManager.UnitManager[unit.ID].ID]);
+        if((unit as Unit).MoveSFX != null)
+            configManager.PlaySound((unit as Unit).MoveSFX);
     }
 
     protected void PlayAttackSFX(IUnit unit)
     {
-        configManager.PlaySound(attackSounds[gameManager.UnitManager[unit.ID].ID]);
+        if ((unit as Unit).AttackSFX != null)
+            configManager.PlaySound((unit as Unit).AttackSFX);
     }
 
     [ContextMenu("Play Attack Sound 1")]
