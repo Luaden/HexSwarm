@@ -136,6 +136,8 @@ public class PlayerTeam : Team
                 unitsUnmoved.Remove(gameManager.DisplayedUnit);
             if (unitsUnmoved.Count == 0)
                 gameManager.EndPlayerTurn();
+            GameManager.Battlefield.HighlightPossibleAttacks(Array.Empty<Vector3Int>());
+            GameManager.Battlefield.HighlightUnmovedUnits(unitsUnmoved.Select(X => X.Location));
         }
 
         gameManager.InspectUnitUnderMouse();
