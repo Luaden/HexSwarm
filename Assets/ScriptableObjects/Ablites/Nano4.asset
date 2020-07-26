@@ -15,7 +15,7 @@ MonoBehaviour:
   myAbility:
     Id: 16
     name: Nano Splash
-    description: Leap a distance, destroy enemies in  splash effect.
+    description: Leap a distance, converts enemies in  splash effect.
     icon: {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
     ThreeAxisAttack: {fileID: 11400000, guid: 239201f9412dca34f9ed306757559a6a, type: 2}
     ThreeAxisMove: {fileID: 11400000, guid: 5c0203cd891b0874aa3116444fb20a28, type: 2}

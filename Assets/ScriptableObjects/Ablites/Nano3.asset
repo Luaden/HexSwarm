@@ -15,7 +15,7 @@ MonoBehaviour:
   myAbility:
     Id: 16
     name: Nano Cloud
-    description: Leap over targets, convert everything in a line.
+    description: Leap far, destroy a lot, but does not convert.
     icon: {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
-    ThreeAxisAttack: {fileID: 11400000, guid: 280d7d0459de7fe4ab309123777fe703, type: 2}
+    ThreeAxisAttack: {fileID: 11400000, guid: 4414214cbbe885d42b895dcd2c85ffea, type: 2}
     ThreeAxisMove: {fileID: 11400000, guid: 4426e1cd32a0f374a95f23102e39f9fb, type: 2}

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f829563b94048e4c89b10ce3ac5016d, type: 3}
   m_Name: ClearM3
   m_EditorClassIdentifier: 
-  rotates: 1
+  rotates: 0
   isJump: 1
   needsClearSpace: 1
   movementRange: 2
