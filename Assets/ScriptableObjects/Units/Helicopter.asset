@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 845f1d78a090766459836192a8b90060, type: 3}
-  m_Name: Factory
+  m_Name: Helicopter
   m_EditorClassIdentifier: 
   myUnit:
-    id: 1
-    icon: {fileID: 2349100956782994321, guid: 9ae9025ffa81e9d409ba104b5dfbe0f6, type: 3}
-    name: Factory
-    description: Hub of this team, produces more units.
-    MoveSFX: {fileID: 0}
-    AttackSFX: {fileID: 0}
+    id: 4
+    icon: {fileID: -7377170927877912761, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
+    name: Helicopter
+    description: Massive movement range, good damage.
+    MoveSFX: {fileID: 8300000, guid: f7e56c830973ada4ead1f1fe3384105d, type: 3}
+    AttackSFX: {fileID: 8300000, guid: 6955aac55028d1445a2b0f2f1bab062e, type: 3}
     ablities:
-    - {fileID: 11400000, guid: 29cf73a40fc6ffe4892b29921ee9ea21, type: 2}
+    - {fileID: 0}
+    - {fileID: 0}

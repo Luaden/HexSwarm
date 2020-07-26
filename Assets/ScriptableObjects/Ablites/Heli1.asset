@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19e05e15c37e5e46b51ff4a19eba431, type: 3}
+  m_Name: Heli1
+  m_EditorClassIdentifier: 
+  myAbility:
+    Id: 4
+    name: UPS
+    description: Moves an incredible range and kills in a short arc.
+    icon: {fileID: 2050611643309227591, guid: 9ae9025ffa81e9d409ba104b5dfbe0f6, type: 3}
+    ThreeAxisAttack: {fileID: 11400000, guid: 6f51cefa6d1365a46921d5c3d5864621, type: 2}
+    ThreeAxisMove: {fileID: 11400000, guid: 9674d3fe6c3e8af438c959b877da2e15, type: 2}

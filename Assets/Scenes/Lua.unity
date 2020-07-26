@@ -379,8 +379,8 @@ MonoBehaviour:
     type: 3}
   Team2Icon: {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303,
     type: 3}
-  validateAblity: {fileID: 11400000, guid: b697adf0f6b621248ad0c933a9dc9e3d, type: 2}
-  valdateUnit: {fileID: 11400000, guid: 691959e3599025a48be1184d96d8927a, type: 2}
+  validateAblity: {fileID: 11400000, guid: 160ac671fb2538342b849399abb9d04a, type: 2}
+  valdateUnit: {fileID: 11400000, guid: 040e16bbc57a1f54485e424cfe435a89, type: 2}
   ValidateMovement: 0
 --- !u!114 &2102556315 stripped
 MonoBehaviour:

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19e05e15c37e5e46b51ff4a19eba431, type: 3}
+  m_Name: Nano4
+  m_EditorClassIdentifier: 
+  myAbility:
+    Id: 16
+    name: Nano Splash
+    description: Leap a distance, destroy enemies in  splash effect.
+    icon: {fileID: 2478943349938514664, guid: 7ff6e1907a56f694281471628bc15303, type: 3}
+    ThreeAxisAttack: {fileID: 11400000, guid: 239201f9412dca34f9ed306757559a6a, type: 2}
+    ThreeAxisMove: {fileID: 11400000, guid: 5c0203cd891b0874aa3116444fb20a28, type: 2}
