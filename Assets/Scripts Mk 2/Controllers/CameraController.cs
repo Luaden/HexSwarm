@@ -29,20 +29,23 @@ public class CameraController : MonoBehaviour
     {
         mainCamera = Camera.main;
         gameManager = FindObjectOfType<GameManager>();
-        cameraTransform = mainCamera.transform;               
+        cameraTransform = mainCamera.transform;
+        ConfigManager.instance.CameraController = this;
     }
 
     protected void Start()
     {
-        ConfigManager.instance.CameraController = this;
         SensitivityModifier = ConfigManager.instance.SensitivityModifier;
         SpeedModifier = ConfigManager.instance.SpeedModifier;
     }
 
     protected void Update()
     {
-        if (!movementEnabled)
+        if (movementEnabled)
+        {
+            Debug.Log("Moving Camera"); 
             CameraMovement();
+        }            
     }
 
     protected void CameraMovement()

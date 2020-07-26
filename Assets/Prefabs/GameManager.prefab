@@ -43,13 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cce56a6fd0c6d314ebba9708a2fa5a0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitManager:
-    EditorList:
-    - {fileID: 11400000, guid: 5287f4df1be53c54a8d99dc9356b3ca4, type: 2}
-    - {fileID: 11400000, guid: 1b33e950f2729694badf61b2fa96ce00, type: 2}
-    - {fileID: 11400000, guid: 01b85b05480e0e14daccdfc19833a17c, type: 2}
-    - {fileID: 0}
-  teamCountPerLevel: 2
-  rangeFromNeighbors: 2
-  levelCounter: 1
-  gridSize: 10
+  unitManager: {fileID: 11400000, guid: a69608da3ef9e1a4a8d363ab46ce1084, type: 2}
+  teamCountPerLevel: 4
+  rangeFromNeighbors: 3
+  levelCounter: 15
+  gridSize: 0

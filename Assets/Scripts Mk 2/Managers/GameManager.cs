@@ -297,7 +297,6 @@ public class GameManager : MonoBehaviour, IGameManager
                     spawnLocation,
                     new HashSet<IUnit>());
                 activeTeams.Enqueue(teamToAssignTo);
-                Debug.Log(teamToAssignTo.Name);
                 aiTeams.Add(teamId, teamToAssignTo);
             }
 

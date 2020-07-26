@@ -130,14 +130,6 @@ public class ConfigManager : MonoBehaviour, IConfigManager
             config.PrimaryColorCategory = (Colors)(int)team;
 
             teamColors.Add(team, config);
-            Debug.Log(team);
-            Debug.Log(config.PrimaryColorCategory);
         }
-    }
-
-    protected void OnLevelWasLoaded(int level)
-    {
-        CameraController = FindObjectOfType<CameraController>();
-        AudioController = FindObjectOfType<AudioController>();
     }
 }
