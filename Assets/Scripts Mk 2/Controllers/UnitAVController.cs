@@ -9,7 +9,7 @@ public class UnitAVController : MonoBehaviour
     [SerializeField] protected AudioClip[] initAttackSFX;
     [SerializeField] protected float moveSpeed = 1f;
     [SerializeField] protected float dieSpeed;
-
+    
     protected GameManager gameManager;
     protected ConfigManager configManager;
     protected Dictionary<IUnit, GameObject> worldUnits = new Dictionary<IUnit, GameObject>();
