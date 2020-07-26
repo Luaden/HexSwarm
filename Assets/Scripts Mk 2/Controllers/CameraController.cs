@@ -40,43 +40,39 @@ public class CameraController : MonoBehaviour
     }
 
     protected void Update()
-    {
-        if (movementEnabled)
-            CameraMovement();
+    {        
+        CameraMovement();
     }
 
     protected void CameraMovement()
     {
-        mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        if (movementEnabled)
+        {
+            mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
-        if(gameManager != null)
-        {
-            cameraPosToBe.x = Mathf.Clamp(mousePos.x, -gameManager.GridSize, gameManager.GridSize);
-            cameraPosToBe.y = Mathf.Clamp(mousePos.y, -gameManager.GridSize, gameManager.GridSize);
-            cameraPosToBe.z = mainCamera.transform.position.z;
-        }
-        else
-        {
-            cameraPosToBe.x = mousePos.x;
-            cameraPosToBe.y = mousePos.y;
-            cameraPosToBe.z = mainCamera.transform.position.z;
-        }        
+            if (gameManager != null)
+            {
+                cameraPosToBe.x = Mathf.Clamp(mousePos.x, -gameManager.GridSize, gameManager.GridSize);
+                cameraPosToBe.y = Mathf.Clamp(mousePos.y, -gameManager.GridSize, gameManager.GridSize);
+                cameraPosToBe.z = mainCamera.transform.position.z;
+            }
 
-        if (mousePos.x > mainCamera.transform.position.x + xMax / sensitivityModifier ||
-            mousePos.x < mainCamera.transform.position.x - xMax / sensitivityModifier ||
-            mousePos.y > mainCamera.transform.position.y + yMax / sensitivityModifier ||
-            mousePos.y < mainCamera.transform.position.y - yMax / sensitivityModifier)
-        {
-            mainCamera.transform.position = Vector3.Lerp(transform.position, cameraPosToBe, speedModifier * Time.deltaTime);
+            if (mousePos.x > mainCamera.transform.position.x + xMax / sensitivityModifier ||
+                mousePos.x < mainCamera.transform.position.x - xMax / sensitivityModifier ||
+                mousePos.y > mainCamera.transform.position.y + yMax / sensitivityModifier ||
+                mousePos.y < mainCamera.transform.position.y - yMax / sensitivityModifier)
+            {
+                mainCamera.transform.position = Vector3.Lerp(transform.position, cameraPosToBe, speedModifier * Time.deltaTime);
+            }
         }
+
+        mainCamera.transform.position = Vector3.Lerp(transform.position, cameraPosToBe, speedModifier * Time.deltaTime);
     }
 
-    public void RepositionCamera(Vector3Int cameraPosition)
+    public void RepositionCamera(Vector3 cameraPosition)
     {
         cameraPosToBe.x = cameraPosition.x;
         cameraPosToBe.y = cameraPosition.y;
-        cameraPosToBe.z = mainCamera.transform.position.z;
-
-        mainCamera.transform.position = cameraPosToBe; 
+        cameraPosToBe.z = mainCamera.transform.position.z;         
     }
 }

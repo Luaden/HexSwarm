@@ -66,8 +66,6 @@ public class TestAITeam : Team
         possibleDefenses.Clear();
         bestHits.Clear();
         bestBlocks.Clear();
-
-        Debug.Log("Initialized.");
     }
 
     protected void CheckForEnemies()
@@ -424,9 +422,7 @@ public class TestAITeam : Team
     protected float passedTime;
     public override void NextMove(float elapsedTime)
     {
-        Debug.Log(unitsUnmoved.Count);
         passedTime += elapsedTime;
-        Debug.Log(System.DateTime.FromBinary((long)passedTime).ToLongTimeString());
         if(unitsUnmoved.Count > 0)
             DetermineStrategy();
 

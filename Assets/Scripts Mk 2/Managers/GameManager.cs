@@ -91,18 +91,27 @@ public class GameManager : MonoBehaviour, IGameManager
 
         ResolveAttack(ability, unit, direction, target);
         Battlefield.ClearSelectedUnitHighlight();
+
+        Debug.Log(unit.Name + " " + target + " " + path.Count());
         return true;
     }
 
-    protected void ResolveAttack(IAbility move,IUnit unit, Direction direction, Vector3Int location)
+    protected void ResolveAttack(IAbility move, IUnit unit, Direction direction, Vector3Int location)
     {
         List<ICell> deaths = new List<ICell>();
         IEnumerable<ICell> attackLocations = move.GetAttack(direction, location);
 
-        foreach (ICell cell in attackLocations)
-            if ((cell.Unit != null && cell.Unit.ID != unit.ID)||
-                (cell.Unit == null && move.IsSpawnVoid))
-                deaths.Add(cell);
+        if(unit.Team.TeamNumber != Teams.Player)
+            foreach (ICell cell in attackLocations)
+                if ((cell.Unit != null && cell.Unit.Team.TeamNumber == Teams.Player)||
+                    (cell.Unit == null && move.IsSpawnVoid))
+                    deaths.Add(cell);
+        
+        if (unit.Team.TeamNumber == Teams.Player)
+            foreach (ICell cell in attackLocations)
+                if ((cell.Unit != null && cell.Unit.Team.TeamNumber != unit.Team.TeamNumber) ||
+                    (cell.Unit == null && move.IsSpawnVoid))
+                    deaths.Add(cell);
 
         ResolveDeaths(deaths, unit, move.IsSpawnVoid || move.IsSpawn);
     }

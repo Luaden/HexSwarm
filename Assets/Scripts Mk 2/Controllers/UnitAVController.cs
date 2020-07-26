@@ -121,12 +121,10 @@ public class UnitAVController : MonoBehaviour
 
     }
 
-    protected void Update()
+    protected void FixedUpdate()
     {
         if (worldUnitPath.Count > 0)
         {
-            Debug.Log("worldUnits.Count" + worldUnits.Count);
-            Debug.Log("worldObjects.Count" + worldObjects.Count);
             MovementComplete = false;
 
             if (worldUnitPath.First().Key.Count == 0)
@@ -150,6 +148,7 @@ public class UnitAVController : MonoBehaviour
                     worldUnit.transform.position,
                     nextPosition,
                     moveSpeed * Time.deltaTime);
+            ConfigManager.instance.RepositionCamera(worldUnit.transform.position);
 
             if (worldUnit.transform.position == nextPosition && worldUnitPath.First().Key.Count == 0)
             {
@@ -165,7 +164,11 @@ public class UnitAVController : MonoBehaviour
             }
 
             if (worldUnit.transform.position == nextPosition)
+            {
                 nextPosition = worldUnitPath.First().Key.Dequeue();
+                Debug.Log("Moving to next position.");
+            }
+                
         }
             
         if (worldUnitPath.Count == 0)
