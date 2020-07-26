@@ -106,10 +106,14 @@ public class UnitAVController : MonoBehaviour
 
                 if (worldUnitPath.First().Key.Count == 0 && worldUnit.transform.position == nextPosition)
                 {
-                    worldUnitPath.Remove(worldUnitPath.First().Key);
                     foreach(KeyValuePair<IUnit, GameObject> unit in worldUnits)
                         if (unit.Value == entry.Value)
+                        {
                             PlayAttackSFX(unit.Key);
+                            break;                            
+                        }
+
+                    worldUnitPath.Remove(worldUnitPath.First().Key);
                 }                    
 
                 if (worldUnit.transform.position == nextPosition)
