@@ -161,7 +161,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     public void HighlightUnmovedUnits(IEnumerable<Vector3Int> unmovedUnits)
     {
         unmovedUnitsHighlightMap.ClearAllTiles();
-        unmovedUnitsHighlightMap.PaintTiles(unmovedUnits, possibleAttackTile);
+        unmovedUnitsHighlightMap.PaintTiles(unmovedUnits, unmovedUnitsHighlightTile);
     }
 
     public void ClearHighlights()
