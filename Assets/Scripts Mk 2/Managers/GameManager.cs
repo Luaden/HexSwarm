@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour, IGameManager
         Battlefield.GenerateGrid(GridSize, ConfigManager.MapShape);
 
         SpawnTeams();
-        //EndTurn();
+        EndTurn();
         return true;
     }
 
@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour, IGameManager
         activeTeams.Enqueue(activeTeams.Dequeue());
         activeTeams.Peek().StartTurn();
         TurnOrderDisplay.UpdateUI(this);
-
+        SelectedUnitPanel.UpdateUI(default);
         return true;
     }
 
@@ -174,12 +174,8 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void Update()
     {
-        if (activeTeams.Count == 0)
-            return;
-        //PlayerTeam currentPlayer = activeTeams.Peek() as PlayerTeam;
-        //currentPlayer?.GetMouseInput();
-        //if (activeTeams.Peek() == player1)
-        //    EndTurn();
+        PlayerTeam currentPlayer = activeTeams.Peek() as PlayerTeam;
+        currentPlayer?.GetMouseInput();
     }
 
     public void RemoveTeam(ITeam team)
@@ -251,13 +247,15 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void SpawnTeams()
     {
+        SpawnAITeam(1);
         SpawnPlayerTeam();
-
-        for (int i = 1; i < Mathf.RoundToInt((teamCountPerLevel + levelCounter) * ConfigManager.GameDifficulty); i++)
+        for (int i = 2; i < Mathf.RoundToInt((teamCountPerLevel + levelCounter) * ConfigManager.GameDifficulty); i++)
         {
             SpawnAITeam(i);
         }
+
     }
+
     protected void SpawnPlayerTeam()
     {
         while (true)

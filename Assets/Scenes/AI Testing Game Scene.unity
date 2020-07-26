@@ -682,6 +682,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2037474865, guid: 2c6c1618143a73843a700941b065d82a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1895993705}
+    - target: {fileID: 2037474865, guid: 2c6c1618143a73843a700941b065d82a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: EndPlayerTurn
+      objectReference: {fileID: 0}
     - target: {fileID: 5133686582898634919, guid: 2c6c1618143a73843a700941b065d82a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -791,6 +799,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Game Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8138612555458358894, guid: 2c6c1618143a73843a700941b065d82a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8138612556549228244, guid: 2c6c1618143a73843a700941b065d82a,
         type: 3}

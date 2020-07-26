@@ -26,6 +26,7 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>, IButtonIndexer
             return;
 
         UpdateSprite(unitImage, unit.Icon);
+        unitImage.color = GameManager.ConfigManager.TeamColors[unit.Team.TeamNumber].PrimaryColor;
         UpdateText(unitName, unit.Name);
         UpdateText(unitDescription, unit.Description);
         foreach (AbilityDisplay ablitydisplay in Abilites)

@@ -37,7 +37,6 @@ public class PlayerTeam : Team
     {
         TeamInit();
         ToggleCameraControls();
-        EndTurn();
     }
 
     public override void EndTurn()
@@ -55,7 +54,7 @@ public class PlayerTeam : Team
     protected void ToggleCameraControls()
     {
         camControls = !camControls;
-        //ConfigManager.instance.ToggleCameraControls(camControls);
+        ConfigManager.instance.ToggleCameraControls(camControls);
     }
 
     protected bool HandleHighlighting()
