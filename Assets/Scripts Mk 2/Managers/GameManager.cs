@@ -110,6 +110,7 @@ public class GameManager : MonoBehaviour, IGameManager
     public bool StartLevel()
     {
         activeTeams.Clear();
+        aiTeams.Clear();
         UnitAVController.Nuke();
 
         GridSize = Mathf.RoundToInt((9 + levelCounter) * ConfigManager.GameDifficulty);
@@ -275,22 +276,35 @@ public class GameManager : MonoBehaviour, IGameManager
         }
     }
 
+    Dictionary<Teams, TestAITeam> aiTeams = new Dictionary<Teams, TestAITeam>();
+
     protected void SpawnAITeam(int i)
     {
-        while (true)
+        int CTRtry = -1;
+        while (++CTRtry < 5)
         {
             Vector3Int spawnLocation = GetSpawnLocation();
-            if (ValidateSpawnLocation(spawnLocation))
-            { 
-                TestAITeam ai = new TestAITeam(this, "AI" + i, "Tank wielding maniac.", UnitManager[Units.Infantry].Icon, (Teams)i,
-                spawnLocation,
-                new HashSet<IUnit>());
-                activeTeams.Enqueue(ai);
-                Debug.Log(ai.Name);
+            if (!ValidateSpawnLocation(spawnLocation))
+                continue;
+            Teams teamId = (Teams)(1 << ((i % 9) +1) );
 
-                GenerateTeam(ai, UnitManager[Units.Infantry], ai.StartPosition);
-                break;
+            TestAITeam teamToAssignTo;
+
+            if (!aiTeams.TryGetValue(teamId, out teamToAssignTo))
+            {
+                teamToAssignTo = new TestAITeam(this, 
+                    "AI" + i, "Tank wielding maniac.",
+                    UnitManager[Units.Infantry].Icon, 
+                    teamId,
+                    spawnLocation,
+                    new HashSet<IUnit>());
+                activeTeams.Enqueue(teamToAssignTo);
+                Debug.Log(teamToAssignTo.Name);
+                aiTeams.Add(teamId, teamToAssignTo);
             }
+
+            GenerateTeam(teamToAssignTo, UnitManager[Units.Infantry], spawnLocation);
+            break;
         }
     }
 
