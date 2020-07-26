@@ -8,24 +8,34 @@ public class UnitAVController : MonoBehaviour
     [SerializeField] protected AudioClip[] initMoveSFX;
     [SerializeField] protected AudioClip[] initAttackSFX;
     [SerializeField] protected float moveSpeed = 1f;
-    [SerializeField] protected float dieSpeed;
+    [SerializeField] protected float dieSpeed = 1f;
     
     protected GameManager gameManager;
     protected ConfigManager configManager;
-    protected Dictionary<IUnit, GameObject> worldUnits = new Dictionary<IUnit, GameObject>();
+    protected Dictionary<Unit, GameObject> worldObjects = new Dictionary<Unit, GameObject>();
+    protected Dictionary<GameObject, Unit> worldUnits = new Dictionary<GameObject, Unit>();
     protected Dictionary<Queue<Vector3>, GameObject> worldUnitPath = new Dictionary<Queue<Vector3>, GameObject>();
-    protected Dictionary<Units, AudioClip> movementSounds = new Dictionary<Units, AudioClip>();
-    protected Dictionary<Units, AudioClip> attackSounds = new Dictionary<Units, AudioClip>();
     protected List<GameObject> totalUnitsToDie = new List<GameObject>();
     protected List<GameObject> currentUnitsToDie = new List<GameObject>();
+    protected bool movementComplete = true;
+    protected bool playNewSound = true;
 
-    public void PlaceNewUnit(IUnit unit)
+    protected Dictionary<Units, AudioClip> movementSFX = new Dictionary<Units, AudioClip>();
+    protected Dictionary<Units, AudioClip> attackSFX = new Dictionary<Units, AudioClip>();
+
+    public bool MovementComplete { get => movementComplete; private set => movementComplete = value; }
+    
+
+    public void PlaceNewUnit(Unit unit)
     {
         GameObject worldUnit = Instantiate(worldUnitPrefab, this.transform);
         SpriteRenderer renderer = worldUnit.GetComponent<SpriteRenderer>();
 
-        if (!worldUnits.ContainsKey(unit))
-            worldUnits.Add(unit, worldUnit);
+        if (!worldObjects.ContainsKey(unit))
+            worldObjects.Add(unit, worldUnit);
+        if (!worldUnits.ContainsKey(worldUnit))
+            worldUnits.Add(worldUnit, unit);
+
 
         renderer.color = configManager.TeamColors[unit.Team.TeamNumber].PrimaryColor;
         renderer.sprite = unit.Icon;
@@ -33,12 +43,13 @@ public class UnitAVController : MonoBehaviour
         worldUnit.transform.position = GameManager.Battlefield.GetWorldLocation(unit.Location);
     }
 
-    public void MoveUnit(IUnit unit, IEnumerable<Vector3Int> path)
+    public void MoveUnit(Unit unit, IEnumerable<Vector3Int> path)
     {
         if (unit == null)
             return;
+
         GameObject worldUnit;
-        worldUnits.TryGetValue(unit, out worldUnit);
+        worldObjects.TryGetValue(unit, out worldUnit);
 
         Queue<Vector3> worldPath = new Queue<Vector3>();
 
@@ -48,33 +59,39 @@ public class UnitAVController : MonoBehaviour
             GameManager.Battlefield.World.TryGetValue(location, out cell);
             worldPath.Enqueue(cell.WorldPosition);
         }
-        
+
         worldUnitPath.Add(worldPath, worldUnit);
-        PlayMoveSFX(unit);
+        
     }
 
-    public void DestroyUnit(IUnit unit)
+    public void DestroyUnit(Unit unit)
     {
         GameObject deadUnit;
-        worldUnits.TryGetValue(unit, out deadUnit);
+        Unit deadIUnit;
+
+        worldObjects.TryGetValue(unit, out deadUnit);
+        worldUnits.TryGetValue(deadUnit, out deadIUnit);
         totalUnitsToDie.Add(deadUnit);
 
-        worldUnits.Remove(unit);
+        worldObjects.Remove(unit);
+        worldUnits.Remove(deadUnit);
     }
 
     public void ChangeTeamColors(Dictionary<Teams, ColorConfig> colors)
     {
-        foreach(KeyValuePair<IUnit, GameObject> worldUnit in worldUnits)
+        foreach(KeyValuePair<Unit, GameObject> worldUnit in worldObjects)
             worldUnit.Value.GetComponent<SpriteRenderer>().color = colors[worldUnit.Key.Team.TeamNumber].PrimaryColor;
     }
 
     public void Nuke()
     {
-        foreach(KeyValuePair<IUnit, GameObject> entry in worldUnits)
+        foreach(KeyValuePair<Unit, GameObject> entry in worldObjects)
         {
             Destroy(entry.Value);
         }
+        
 
+        worldObjects.Clear();
         worldUnits.Clear();
         worldUnitPath.Clear();
         totalUnitsToDie.Clear();
@@ -89,28 +106,54 @@ public class UnitAVController : MonoBehaviour
             gameManager = FindObjectOfType<GameManager>();
     }
 
+    protected void Start()
+    {
+        movementSFX.Add(Units.Infantry, initMoveSFX[0]);
+        movementSFX.Add(Units.Tank, initMoveSFX[1]);
+        movementSFX.Add(Units.Heli, initMoveSFX[2]);
+        movementSFX.Add(Units.Nanos, null);
+        movementSFX.Add(Units.Spawner, null);
+        attackSFX.Add(Units.Infantry, initAttackSFX[0]);
+        attackSFX.Add(Units.Tank, initAttackSFX[1]);
+        attackSFX.Add(Units.Heli, initAttackSFX[2]);
+        attackSFX.Add(Units.Nanos, null);
+        attackSFX.Add(Units.Spawner, null);
+
+    }
+
     protected void Update()
     {
         if (worldUnitPath.Count > 0)
         {
-            if(worldUnitPath.First().Key.Count == 1)
+            Debug.Log("worldUnits.Count" + worldUnits.Count);
+            Debug.Log("worldObjects.Count" + worldObjects.Count);
+            MovementComplete = false;
+
+            if (worldUnitPath.First().Key.Count == 0)
             {
                 worldUnitPath.Remove(worldUnitPath.First().Key);
+                playNewSound = true;
+
                 return;
-            }                
+            }
+
+            Unit temp;
+            if (playNewSound && worldUnits.TryGetValue(worldUnitPath.First().Value, out temp))
+                PlayMoveSFX(worldUnits[worldUnitPath.First().Value]);
+
+            playNewSound = false;
 
             GameObject worldUnit = worldUnitPath.First().Value;
             Vector3 nextPosition = worldUnitPath.First().Key.Peek();
+
             worldUnit.transform.position = Vector3.MoveTowards(
                     worldUnit.transform.position,
                     nextPosition,
                     moveSpeed * Time.deltaTime);
 
-            KillCurrentUnits(worldUnit);
-
-            if (worldUnitPath.First().Key.Count == 0 && worldUnit.transform.position == nextPosition)
+            if (worldUnit.transform.position == nextPosition && worldUnitPath.First().Key.Count == 0)
             {
-                foreach (KeyValuePair<IUnit, GameObject> unit in worldUnits)
+                foreach (KeyValuePair<Unit, GameObject> unit in worldObjects)
                     if (unit.Value == worldUnit)
                     {
                         PlayAttackSFX(unit.Key);
@@ -118,17 +161,19 @@ public class UnitAVController : MonoBehaviour
                     }
 
                 worldUnitPath.Remove(worldUnitPath.First().Key);
+                playNewSound = true;
             }
 
             if (worldUnit.transform.position == nextPosition)
                 nextPosition = worldUnitPath.First().Key.Dequeue();
         }
-
+            
         if (worldUnitPath.Count == 0)
+        {
             KillAllUnits();
+            MovementComplete = true;
+        }
     }
-
-
 
     protected void KillAllUnits()
     {
@@ -167,7 +212,8 @@ public class UnitAVController : MonoBehaviour
             {
                 SpriteRenderer sprite = deadUnit.GetComponent<SpriteRenderer>();
 
-                Color targetAlpha = new Color(sprite.color.r, sprite.color.g, sprite.color.b, Mathf.Lerp(1, 0, dieSpeed * Time.deltaTime));
+                Color targetAlpha = new Color(sprite.color.r, sprite.color.g, sprite.color.r, sprite.color.a);
+                targetAlpha.a = Mathf.Clamp01(targetAlpha.a - (dieSpeed * Time.deltaTime));
                 sprite.color = targetAlpha;
 
                 if (sprite.color.a == 0)
@@ -180,19 +226,15 @@ public class UnitAVController : MonoBehaviour
 
     protected void PlayMoveSFX(IUnit unit)
     {
-        if((unit as Unit).MoveSFX != null)
-            configManager.PlaySound((unit as Unit).MoveSFX);
+        AudioClip clip; 
+        if(movementSFX.TryGetValue(unit.ID, out clip))
+            ConfigManager.instance.PlaySound(clip);
     }
 
     protected void PlayAttackSFX(IUnit unit)
     {
-        if ((unit as Unit).AttackSFX != null)
-            configManager.PlaySound((unit as Unit).AttackSFX);
-    }
-
-    [ContextMenu("Play Attack Sound 1")]
-    protected void TestPlaySFX()
-    {
-        configManager.PlaySound(initAttackSFX[0]);
+        AudioClip clip;
+        if (attackSFX.TryGetValue(unit.ID, out clip))
+            ConfigManager.instance.PlaySound(clip);
     }
 }

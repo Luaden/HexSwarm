@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Nano1
   m_EditorClassIdentifier: 
   myAbility:
-    Id: 144
+    Id: 16
     name: AMitosis
     description: Spawns a new swarm.
     icon: {fileID: 21300000, guid: d4c10dda67be15e419045b3409d76e10, type: 3}

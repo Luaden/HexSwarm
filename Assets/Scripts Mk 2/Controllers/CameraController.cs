@@ -42,10 +42,7 @@ public class CameraController : MonoBehaviour
     protected void Update()
     {
         if (movementEnabled)
-        {
-            Debug.Log("Moving Camera"); 
             CameraMovement();
-        }            
     }
 
     protected void CameraMovement()

@@ -23,13 +23,17 @@ public interface IBattlefieldManager
     void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<Vector3Int> attackCells);
     void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<ICell> attackCells);
     void HighlightGrid(IEnumerable<ICell> moveCells);
+    void HighlightSelectedUnit(ICell selectedUnits);
     void HighlightPossibleAttacks(IEnumerable<ICell> possibleAttacks);
     void HighlightUnmovedUnits(IEnumerable<ICell> unmovedUnits);
     void HighlightPossibleAttacks(IEnumerable<Vector3Int> possibleAttacks);
     void HighlightUnmovedUnits(IEnumerable<Vector3Int> unmovedUnits);
+    void HighlightSelectedUnit(Vector3Int selectedUnits);
+
 
 
     void ClearHighlights();
+    void ClearSelectedUnitHighlight();
     void PlaceNewUnit(IUnit unit, Vector3Int position);
     void MoveUnit(Vector3Int unitPosition, Vector3Int destination, IEnumerable<Vector3Int> path = null);
     void DestroyUnit(Vector3Int unitPosition);

@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour, IGameManager
             return;
 
         DisplayedUnit = selectedcell.Unit;
+        Battlefield.HighlightSelectedUnit(selectedcell);
         SelectedUnitPanel.UpdateUI(DisplayedUnit);
     }
 
@@ -89,7 +90,7 @@ public class GameManager : MonoBehaviour, IGameManager
             Battlefield.MoveUnit(unit.Location, target, path);
 
         ResolveAttack(ability, unit, direction, target);
-
+        Battlefield.ClearSelectedUnitHighlight();
         return true;
     }
 
@@ -127,7 +128,10 @@ public class GameManager : MonoBehaviour, IGameManager
             turnCounter++;
 
         activeTeams.Enqueue(activeTeams.Dequeue());
+
+        ConfigManager.CameraController.RepositionCamera(activeTeams.Peek().StartPosition);
         activeTeams.Peek().StartTurn();
+
         TurnOrderDisplay.UpdateUI(this);
         SelectedUnitPanel.UpdateUI(default);
         return true;
@@ -137,7 +141,7 @@ public class GameManager : MonoBehaviour, IGameManager
     {
         if ((activeTeams.Peek().TeamNumber & Teams.AIS) != default)
             return;
-        EndTurn();
+        activeTeams.Peek().EndTurn();
     }
 
     public void ClearActiveUnit()
@@ -146,6 +150,7 @@ public class GameManager : MonoBehaviour, IGameManager
         DisplayedUnit = null;
 
         Battlefield.ClearHighlights();
+        Battlefield.ClearSelectedUnitHighlight();
         SelectedUnitPanel.UpdateUI(null);
     }
 
@@ -176,6 +181,7 @@ public class GameManager : MonoBehaviour, IGameManager
     {
         activeTeams.Peek().NextMove(Time.deltaTime);
     }
+
     protected void Update()
     {    
         PlayerTeam currentPlayer = activeTeams.Peek() as PlayerTeam;
@@ -243,10 +249,35 @@ public class GameManager : MonoBehaviour, IGameManager
     protected void GenerateTeam(Team team, Unit template, Vector3Int centerPoint, int radius = 1)
     {
         GenerateUnitForTeam(team, template, centerPoint);
-        foreach (ICell cell in Battlefield.GetNeighborCells(centerPoint, radius))
-            GenerateUnitForTeam(team,
-            template,
-            cell.GridPosition);
+
+        if(template.ID == Units.Spawner)
+        {
+            foreach (ICell cell in Battlefield.GetNeighborCells(centerPoint, radius))
+                GenerateUnitForTeam(team,
+                GetRandomUnit(),
+                cell.GridPosition);
+        }
+        else
+        {
+            foreach (ICell cell in Battlefield.GetNeighborCells(centerPoint, radius))
+                GenerateUnitForTeam(team,
+                template,
+                cell.GridPosition);
+        }
+        
+    }
+
+    private IUnit GetRandomUnit()
+    {
+        int i = UnityEngine.Random.Range(1, 11);
+        float j = i * ConfigManager.instance.GameDifficulty;
+
+        if (j < 6)
+            return UnitManager[Units.Infantry];
+        if (j < 9)
+            return UnitManager[Units.Tank];
+        
+        return UnitManager[Units.Heli];
     }
 
     protected void SpawnTeams()
@@ -304,7 +335,7 @@ public class GameManager : MonoBehaviour, IGameManager
                 aiTeams.Add(teamId, teamToAssignTo);
             }
 
-            GenerateTeam(teamToAssignTo, UnitManager[Units.Infantry], spawnLocation);
+            GenerateTeam(teamToAssignTo, UnitManager[Units.Spawner], spawnLocation);
             break;
         }
     }

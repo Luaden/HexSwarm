@@ -28,7 +28,7 @@ public class SliderUpdater : MonoBehaviour
     public void UpdateSensitivity() => configManager.SensitivityModifier = cameraSensitivitySlider.value;
     public void UpdateSpeed() => configManager.SpeedModifier = cameraSpeedSlider.value;
 
-    protected void Awake() => configManager = FindObjectOfType<ConfigManager>();
+    protected void Awake() => configManager = ConfigManager.instance;
 
     protected void Start()
     {

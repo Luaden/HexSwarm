@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Nano2
   m_EditorClassIdentifier: 
   myAbility:
-    Id: 272
+    Id: 16
     name: Hexxagon!
     description: Jump and destroy surrounding units and spawn a new swarm.
     icon: {fileID: 21300000, guid: 9f1104386f2f0174f9a0479a71172d84, type: 3}

@@ -16,6 +16,8 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     [SerializeField] protected Tile attackTile;
     [SerializeField, Header("Unmoved Units")] protected Tilemap unmovedUnitsHighlightMap;
     [SerializeField] protected Tile unmovedUnitsHighlightTile;
+    [SerializeField, Header("Unmoved Units")] protected Tilemap selectedUnitsHighlightMap;
+    [SerializeField] protected Tile selectedUnitsHighlightTile;
 
     protected Grid mapGrid;
     protected Dictionary<Vector3Int, ICell> gridLookup = new Dictionary<Vector3Int, ICell>();
@@ -139,6 +141,8 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     public void HighlightGrid(IEnumerable<ICell> moveCells) { HighlightGrid(moveCells.Select(X => X.GridPosition)); }
     public void HighlightPossibleAttacks(IEnumerable<ICell> possibleAttacks) { HighlightPossibleAttacks(possibleAttacks.Select(x => x.GridPosition)); }
     public void HighlightUnmovedUnits(IEnumerable<ICell> unmovedUnits) { HighlightUnmovedUnits(unmovedUnits.Select(x => x.GridPosition)); }
+    public void HighlightSelectedUnit(ICell selectedUnits) { HighlightSelectedUnit(selectedUnits.GridPosition); }
+
 
     public void HighlightGrid(IEnumerable<Vector3Int> moveCells, IEnumerable<Vector3Int> attackCells)
     {
@@ -164,11 +168,19 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         unmovedUnitsHighlightMap.PaintTiles(unmovedUnits, unmovedUnitsHighlightTile);
     }
 
+    public void HighlightSelectedUnit(Vector3Int selectedUnits)
+    {
+        selectedUnitsHighlightMap.ClearAllTiles();
+        selectedUnitsHighlightMap.SetTile(selectedUnits, selectedUnitsHighlightTile);
+    }
+
     public void ClearHighlights()
     {
         moveHighlightMap.ClearAllTiles();
         attackHighlightMap.ClearAllTiles();
     }
+
+    public void ClearSelectedUnitHighlight() => selectedUnitsHighlightMap.ClearAllTiles();
     #endregion
 
     #region Unit Control
@@ -189,7 +201,7 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         checkCell.Unit = unit;
         (unit as Unit).Location = position;
 
-        GameManager.UnitAVController.PlaceNewUnit(unit);
+        GameManager.UnitAVController.PlaceNewUnit(unit as Unit);
     }
 
     public void MoveUnit(Vector3Int unitPosition, Vector3Int destination, IEnumerable<Vector3Int> path)
@@ -201,14 +213,14 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         (toCell.Unit as Unit).Location = destination;
         fromCell.Unit = null;
 
-        GameManager.UnitAVController.MoveUnit(toCell.Unit, path);
+        GameManager.UnitAVController.MoveUnit(toCell.Unit as Unit, path);
     }
 
     public void DestroyUnit(Vector3Int unitPosition)
     {
         World.TryGetValue(unitPosition, out checkCell);
 
-        GameManager.UnitAVController.DestroyUnit(checkCell.Unit);
+        GameManager.UnitAVController.DestroyUnit(checkCell.Unit as Unit);
         checkCell.Unit = null;
     }
 

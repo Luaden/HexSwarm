@@ -42,6 +42,7 @@ public class PlayerTeam : Team
     public override void EndTurn()
     {
         ToggleCameraControls();
+        gameManager.EndTurn();
     }
 
     protected void TeamInit()
@@ -54,7 +55,6 @@ public class PlayerTeam : Team
     protected void ToggleCameraControls()
     {
         camControls = !camControls;
-        Debug.Log("Camera controls are" + camControls);
         ConfigManager.instance.ToggleCameraControls(camControls);
     }
 
@@ -119,7 +119,11 @@ public class PlayerTeam : Team
         GameManager.Battlefield.HighlightUnmovedUnits(unitsUnmoved.Select(X=>X.Location));
 
         if (Input.GetMouseButtonDown(1))
+        {
+            GameManager.Battlefield.HighlightPossibleAttacks(Array.Empty<Vector3Int>());
             gameManager.ClearActiveUnit();
+        }
+        
 
         if (EventSystem.current.IsPointerOverGameObject())
             return false;

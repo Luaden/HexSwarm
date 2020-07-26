@@ -23,11 +23,11 @@ public class AudioController : MonoBehaviour
 
     protected void Awake()
     {
-        configManager = FindObjectOfType<ConfigManager>();
         audioSources = GetComponents<AudioSource>();
         sfxAudioSource = audioSources[0];
         bgmAudioSource = audioSources[1];
 
+        configManager = ConfigManager.instance;
         configManager.AudioController = this;
     }
 

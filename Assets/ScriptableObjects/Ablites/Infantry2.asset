@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Infantry2
   m_EditorClassIdentifier: 
   myAbility:
-    Id: 264
+    Id: 8
     name: Snipe
     description: Shoots a far distance away with penetration.
     icon: {fileID: 21300000, guid: 37676670ef4795e48afb647ba484baaa, type: 3}

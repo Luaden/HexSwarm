@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Infantry1
   m_EditorClassIdentifier: 
   myAbility:
-    Id: 136
+    Id: 8
     name: SprayAndPrey
     description: Shoots in a wide arc close to the unit.
     icon: {fileID: 2050611643309227591, guid: 9ae9025ffa81e9d409ba104b5dfbe0f6, type: 3}
