@@ -10,7 +10,6 @@ public class UnitAVController : MonoBehaviour
     [SerializeField] protected float moveSpeed = 1f;
     [SerializeField] protected float dieSpeed;
 
-    protected List<ColorConfig> teamColors;
     protected GameManager gameManager;
     protected ConfigManager configManager;
     protected Dictionary<IUnit, GameObject> worldUnits = new Dictionary<IUnit, GameObject>();
@@ -28,9 +27,9 @@ public class UnitAVController : MonoBehaviour
         if (!worldUnits.ContainsKey(unit))
             worldUnits.Add(unit, worldUnit);
 
-        int team = (int)unit.Team.TeamNumber;
-        renderer.color = configManager.TeamColors[team].PrimaryColor;
+        renderer.color = configManager.TeamColors[unit.Team.TeamNumber].PrimaryColor;
         renderer.sprite = unit.Icon;
+        Debug.Log(unit.Team.TeamNumber);
         
         worldUnit.transform.position = GameManager.Battlefield.GetWorldLocation(unit.Location);
     }
@@ -63,12 +62,10 @@ public class UnitAVController : MonoBehaviour
         worldUnits.Remove(unit);
     }
 
-    public void ChangeTeamColors(List<ColorConfig> colors)
+    public void ChangeTeamColors(Dictionary<Teams, ColorConfig> colors)
     {
-        foreach (ColorConfig color in colors)
-            foreach (KeyValuePair<IUnit, GameObject> worldUnit in worldUnits)
-                if (color.TeamNumber == worldUnit.Key.Team.TeamNumber)
-                    worldUnit.Value.GetComponent<SpriteRenderer>().color = color.PrimaryColor;
+        foreach(KeyValuePair<IUnit, GameObject> worldUnit in worldUnits)
+            worldUnit.Value.GetComponent<SpriteRenderer>().color = colors[worldUnit.Key.Team.TeamNumber].PrimaryColor;
     }
 
     public void Nuke()
@@ -91,8 +88,6 @@ public class UnitAVController : MonoBehaviour
         if (gameManager == null)
             gameManager = FindObjectOfType<GameManager>();
     }
-
-    protected void Start() => teamColors = configManager.TeamColors;
 
     protected void Update()
     {
@@ -126,7 +121,7 @@ public class UnitAVController : MonoBehaviour
             {
                 SpriteRenderer sprite = deadUnit.GetComponent<SpriteRenderer>();
 
-                Color targetAlpha = new Color(1, 1, 1, sprite.color.a);
+                Color targetAlpha = new Color(sprite.color.r, sprite.color.g, sprite.color.r, sprite.color.a);
                 targetAlpha.a = Mathf.Clamp01(targetAlpha.a - (dieSpeed * Time.deltaTime));
                 sprite.color = targetAlpha; 
 
@@ -156,7 +151,7 @@ public class UnitAVController : MonoBehaviour
             {
                 SpriteRenderer sprite = deadUnit.GetComponent<SpriteRenderer>();
 
-                Color targetAlpha = new Color(1, 1, 1, Mathf.Lerp(1, 0, dieSpeed * Time.deltaTime));
+                Color targetAlpha = new Color(sprite.color.r, sprite.color.g, sprite.color.b, Mathf.Lerp(1, 0, dieSpeed * Time.deltaTime));
                 sprite.color = targetAlpha;
 
                 if (sprite.color.a == 0)

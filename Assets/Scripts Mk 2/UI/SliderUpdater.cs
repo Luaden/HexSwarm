@@ -19,7 +19,7 @@ public class SliderUpdater : MonoBehaviour
 
     protected ConfigManager configManager;
 
-    public void UpdateTeamColors() => configManager.ChangeTeamColor(teamNumber.value, GetColors());
+    public void UpdateTeamColors() => configManager.ChangeTeamColor((Teams)teamNumber.value, GetColors());
     public void UpdateDifficulty() => configManager.GameDifficulty = masterVolumeSlider.value;
     public void UpdateMapShape() => configManager.MapShape = (MapShape)mapShape.value;
     public void UpdateMasterVolume() => configManager.MasterVolume = masterVolumeSlider.value;
@@ -43,7 +43,7 @@ public class SliderUpdater : MonoBehaviour
     protected ColorConfig GetColors()
     {
         ColorConfig colorConfig = new ColorConfig();
-        colorConfig.PrimaryColor = colorConfig.GetColor((Colors)primaryColor.value + 1);
+        colorConfig.PrimaryColor = colorConfig.GetColor((Colors)primaryColor.value);
 
         colorConfig.PrimaryColorCategory = (Colors)primaryColor.value;
 
@@ -52,7 +52,7 @@ public class SliderUpdater : MonoBehaviour
 
     public void GetTeamColors()
     {
-        ColorConfig config = configManager.TeamColors[teamNumber.value + 1];
+        ColorConfig config = configManager.TeamColors[(Teams)teamNumber.value];
         
         primaryColor.value = (int)config.PrimaryColorCategory;
 

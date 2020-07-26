@@ -2,16 +2,16 @@
 
 public enum Colors
 {
-    grey = 1,
-    red = 2,
-    blue = 3,
-    yellow = 4,
-    green = 5,
-    orange = 6,
-    purple = 7,
-    pink = 8,
-    black = 9,
-    white = 10
+    grey = 1 << 0,
+    red = 1 << 1,
+    blue = 1 << 2,
+    yellow = 1 << 3,
+    green = 1 << 4,
+    orange = 1 << 5,
+    purple = 1 << 6,
+    pink = 1 << 7,
+    black = 1 << 8,
+    white = 1 << 9
 }
 
 public interface IColorConfig
@@ -45,7 +45,7 @@ public class ColorConfig : IColorConfig
         if (color == Colors.purple)
             return new Color(97/255f, 13/255f, 224/255f, 255/255f);
         if (color == Colors.pink)
-            return new Color(255 / 255f, 0f, 203 / 255f, 255f);
+            return new Color(255/255f, 0f, 203/255f, 255f);
         if (color == Colors.black)
             return Color.black;
         

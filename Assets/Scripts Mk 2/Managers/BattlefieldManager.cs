@@ -10,8 +10,12 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     [SerializeField] protected Tile[] groundTiles;
     [SerializeField, Header("Movement")] protected Tilemap moveHighlightMap;
     [SerializeField] protected Tile moveTile;
+    [SerializeField, Header("Attacks")] protected Tilemap possibleAttackHighlightMap;
+    [SerializeField] protected Tile possibleAttackTile;
     [SerializeField, Header("Attacks")] protected Tilemap attackHighlightMap;
     [SerializeField] protected Tile attackTile;
+    [SerializeField, Header("Unmoved Units")] protected Tilemap unmovedUnitsHighlightMap;
+    [SerializeField] protected Tile unmovedUnitsHighlightTile;
 
     protected Grid mapGrid;
     protected Dictionary<Vector3Int, ICell> gridLookup = new Dictionary<Vector3Int, ICell>();
@@ -132,18 +136,32 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
     public void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<ICell> attackCells){ HighlightGrid(moveCells, attackCells.Select(X => X.GridPosition));}
     public void HighlightGrid(IEnumerable<Vector3Int> moveCells, IEnumerable<ICell> attackCells) { HighlightGrid(moveCells, attackCells.Select(X => X.GridPosition)); }
     public void HighlightGrid(IEnumerable<ICell> moveCells, IEnumerable<Vector3Int> attackCells) {HighlightGrid(moveCells.Select(X=>X.GridPosition), attackCells);}
+    public void HighlightGrid(IEnumerable<ICell> moveCells) { HighlightGrid(moveCells.Select(X => X.GridPosition)); }
+    public void HighlightPossibleAttacks(IEnumerable<ICell> possibleAttacks) { HighlightPossibleAttacks(possibleAttacks.Select(x => x.GridPosition)); }
+    public void HighlightUnmovedUnits(IEnumerable<ICell> unmovedUnits) { HighlightUnmovedUnits(unmovedUnits.Select(x => x.GridPosition)); }
+
     public void HighlightGrid(IEnumerable<Vector3Int> moveCells, IEnumerable<Vector3Int> attackCells)
     {
         HighlightGrid(moveCells);
         attackHighlightMap.PaintTiles(attackCells, attackTile);
     }
 
-    public void HighlightGrid(IEnumerable<ICell> moveCells) { HighlightGrid(moveCells.Select(X => X.GridPosition)); }
     public void HighlightGrid(IEnumerable<Vector3Int> moveCells)
     {
         ClearHighlights();
         moveHighlightMap.PaintTiles(moveCells, moveTile);
+    }
+   
+    public void HighlightPossibleAttacks(IEnumerable<Vector3Int> possibleAttacks)
+    {
+        possibleAttackHighlightMap.ClearAllTiles();
+        possibleAttackHighlightMap.PaintTiles(possibleAttacks, possibleAttackTile);
+    }
 
+    public void HighlightUnmovedUnits(IEnumerable<Vector3Int> unmovedUnits)
+    {
+        unmovedUnitsHighlightMap.ClearAllTiles();
+        unmovedUnitsHighlightMap.PaintTiles(unmovedUnits, possibleAttackTile);
     }
 
     public void ClearHighlights()
