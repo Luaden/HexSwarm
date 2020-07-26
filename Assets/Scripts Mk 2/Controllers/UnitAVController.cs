@@ -92,21 +92,24 @@ public class UnitAVController : MonoBehaviour
     {
         if (worldUnitPath.Count > 0)
         {
-            GameObject worldUnit = worldUnitPath.First().Value;
-            Vector3 nextPosition = worldUnitPath.First().Key.Peek();
-            worldUnit.transform.position = Vector3.MoveTowards(
-                    worldUnit.transform.position,
-                    nextPosition,
-                    moveSpeed * Time.deltaTime);
+            foreach(KeyValuePair<Queue<Vector3>, GameObject> entry in worldUnitPath)
+            {
+                GameObject worldUnit = entry.Value;
+                Vector3 nextPosition = entry.Key.Peek();
+                worldUnit.transform.position = Vector3.MoveTowards(
+                        worldUnit.transform.position,
+                        nextPosition,
+                        moveSpeed * Time.deltaTime);
 
-            KillCurrentUnits(worldUnit);
+                KillCurrentUnits(worldUnit);
 
-            if (worldUnit.transform.position == nextPosition)
-                nextPosition = worldUnitPath.First().Key.Dequeue();
-            
+                if (worldUnit.transform.position == nextPosition)
+                    nextPosition = worldUnitPath.First().Key.Dequeue();
 
-            if (worldUnitPath.First().Key.Count == 0 && worldUnit.transform.position == nextPosition)
-                worldUnitPath.Remove(worldUnitPath.First().Key);
+
+                if (worldUnitPath.First().Key.Count == 0 && worldUnit.transform.position == nextPosition)
+                    worldUnitPath.Remove(worldUnitPath.First().Key);
+            }
         }
 
         if (worldUnitPath.Count == 0)
