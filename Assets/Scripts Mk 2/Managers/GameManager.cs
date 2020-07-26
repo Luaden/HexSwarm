@@ -253,7 +253,7 @@ public class GameManager : MonoBehaviour, IGameManager
     {
         SpawnPlayerTeam();
 
-        for (int i = 1; i < Mathf.RoundToInt((teamCountPerLevel + levelCounter) * ConfigManager.GameDifficulty); i++)
+        for (int i = 2; i < Mathf.RoundToInt((teamCountPerLevel + levelCounter) * ConfigManager.GameDifficulty); i++)
         {
             SpawnAITeam(i);
         }
