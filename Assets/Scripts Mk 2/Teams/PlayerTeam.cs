@@ -61,13 +61,18 @@ public class PlayerTeam : Team
     protected bool HandleHighlighting()
     {
         pathEndPoint = GameManager.GetCellUnderMouse();
-        
+
+        if (validMoves.Count != 0)
+            GameManager.Battlefield.HighlightPossibleAttacks(validMoves);
+
         if ((pathEndPoint == default)||(gameManager.SelectedAbility == default) || (gameManager.DisplayedUnit == default) ||
             !unitsUnmoved.Contains(gameManager.DisplayedUnit))
             return InvalidateHighLight();
         //my unit is selected and I have a selected ablity
         if (validMoves.Count == 0)
             validMoves.UnionWith(gameManager.DisplayedUnit.CalcuateValidNewLocation(gameManager.SelectedAbility));
+
+        
 
         if (!validMoves.Contains(pathEndPoint))
             return InvalidateHighLight();
@@ -111,6 +116,8 @@ public class PlayerTeam : Team
     public void GetMouseInput() { ResolveMouseInput(); }
     protected bool ResolveMouseInput()
     {
+        GameManager.Battlefield.HighlightUnmovedUnits(unitsUnmoved.Select(X=>X.Location));
+
         if (Input.GetMouseButtonDown(1))
             gameManager.ClearActiveUnit();
 
