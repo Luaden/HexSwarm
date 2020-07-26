@@ -236,7 +236,7 @@ public class TestAITeam : Team
                 bestBlocks.Enqueue(entry.Value.ElementAt(0));
         }
 
-        if (bestBlocks.Count == 0 && possibleDefenses.Count > 0)
+        if (bestBlocks.Count == 0 && possibleDefenses.Count > 0 && possibleDefenses.First().Value.FirstOrDefault() != default)
             bestBlocks.Enqueue(possibleDefenses.First().Value.First());
     }
 

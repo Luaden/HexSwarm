@@ -93,41 +93,42 @@ public class UnitAVController : MonoBehaviour
     {
         if (worldUnitPath.Count > 0)
         {
-            foreach(KeyValuePair<Queue<Vector3>, GameObject> entry in worldUnitPath)
+            if(worldUnitPath.First().Key.Count == 1)
             {
-                if (entry.Key.Count == 0)
-                    continue;
+                worldUnitPath.Remove(worldUnitPath.First().Key);
+                return;
+            }                
 
-                GameObject worldUnit = entry.Value;
-                Vector3 nextPosition = entry.Key.Peek();
-                worldUnit.transform.position = Vector3.MoveTowards(
-                        worldUnit.transform.position,
-                        nextPosition,
-                        moveSpeed * Time.deltaTime);
+            GameObject worldUnit = worldUnitPath.First().Value;
+            Vector3 nextPosition = worldUnitPath.First().Key.Peek();
+            worldUnit.transform.position = Vector3.MoveTowards(
+                    worldUnit.transform.position,
+                    nextPosition,
+                    moveSpeed * Time.deltaTime);
 
-                KillCurrentUnits(worldUnit);
+            KillCurrentUnits(worldUnit);
 
-                if (worldUnitPath.First().Key.Count == 0 && worldUnit.transform.position == nextPosition)
-                {
-                    foreach(KeyValuePair<IUnit, GameObject> unit in worldUnits)
-                        if (unit.Value == entry.Value)
-                        {
-                            PlayAttackSFX(unit.Key);
-                            break;                            
-                        }
+            if (worldUnitPath.First().Key.Count == 0 && worldUnit.transform.position == nextPosition)
+            {
+                foreach (KeyValuePair<IUnit, GameObject> unit in worldUnits)
+                    if (unit.Value == worldUnit)
+                    {
+                        PlayAttackSFX(unit.Key);
+                        break;
+                    }
 
-                    worldUnitPath.Remove(entry.Key);
-                    break;
-                }                    
-
-                if (worldUnit.transform.position == nextPosition)
-                    nextPosition = worldUnitPath.First().Key.Dequeue();                
+                worldUnitPath.Remove(worldUnitPath.First().Key);
             }
+
+            if (worldUnit.transform.position == nextPosition)
+                nextPosition = worldUnitPath.First().Key.Dequeue();
         }
 
         if (worldUnitPath.Count == 0)
             KillAllUnits();
     }
+
+
 
     protected void KillAllUnits()
     {
