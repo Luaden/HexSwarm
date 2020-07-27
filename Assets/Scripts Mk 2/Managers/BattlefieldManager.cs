@@ -209,11 +209,13 @@ public class BattlefieldManager : MonoBehaviour, IBattlefieldManager
         World.TryGetValue(unitPosition, out fromCell);
         World.TryGetValue(destination, out toCell);
 
-        toCell.Unit = fromCell.Unit;
-        (toCell.Unit as Unit).Location = destination;
+        Unit unit = fromCell.Unit as Unit;
+        unit.Location = toCell.GridPosition;
+
+        toCell.Unit = unit;
         fromCell.Unit = null;
 
-        GameManager.UnitAVController.MoveUnit(toCell.Unit as Unit, path);
+        GameManager.UnitAVController.MoveUnit(unit, path);
     }
 
     public void DestroyUnit(Vector3Int unitPosition)

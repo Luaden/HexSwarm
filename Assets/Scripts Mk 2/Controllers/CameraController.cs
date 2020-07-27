@@ -66,7 +66,10 @@ public class CameraController : MonoBehaviour
             }
         }
 
-        mainCamera.transform.position = Vector3.Lerp(transform.position, cameraPosToBe, speedModifier * Time.deltaTime);
+        else
+        {
+            mainCamera.transform.position = Vector3.Lerp(transform.position, cameraPosToBe, speedModifier * Time.deltaTime);
+        }        
     }
 
     public void RepositionCamera(Vector3 cameraPosition)
@@ -74,5 +77,14 @@ public class CameraController : MonoBehaviour
         cameraPosToBe.x = cameraPosition.x;
         cameraPosToBe.y = cameraPosition.y;
         cameraPosToBe.z = mainCamera.transform.position.z;         
+    }
+
+    public void SetCameraPosition(Vector3 cameraPosition)
+    {
+        cameraPosToBe.x = cameraPosition.x;
+        cameraPosToBe.y = cameraPosition.y;
+        cameraPosToBe.z = mainCamera.transform.position.z;
+
+        mainCamera.transform.position = cameraPosToBe;
     }
 }

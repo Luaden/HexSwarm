@@ -161,13 +161,11 @@ public class UnitAVController : MonoBehaviour
 
                 worldUnitPath.Remove(worldUnitPath.First().Key);
                 playNewSound = true;
+                return;
             }
 
             if (worldUnit.transform.position == nextPosition)
-            {
                 nextPosition = worldUnitPath.First().Key.Dequeue();
-                Debug.Log("Moving to next position.");
-            }
                 
         }
             

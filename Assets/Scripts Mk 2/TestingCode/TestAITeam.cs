@@ -94,6 +94,7 @@ public class TestAITeam : Team
 
     protected void DetermineStrategy()
     {
+        CheckForEnemies();
         GetEnemyLOS();
         GetPossibleMoves();
 
@@ -143,6 +144,8 @@ public class TestAITeam : Team
 
                 unguardedCells.Add(checkCell);
             }
+
+            Debug.Log("There are " + unguardedCells.Count + " unguarded cells.");
         }
     }
 
@@ -269,7 +272,7 @@ public class TestAITeam : Team
         int i = Random.Range(1, 11);
         float j = i * ConfigManager.instance.GameDifficulty;
 
-        if (j <= 5)
+        if (j <= 8)
             return false;
         return true;
     }
@@ -292,7 +295,9 @@ public class TestAITeam : Team
     protected void UseOffensiveStrategy()
     {
         gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.Direction, selectedAttack.TargetLocation, selectedAttack.Path);
-        
+
+        Debug.Log(selectedAttack.Unit.Name + " is attacking.");
+
         enemiesSeen.ExceptWith(selectedAttack.LocationsHit);
         UnitHasMoved(selectedAttack.Unit, selectedAttack.TargetLocation);
 
@@ -310,7 +315,8 @@ public class TestAITeam : Team
     protected void UseDefensiveStrategy()
     {
         gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, Direction.Zero, selectedDefense.TargetLocation, selectedDefense.Path);
-        
+        Debug.Log(selectedDefense.Unit.Name + " is defending.");
+
         unguardedCells.Remove(battlefieldManager.World[selectedDefense.TargetLocation]);
 
         UnitHasMoved(selectedDefense.Unit, selectedDefense.TargetLocation);
@@ -335,6 +341,9 @@ public class TestAITeam : Team
             foreach (DefendPattern defense in key.Value.ToList())
                 if (defense.Unit == unit)
                     key.Value.Remove(defense);
+
+        bestBlocks.Clear();
+        GetBestDefense();
     }
 
 
@@ -393,8 +402,11 @@ public class TestAITeam : Team
             checkPath = GameManager.Pathing.FindPath(unit.Location, toTarget, true, toUse.MovementRange);
 
             if (checkPath != default)
+            {
                 gameManager.PerformMove(unit, toUse, Direction.Zero, toTarget, checkPath);
-        }            
+                Debug.Log(unit.Name + " is taking a path..");
+            }
+        }
 
         UnitHasMoved(unit, unit.Location);
     }

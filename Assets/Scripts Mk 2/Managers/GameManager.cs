@@ -92,7 +92,6 @@ public class GameManager : MonoBehaviour, IGameManager
         ResolveAttack(ability, unit, direction, target);
         Battlefield.ClearSelectedUnitHighlight();
 
-        Debug.Log(unit.Name + " " + target + " " + path.Count());
         return true;
     }
 
@@ -138,7 +137,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
         activeTeams.Enqueue(activeTeams.Dequeue());
 
-        ConfigManager.CameraController.RepositionCamera(activeTeams.Peek().StartPosition);
+        ConfigManager.CameraController.SetCameraPosition(activeTeams.Peek().StartPosition);
         activeTeams.Peek().StartTurn();
 
         TurnOrderDisplay.UpdateUI(this);
@@ -227,7 +226,9 @@ public class GameManager : MonoBehaviour, IGameManager
         foreach (ICell cell in deaths)
         {
             if (cell.Unit != default)
+            {                
                 cell.Unit.Team.RemoveUnit(cell.Unit);
+            }
 
             if (spawnReplacements)
                 GenerateUnitForTeam(unit.Team, unit, cell.GridPosition);
