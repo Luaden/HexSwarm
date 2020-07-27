@@ -129,6 +129,8 @@ public class UnitAVController : MonoBehaviour
 
             if (worldUnitPath.First().Key.Count == 0)
             {
+                if(totalUnitsToDie.Count != 0)
+                    PlayAttackSFX(worldUnits[worldUnitPath.First().Value]);
                 worldUnitPath.Remove(worldUnitPath.First().Key);
                 playNewSound = true;
 
@@ -148,23 +150,10 @@ public class UnitAVController : MonoBehaviour
                     worldUnit.transform.position,
                     nextPosition,
                     moveSpeed * Time.deltaTime);
+
             ConfigManager.instance.RepositionCamera(worldUnit.transform.position);
 
-            if (worldUnit.transform.position == nextPosition && worldUnitPath.First().Key.Count == 0)
-            {
-                foreach (KeyValuePair<Unit, GameObject> unit in worldObjects)
-                    if (unit.Value == worldUnit)
-                    {
-                        PlayAttackSFX(unit.Key);
-                        break;
-                    }
-
-                worldUnitPath.Remove(worldUnitPath.First().Key);
-                playNewSound = true;
-                return;
-            }
-
-            if (worldUnit.transform.position == nextPosition)
+            if (worldUnit.transform.position == nextPosition && worldUnitPath.First().Key.Count != 0)
                 nextPosition = worldUnitPath.First().Key.Dequeue();
                 
         }

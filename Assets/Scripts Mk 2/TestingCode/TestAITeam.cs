@@ -98,7 +98,7 @@ public class TestAITeam : Team
         GetEnemyLOS();
         GetPossibleMoves();
 
-        if (enemiesSeen.Count == 0)
+        if (enemiesSeen.Count == 0 && unitsUnmoved.Count != 0)
         {
             GetNeutralRoute(unitsUnmoved.First());
             GetBestAttacks();
@@ -145,7 +145,6 @@ public class TestAITeam : Team
                 unguardedCells.Add(checkCell);
             }
 
-            Debug.Log("There are " + unguardedCells.Count + " unguarded cells.");
         }
     }
 
