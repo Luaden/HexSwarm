@@ -2,20 +2,21 @@
 
 public class CameraBackground : MonoBehaviour
 {
-    protected Transform cameraTransform;
-    protected Vector3 positionToBe;
+    [SerializeField] private float scrollSpeed;
 
-    protected void Awake()
+    //Cached references
+    protected Material cloudyMaterial;
+
+    //State variables
+    protected Vector2 offset;
+
+    protected void Start()
     {
-        cameraTransform = Camera.main.transform;
+        cloudyMaterial = GetComponent<Renderer>().material;
+        offset = new Vector2(scrollSpeed, 0f);
     }
 
-    void Update()
-    {
-        positionToBe.x = cameraTransform.position.x;
-        positionToBe.y = cameraTransform.position.y;
-        positionToBe.z = transform.position.z;
+    protected void Update() => ScrollBackground();
 
-        transform.position = positionToBe; 
-    }
+    protected void ScrollBackground() => cloudyMaterial.mainTextureOffset += offset * Time.deltaTime;
 }

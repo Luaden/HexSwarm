@@ -61,6 +61,8 @@ public class TestAITeam : Team
         teamRange.Add(cell);
         enemiesSeen.Clear();
         unitsUnmoved.UnionWith(units);
+        foreach (IUnit unit in unitsUnmoved)
+            Debug.Log(unit.Name);
         unguardedCells.Clear();
         possibleAttacks.Clear();
         possibleDefenses.Clear();
@@ -100,7 +102,7 @@ public class TestAITeam : Team
 
         if (enemiesSeen.Count == 0 && unitsUnmoved.Count != 0)
         {
-            GetNeutralRoute(unitsUnmoved.First());
+            GetNeutralRoute(unitsUnmoved.First(), false);
             GetBestAttacks();
             return;
         }
@@ -125,7 +127,7 @@ public class TestAITeam : Team
         }
 
         if(unitsUnmoved.Count > 0)
-            GetNeutralRoute(unitsUnmoved.First(), false);
+            GetNeutralRoute(unitsUnmoved.First());
     }
 
     protected void GetEnemyLOS()
@@ -144,7 +146,6 @@ public class TestAITeam : Team
 
                 unguardedCells.Add(checkCell);
             }
-
         }
     }
 
@@ -162,7 +163,7 @@ public class TestAITeam : Team
                 }
             }
             else
-                GetNeutralRoute(unit, true);
+                GetNeutralRoute(unit);
     }
 
     private bool CheckInTeamRange(IUnit unit)
@@ -271,7 +272,7 @@ public class TestAITeam : Team
         int i = Random.Range(1, 11);
         float j = i * ConfigManager.instance.GameDifficulty;
 
-        if (j <= 8)
+        if (j <= 3)
             return false;
         return true;
     }
@@ -295,10 +296,11 @@ public class TestAITeam : Team
     {
         gameManager.PerformMove(selectedAttack.Unit, selectedAttack.Ability, selectedAttack.Direction, selectedAttack.TargetLocation, selectedAttack.Path);
 
-        Debug.Log(selectedAttack.Unit.Name + " is attacking.");
-
         enemiesSeen.ExceptWith(selectedAttack.LocationsHit);
         UnitHasMoved(selectedAttack.Unit, selectedAttack.TargetLocation);
+
+        Debug.Log(selectedAttack.Unit.Name + " is attacking. There are " + possibleAttacks + " remaining.");
+
 
         selectedAttack = null;
     }
@@ -314,11 +316,12 @@ public class TestAITeam : Team
     protected void UseDefensiveStrategy()
     {
         gameManager.PerformMove(selectedDefense.Unit, selectedDefense.Ability, Direction.Zero, selectedDefense.TargetLocation, selectedDefense.Path);
-        Debug.Log(selectedDefense.Unit.Name + " is defending.");
 
         unguardedCells.Remove(battlefieldManager.World[selectedDefense.TargetLocation]);
 
         UnitHasMoved(selectedDefense.Unit, selectedDefense.TargetLocation);
+
+        Debug.Log(selectedDefense.Unit.Name + " is defending. There are " + possibleDefenses.Count + " possible defenses remaining.");
 
         selectedDefense = null;
     }
@@ -369,7 +372,7 @@ public class TestAITeam : Team
 
         currentPath = GameManager.Pathing.FindPath(unit.Location, destination);
 
-        if (shortestRoute)
+        if (shortestRoute && enemiesSeen.Count == 0)
         {
             foreach (ICell location in teamRange)
             {
@@ -388,6 +391,24 @@ public class TestAITeam : Team
             TakePath(unit, currentPath);
         }
 
+        if (shortestRoute && enemiesSeen.Count != 0)
+        {
+            foreach (ICell location in unguardedCells)
+            {
+                checkPath = GameManager.Pathing.FindPath(unit.Location, location.GridPosition);
+
+                if (checkPath == null || location.Unit != null)
+                    continue;
+
+                if (currentPath.Count() > checkPath.Count())
+                {
+                    destination = location.GridPosition;
+                    currentPath = checkPath;
+                }
+            }
+
+            TakePath(unit, currentPath);
+        }
         else if (!shortestRoute)
         {
             TakePath(unit, currentPath);
@@ -403,7 +424,7 @@ public class TestAITeam : Team
             if (checkPath != default)
             {
                 gameManager.PerformMove(unit, toUse, Direction.Zero, toTarget, checkPath);
-                Debug.Log(unit.Name + " is taking a path..");
+                Debug.Log(unit.Name + " is taking a path.");
             }
         }
 

@@ -219,6 +219,7 @@ public class GameManager : MonoBehaviour, IGameManager
             if (nextTeam != team)
                 activeTeams.Enqueue(nextTeam);
         }
+        TurnOrderDisplay.UpdateUI(this);
     }
 
     protected void ResolveDeaths(IEnumerable<ICell> deaths, IUnit unit, bool spawnReplacements)
@@ -230,8 +231,10 @@ public class GameManager : MonoBehaviour, IGameManager
                 cell.Unit.Team.RemoveUnit(cell.Unit);
             }
 
-            if (spawnReplacements)
+            if (spawnReplacements && unit.ID == Units.Nanos)
                 GenerateUnitForTeam(unit.Team, unit, cell.GridPosition);
+            if (spawnReplacements && unit.ID == Units.Spawner)
+                GenerateUnitForTeam(unit.Team, GetRandomUnit(), cell.GridPosition);
         }
     }
 
@@ -336,7 +339,7 @@ public class GameManager : MonoBehaviour, IGameManager
             if (!aiTeams.TryGetValue(teamId, out teamToAssignTo))
             {
                 teamToAssignTo = new TestAITeam(this, 
-                    "AI" + i, "Tank wielding maniac.",
+                    "AI" + i, "Humans, aka, maniacs.",
                     UnitManager[Units.Infantry].Icon, 
                     teamId,
                     spawnLocation,

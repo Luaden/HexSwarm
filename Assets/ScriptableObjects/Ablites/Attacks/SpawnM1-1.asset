@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SpawnM1-1
   m_EditorClassIdentifier: Assembly-CSharp::SODamgeRange
   rotates: 1
-  isSpawn: 1
+  isSpawn: 0
   isSpawnVoid: 1
   ThreeAxisRange:
   - {x: 1, y: 0, z: -1}

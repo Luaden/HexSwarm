@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FactorySpawn
   m_EditorClassIdentifier: 
   myAbility:
-    Id: 129
+    Id: 1
     name: Manufacture
     description: Attempts to create more units.
     icon: {fileID: 2349100956782994321, guid: 9ae9025ffa81e9d409ba104b5dfbe0f6, type: 3}

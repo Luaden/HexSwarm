@@ -32,6 +32,9 @@ public abstract class Team : ITeam
 
         unit.Team = null;
         units.Remove(unit);
-        GameManager.Battlefield.DestroyUnit(unit.Location);     
+        GameManager.Battlefield.DestroyUnit(unit.Location);
+
+        if (units.Count == 0)
+            gameManager.RemoveTeam(this);
     }
 }
