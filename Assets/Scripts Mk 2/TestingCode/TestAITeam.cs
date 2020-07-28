@@ -102,10 +102,11 @@ public class TestAITeam : Team
         {
             GetNeutralRoute(unitsUnmoved.First(), false);
             GetBestAttacks();
+            GetBestDefense();
             return;
         }
 
-        while (bestHits.Count > 0 && bestBlocks.Count > 0 && enemiesSeen.Count > 0)
+        if (bestHits.Count > 0 && bestBlocks.Count > 0 && enemiesSeen.Count > 0)
         {
             if (ResolvedAttackDifficult())
             {
@@ -116,12 +117,14 @@ public class TestAITeam : Team
 
             UseDefensiveStrategy();
             GetBestDefense();
+            return;
         }
 
-        while (bestBlocks.Count > 0 && enemiesSeen.Count > 0)
+        if (bestBlocks.Count > 0 && enemiesSeen.Count > 0)
         {
             UseDefensiveStrategy();
             GetBestDefense();
+            return;
         }
 
         if(unitsUnmoved.Count > 0)
