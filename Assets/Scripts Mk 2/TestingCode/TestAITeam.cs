@@ -461,4 +461,9 @@ public class TestAITeam : Team
         if (unitsUnmoved.Count == 0 && GameManager.UnitAVController.MovementComplete)
             EndTurn();
     }
+
+    public override void AbilitySelected(IAbility ablity)
+    {
+        //doNothing
+    }
 }

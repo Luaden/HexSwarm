@@ -65,14 +65,11 @@ public class PlayerTeam : Team
         if (validMoves.Count != 0)
             GameManager.Battlefield.HighlightPossibleAttacks(validMoves);
 
-        if ((pathEndPoint == default)||(gameManager.SelectedAbility == default) || (gameManager.DisplayedUnit == default) ||
-            !unitsUnmoved.Contains(gameManager.DisplayedUnit))
+        if ((pathEndPoint == default)||(gameManager.SelectedAbility == default) || (gameManager.DisplayedUnit == default))
+            return InvalidateHighLight();
+        if (!unitsUnmoved.Contains(gameManager.DisplayedUnit))
             return InvalidateHighLight();
         //my unit is selected and I have a selected ablity
-        if (validMoves.Count == 0)
-            validMoves.UnionWith(gameManager.DisplayedUnit.CalcuateValidNewLocation(gameManager.SelectedAbility));
-
-        
 
         if (!validMoves.Contains(pathEndPoint))
             return InvalidateHighLight();
@@ -117,6 +114,7 @@ public class PlayerTeam : Team
     protected bool ResolveMouseInput()
     {
         GameManager.Battlefield.HighlightUnmovedUnits(unitsUnmoved.Select(X=>X.Location));
+        GameManager.Battlefield.HighlightPossibleAttacks(validMoves);
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -124,6 +122,7 @@ public class PlayerTeam : Team
             gameManager.ClearActiveUnit();
         }
         
+
 
         if (EventSystem.current.IsPointerOverGameObject())
             return false;
@@ -140,7 +139,7 @@ public class PlayerTeam : Team
                 unitsUnmoved.Remove(gameManager.DisplayedUnit);
             if (unitsUnmoved.Count == 0)
                 gameManager.EndPlayerTurn();
-            GameManager.Battlefield.HighlightPossibleAttacks(Array.Empty<Vector3Int>());
+           
             GameManager.Battlefield.HighlightUnmovedUnits(unitsUnmoved.Select(X => X.Location));
         }
 
@@ -154,5 +153,14 @@ public class PlayerTeam : Team
         //TODO: DO NOTHING
         //TODO: maybe setup a time elapsed for turn and for game duration
         // for speed runing lol
+    }
+
+    public override void AbilitySelected(IAbility ablity)
+    {
+        validMoves.Clear();
+        if (ablity == default)
+            return;
+
+        validMoves.UnionWith(gameManager.DisplayedUnit.CalcuateValidNewLocation(gameManager.SelectedAbility));
     }
 }

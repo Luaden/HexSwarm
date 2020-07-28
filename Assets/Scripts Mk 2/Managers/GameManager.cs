@@ -78,6 +78,11 @@ public class GameManager : MonoBehaviour, IGameManager
         StartLevel();
         return true;
     }
+    public void AbilitySelected()
+    {
+        activeTeams.Peek().AbilitySelected(SelectedAbility);
+    }
+
 
     public bool PerformMove(IUnit unit, IAbility ability, Direction direction, Vector3Int target, IEnumerable<Vector3Int> path)
     {
@@ -154,12 +159,12 @@ public class GameManager : MonoBehaviour, IGameManager
 
     public void ClearActiveUnit()
     {
-        selectedAbility = null;
         DisplayedUnit = null;
 
         Battlefield.ClearHighlights();
         Battlefield.ClearSelectedUnitHighlight();
         SelectedUnitPanel.UpdateUI(null);
+        AbilitySelected();
     }
 
     protected void Awake()

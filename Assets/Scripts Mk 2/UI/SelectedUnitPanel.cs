@@ -10,6 +10,7 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>, IButtonIndexer
     [SerializeField] protected Image unitImageBackground;
     [SerializeField] protected TMP_Text unitName;
     [SerializeField] protected TMP_Text unitDescription;
+    [SerializeField] protected GameManager gm;
 
     [SerializeField] protected List<AbilityDisplay> Abilites;
     [SerializeField] protected int lastSelected;
@@ -56,6 +57,8 @@ public class SelectedUnitPanel : CoreUIElement<IUnit>, IButtonIndexer
         lastSelected = x;
         if (lastSelected > -1)
             Abilites[lastSelected].IsSelected = true;
+        gm.AbilitySelected();
+
     }
     public void Buttonclicked(int index) => UpdateSelectedAbility(index);
 }

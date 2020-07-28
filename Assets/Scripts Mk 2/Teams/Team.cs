@@ -18,6 +18,7 @@ public abstract class Team : ITeam
     public abstract void StartTurn();
     public abstract void NextMove(float elapsedTime);
     public abstract void EndTurn();
+    public abstract void AbilitySelected(IAbility ablity);
 
     public void AddNewUnit(IUnit unit)
     {

@@ -15,4 +15,5 @@ public interface ITeam
     void EndTurn();
     void RemoveUnit(IUnit unit);
     void AddNewUnit(IUnit unit);
+    void AbilitySelected(IAbility ablity);
 }

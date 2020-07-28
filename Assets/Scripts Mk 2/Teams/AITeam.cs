@@ -419,4 +419,9 @@ public class AITeam : Team
     {
         throw new System.NotImplementedException();
     }
+
+    public override void AbilitySelected(IAbility ablity)
+    {
+        throw new System.NotImplementedException();
+    }
 }
