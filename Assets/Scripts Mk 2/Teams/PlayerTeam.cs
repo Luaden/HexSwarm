@@ -36,6 +36,7 @@ public class PlayerTeam : Team
 
     public override void StartTurn()
     {
+        camControls = false;
         base.StartTurn();
         TeamInit();
         ToggleCameraControls();

@@ -123,7 +123,6 @@ public class UnitAVController : MonoBehaviour
         if (worldUnitPath.Count > 0)
         {
             MovementComplete = false;
-            Debug.Log(totalUnitsToDie.Count);
 
             if (worldUnitPath.First().Key.Count == 0)
             {
