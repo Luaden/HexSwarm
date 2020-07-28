@@ -7,12 +7,9 @@ public class AITesting : GameManager
     [SerializeField] protected Sprite Player1Icon;
     [SerializeField] protected Sprite AIIcon;
     [SerializeField] protected int teamsToSpawn;
-    [SerializeField] protected int rangeFromNeighbors;
     protected bool gameIsStarted = false;
-    protected PlayerTeam player1;
     protected TestAITeam ai1;
     protected bool canAddUnits = true;
-    protected Vector3Int spawnLocation;
 
     public PlayerTeam Player { get => player1; }
 
@@ -82,7 +79,7 @@ public class AITesting : GameManager
     }
 
     [ContextMenu("Spawn Teams")]
-    protected void SpawnTeams()
+    protected new void SpawnTeams()
     {
         for(int i = 0; i < teamsToSpawn; i++)
         {
@@ -93,7 +90,7 @@ public class AITesting : GameManager
         }
     }
 
-    protected Vector3Int GetSpawnLocation()
+    protected new Vector3Int GetSpawnLocation()
     {
         int i = Random.Range(0, Battlefield.World.Count + 1);
         int j = 0;
@@ -112,7 +109,7 @@ public class AITesting : GameManager
         return spawnLocation;
     }
 
-    protected bool ValidateSpawnLocation(Vector3Int checkLocation)
+    protected new bool ValidateSpawnLocation(Vector3Int checkLocation)
     {
         IEnumerable<ICell> neighbors = Battlefield.GetNeighborCells(checkLocation, rangeFromNeighbors);
 
@@ -128,7 +125,7 @@ public class AITesting : GameManager
         return true;
     }
 
-    protected void SpawnPlayerTeam()
+    protected new void SpawnPlayerTeam()
     {
         while (true)
         {
@@ -146,7 +143,7 @@ public class AITesting : GameManager
         }
     }
 
-    protected void SpawnAITeam(int i)
+    protected new void SpawnAITeam(int i)
     {
         while (true)
         {

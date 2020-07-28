@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour, IGameManager
     protected Vector3Int end;
     protected Vector3Int secondEnd;
     protected Vector3Int spawnLocation;
-    
+    protected bool needsNewLevel;
 
     public int TurnCounter => turnCounter;
     public int LevelCounter => levelCounter;
@@ -192,8 +192,18 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void FixedUpdate()
     {
-        if(UnitAVController.MovementComplete)
-            activeTeams.Peek().NextMove(Time.deltaTime);
+        if (!UnitAVController.MovementComplete)
+            return;
+        activeTeams.Peek().NextMove(Time.deltaTime);
+
+        if (activeTeams.Peek().TurnOver)
+            EndTurn();
+
+        if (needsNewLevel)
+        {
+            needsNewLevel = false;
+            StartLevel();
+        }
     }
 
     protected void Update()

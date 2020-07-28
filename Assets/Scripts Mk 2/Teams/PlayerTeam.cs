@@ -35,6 +35,7 @@ public class PlayerTeam : Team
 
     public override void StartTurn()
     {
+        base.StartTurn();
         TeamInit();
         ToggleCameraControls();
     }
@@ -42,7 +43,7 @@ public class PlayerTeam : Team
     public override void EndTurn()
     {
         ToggleCameraControls();
-        gameManager.EndTurn();
+        base.EndTurn();
     }
 
     protected void TeamInit()

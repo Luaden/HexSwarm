@@ -44,6 +44,7 @@ public class AITeam : Team
 
     public override void StartTurn()
     {
+        base.StartTurn();
         TeamInit();
 
         CheckForEnemies();
@@ -412,16 +413,7 @@ public class AITeam : Team
         //if (gameManager.PerformMove(unit, toUse, toTarget, path))
         //    UnitHasMoved(unit);
     }
-    
-    public override void EndTurn() { }
 
-    public override void NextMove(float elapsedTime)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void AbilitySelected(IAbility ablity)
-    {
-        throw new System.NotImplementedException();
-    }
+    public override void NextMove(float elapsedTime) { }
+    public override void AbilitySelected(IAbility ablity) { }
 }

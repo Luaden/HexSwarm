@@ -14,10 +14,10 @@ public abstract class Team : ITeam
     public Teams TeamNumber { get; set; }
     public IEnumerable<IUnit> Units { get => units; }
     public Vector3Int StartPosition { get; set; }
-
-    public abstract void StartTurn();
+    public bool TurnOver { get; protected set; }
+    public virtual void StartTurn() { TurnOver = false; }
+    public virtual void EndTurn() { TurnOver = true; }
     public abstract void NextMove(float elapsedTime);
-    public abstract void EndTurn();
     public abstract void AbilitySelected(IAbility ablity);
 
     public void AddNewUnit(IUnit unit)

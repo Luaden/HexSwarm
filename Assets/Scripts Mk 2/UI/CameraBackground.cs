@@ -2,7 +2,7 @@
 
 public class CameraBackground : MonoBehaviour
 {
-    [SerializeField] private float scrollSpeed;
+    [SerializeField] private float scrollSpeed = 1;
 
     //Cached references
     protected Material cloudyMaterial;

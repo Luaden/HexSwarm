@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class DefendPattern
 {
-
-
     public IUnit Unit { get; }
     public IAbility Ability { get; }
     public IEnumerable<Vector3Int> Path { get; }
