@@ -61,8 +61,6 @@ public class TestAITeam : Team
         teamRange.Add(cell);
         enemiesSeen.Clear();
         unitsUnmoved.UnionWith(units);
-        foreach (IUnit unit in unitsUnmoved)
-            Debug.Log(unit.Name);
         unguardedCells.Clear();
         possibleAttacks.Clear();
         possibleDefenses.Clear();
@@ -428,7 +426,7 @@ public class TestAITeam : Team
             }
         }
 
-        UnitHasMoved(unit, unit.Location);
+        UnitHasMoved(unit, toTarget);
     }
 
     protected bool GetAbilityAndTarget(IUnit unit, IEnumerable<Vector3Int> currentPath)

@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
     public bool NewGame()
     {
-        levelCounter = 1;
+        levelCounter = 0;
         turnCounter = 0;
 
         StartLevel();
@@ -192,7 +192,8 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void FixedUpdate()
     {
-        activeTeams.Peek().NextMove(Time.deltaTime);
+        if(UnitAVController.MovementComplete)
+            activeTeams.Peek().NextMove(Time.deltaTime);
     }
 
     protected void Update()
