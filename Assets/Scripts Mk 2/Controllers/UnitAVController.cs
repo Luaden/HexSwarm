@@ -61,7 +61,6 @@ public class UnitAVController : MonoBehaviour
         }
 
         worldUnitPath.Add(worldPath, worldUnit);
-        
     }
 
     public void DestroyUnit(Unit unit)
@@ -72,9 +71,6 @@ public class UnitAVController : MonoBehaviour
         worldObjects.TryGetValue(unit, out deadUnit);
         worldUnits.TryGetValue(deadUnit, out deadIUnit);
         totalUnitsToDie.Add(deadUnit);
-
-        worldObjects.Remove(unit);
-        worldUnits.Remove(deadUnit);
     }
 
     public void ChangeTeamColors(Dictionary<Teams, ColorConfig> colors)
@@ -182,7 +178,9 @@ public class UnitAVController : MonoBehaviour
 
                 if(sprite.color.a == 0)
                 {
-                    totalUnitsToDie.Remove(deadUnit);
+                    totalUnitsToDie.Remove(deadUnit);                    
+                    worldObjects.Remove(worldUnits[deadUnit]);
+                    worldUnits.Remove(deadUnit);
                     Destroy(deadUnit);
                     break;
                 }
