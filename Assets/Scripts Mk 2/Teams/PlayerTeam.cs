@@ -31,6 +31,7 @@ public class PlayerTeam : Team
         TeamNumber = teamNumber;
         StartPosition = origin;
         units = newUnits;
+        validMoves = new HashSet<ICell>();
     }
 
     public override void StartTurn()
@@ -50,7 +51,6 @@ public class PlayerTeam : Team
     {
         unitsUnmoved.Clear();
         unitsUnmoved.UnionWith(units);
-        validMoves = new HashSet<ICell>();
     }
 
     protected void ToggleCameraControls()

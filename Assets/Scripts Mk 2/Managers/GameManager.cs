@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour, IGameManager
     [SerializeField] protected int gridSize;
     public UnitManager UnitManager => unitManager;
 
-
+    protected bool wasNuked;
     protected readonly Queue<ITeam> activeTeams = new Queue<ITeam>();
     protected PlayerTeam player1;
     protected int turnCounter;
@@ -131,7 +131,6 @@ public class GameManager : MonoBehaviour, IGameManager
         Battlefield.GenerateGrid(GridSize, ConfigManager.MapShape);
 
         SpawnTeams();
-        EndTurn();
         return true;
     }
 
@@ -199,9 +198,16 @@ public class GameManager : MonoBehaviour, IGameManager
         if (activeTeams.Peek().TurnOver)
             EndTurn();
 
+        if (wasNuked)
+        {
+            wasNuked = false;
+            EndTurn();
+        }
+
         if (needsNewLevel)
         {
             needsNewLevel = false;
+            wasNuked = true;
             StartLevel();
         }
     }
@@ -264,14 +270,14 @@ public class GameManager : MonoBehaviour, IGameManager
     private bool Win()
     {
         this.levelCounter++;
-        StartLevel();
+        needsNewLevel = true;
         return true;
     }
 
     private bool Loss()
     {
         this.levelCounter--;
-        StartLevel();
+        needsNewLevel = true;
         return true;
     }
 
