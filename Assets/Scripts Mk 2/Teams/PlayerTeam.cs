@@ -42,7 +42,7 @@ public class PlayerTeam : Team
     public override void EndTurn()
     {
         ToggleCameraControls();
-        gameManager.EndTurn();
+        gameManager.TurnOver = true;
     }
 
     protected void TeamInit()

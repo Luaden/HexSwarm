@@ -85,17 +85,18 @@ public class UnitAVController : MonoBehaviour
 
     public void Nuke()
     {
+        MovementComplete = false;
         foreach(KeyValuePair<Unit, GameObject> entry in worldObjects)
         {
             Destroy(entry.Value);
-        }
-        
+        }       
 
         worldObjects.Clear();
         worldUnits.Clear();
         worldUnitPath.Clear();
         totalUnitsToDie.Clear();
         currentUnitsToDie.Clear();
+        MovementComplete = true;
     }
 
     protected void Awake()

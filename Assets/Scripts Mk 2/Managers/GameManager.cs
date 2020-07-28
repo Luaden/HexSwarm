@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour, IGameManager
     [SerializeField] protected int gridSize;
     public UnitManager UnitManager => unitManager;
 
-
     protected readonly Queue<ITeam> activeTeams = new Queue<ITeam>();
     protected PlayerTeam player1;
     protected int turnCounter;
@@ -33,8 +32,13 @@ public class GameManager : MonoBehaviour, IGameManager
     protected Vector3Int end;
     protected Vector3Int secondEnd;
     protected Vector3Int spawnLocation;
-    
+    protected bool levelEnded = false;
+    protected bool gameOver = false;
+    protected bool turnOver = false;
 
+    public bool LevelEnded { get => levelEnded; set => levelEnded = value; }
+    public bool GameOver { get => gameOver; set => gameOver = value; }
+    public bool TurnOver { get => turnOver; set => turnOver = value; }
     public int TurnCounter => turnCounter;
     public int LevelCounter => levelCounter;
     public Team Player1 => player1;
@@ -127,6 +131,8 @@ public class GameManager : MonoBehaviour, IGameManager
 
         SpawnTeams();
         EndTurn();
+
+        LevelEnded = false;
         return true;
     }
 
@@ -142,6 +148,8 @@ public class GameManager : MonoBehaviour, IGameManager
 
         TurnOrderDisplay.UpdateUI(this);
         SelectedUnitPanel.UpdateUI(default);
+
+        TurnOver = false;
         return true;
     }
 
@@ -187,8 +195,17 @@ public class GameManager : MonoBehaviour, IGameManager
 
     protected void FixedUpdate()
     {
-        if(UnitAVController.MovementComplete)
-            activeTeams.Peek().NextMove(Time.deltaTime);
+        if (!UnitAVController.MovementComplete)
+            return;
+        
+        activeTeams.Peek().NextMove(Time.deltaTime);
+
+        if (TurnOver && UnitAVController.MovementComplete)
+            EndTurn();
+        if (LevelEnded && UnitAVController.MovementComplete)
+            StartLevel();
+        if (GameOver && UnitAVController.MovementComplete)
+            NewGame();
     }
 
     protected void Update()
@@ -249,14 +266,14 @@ public class GameManager : MonoBehaviour, IGameManager
     private bool Win()
     {
         this.levelCounter++;
-        StartLevel();
+        LevelEnded = true;
         return true;
     }
 
     private bool Loss()
     {
         this.levelCounter--;
-        StartLevel();
+        GameOver = true;
         return true;
     }
 

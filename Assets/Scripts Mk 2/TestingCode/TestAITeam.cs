@@ -457,6 +457,6 @@ public class TestAITeam : Team
             DetermineStrategy();
 
         if (unitsUnmoved.Count == 0 && GameManager.UnitAVController.MovementComplete)
-            EndTurn();
+            gameManager.TurnOver = true;
     }
 }
