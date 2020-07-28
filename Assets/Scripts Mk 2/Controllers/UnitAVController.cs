@@ -127,6 +127,7 @@ public class UnitAVController : MonoBehaviour
         if (worldUnitPath.Count > 0)
         {
             MovementComplete = false;
+            Debug.Log(totalUnitsToDie.Count);
 
             if (worldUnitPath.First().Key.Count == 0)
             {
@@ -134,7 +135,6 @@ public class UnitAVController : MonoBehaviour
                     PlayAttackSFX(worldUnits[worldUnitPath.First().Value]);
                 worldUnitPath.Remove(worldUnitPath.First().Key);
                 playNewSound = true;
-
                 return;
             }
 
@@ -155,15 +155,18 @@ public class UnitAVController : MonoBehaviour
             ConfigManager.instance.RepositionCamera(worldUnit.transform.position);
 
             if (worldUnit.transform.position == nextPosition && worldUnitPath.First().Key.Count != 0)
+            {
                 nextPosition = worldUnitPath.First().Key.Dequeue();
-                
+                return;
+            }
+
+            return;
         }
-            
-        if (worldUnitPath.Count == 0)
-        {
-            KillAllUnits();
+
+        KillAllUnits();
+
+        if (worldUnitPath.Count == 0 && totalUnitsToDie.Count == 0)
             MovementComplete = true;
-        }
     }
 
     protected void KillAllUnits()
@@ -182,35 +185,6 @@ public class UnitAVController : MonoBehaviour
                     totalUnitsToDie.Remove(deadUnit);
                     Destroy(deadUnit);
                     break;
-                }
-            }
-    }
-
-    protected void KillCurrentUnits(GameObject worldUnit)
-    {
-        foreach (GameObject deadUnit in totalUnitsToDie)
-        {
-            if (worldUnit.transform.position == deadUnit.transform.position)
-            {
-                currentUnitsToDie.Add(deadUnit);
-                totalUnitsToDie.Remove(deadUnit);
-                break;
-            }
-        }
-
-        if (currentUnitsToDie.Count > 0)
-            foreach (GameObject deadUnit in currentUnitsToDie)
-            {
-                SpriteRenderer sprite = deadUnit.GetComponent<SpriteRenderer>();
-
-                Color targetAlpha = new Color(sprite.color.r, sprite.color.g, sprite.color.r, sprite.color.a);
-                targetAlpha.a = Mathf.Clamp01(targetAlpha.a - (dieSpeed * Time.deltaTime));
-                sprite.color = targetAlpha;
-
-                if (sprite.color.a == 0)
-                {
-                    currentUnitsToDie.Remove(deadUnit);
-                    Destroy(deadUnit);
                 }
             }
     }
