@@ -49,6 +49,7 @@ public class PlayerTeam : Team
 
     protected void TeamInit()
     {
+        camControls = false;
         unitsUnmoved.Clear();
         unitsUnmoved.UnionWith(units);
     }
